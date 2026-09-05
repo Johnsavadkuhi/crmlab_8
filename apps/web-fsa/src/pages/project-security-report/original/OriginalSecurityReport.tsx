@@ -22,7 +22,7 @@ import {
   testOutcomeAndHardeningSource, penetrationTestApproachSource,
   iso15408_2026Baseline, iso15408_2026FunctionalClasses, iso15408LegacyBaseFamilyResults,
   iso15408LegacyExtendedRequirements, iso15408_2026StandardsResearchAudit,
-  owaspWstgIso15408Crosswalk2026, owaspWstgIso15408CrosswalkAudit
+  owaspWstgIso15408Crosswalk2026, owaspWstgIso15408CrosswalkAudit, wstgCategoryDescriptionTranscriptionAudit
 } from './officialReportSourceData';
 
 const slug = v => String(v || '').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
@@ -705,7 +705,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 <strong data-source-literal="true">{owaspWstgIso15408Crosswalk2026.legacyFinalEvaluationLabelFa}</strong>
               </Callout>
 
-              <h3>شرح نگاشت فنی هر دسته</h3>
+              <h3>شرح عین مستند مبنا و نگاشت فنی هر دسته</h3>
               <div className="card-stack">
                 {owaspWstgIso15408Crosswalk2026.categories.map(c=><div className="card" key={c.code} style={{marginBottom:14}}>
                   <div className="data-grid cols-4">
@@ -715,12 +715,21 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                     <Meta label="نتیجه مستند مبنا" value={c.legacyResult}/>
                   </div>
                   <h3>{c.nameFa} <small dir="ltr">— {c.nameEn}</small></h3>
-                  <p><strong>عنوان ثبت‌شده در مستند مبنا: </strong><span data-source-literal="true">{c.sourceLabelFa}</span></p>
-                  <p>{c.rationaleFa}</p>
+                  <Callout title="متن عیناً استخراج‌شده از مستند مبنا (Source-Locked)" icon={<FileText/>}>
+                    <div data-source-literal="true" dir="rtl">
+                      <p style={{marginTop:0}}><strong>{c.sourceHeadingFa}</strong></p>
+                      <p style={{marginBottom:0, lineHeight:2.15, textAlign:'justify'}}>{c.sourceDescriptionFa}</p>
+                    </div>
+                  </Callout>
+                  <p><strong>عنوان دسته در مستند مبنا: </strong><span data-source-literal="true">{c.sourceLabelFa}</span></p>
+                  <p><strong>توضیح مهندسی نگاشت به ISO/IEC 15408-2:2026: </strong>{c.rationaleFa}</p>
                   <div className="chip-row">{c.isoRefs.map(r=><span className="chip" dir="ltr" key={`${c.code}-detail-${r.code}`}>{r.code} · ISO/IEC 15408-2:2026 §{r.clause}</span>)}</div>
                 </div>)}
               </div>
 
+              <Callout title="کنترل ممیزی متن منبع" icon={<FileCheck2/>}>
+                {wstgCategoryDescriptionTranscriptionAudit.noteFa} تعداد تصاویر مبنا <span dir="ltr">{wstgCategoryDescriptionTranscriptionAudit.sourceScreenshotCount}</span> و تعداد شرح‌های کنترل‌شده <span dir="ltr">{wstgCategoryDescriptionTranscriptionAudit.categoryCount}</span> است.
+              </Callout>
               <Callout title="کنترل ممیزی نگاشت" icon={<ShieldCheck/>}>
                 این ماتریس در تاریخ <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.verifiedOn}</span> بازبینی شده است؛ تعداد دسته‌های WSTG برابر <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.wstgCategoryCount}</span> و تعداد آزمون‌های سطح بالا در خط مبنای <span dir="ltr">v4.2</span> برابر <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.wstgTopLevelTestCount}</span> است. نگاشت در سطح خانواده‌های SFR انجام شده و ادعای هم‌ارزی هنجاری رسمی میان OWASP و ISO/IEC 15408 مطرح نمی‌شود.
               </Callout>

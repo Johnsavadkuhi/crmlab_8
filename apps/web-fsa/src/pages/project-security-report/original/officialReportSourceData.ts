@@ -635,6 +635,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.1', code: 'INFO', wstgPrefix: 'WSTG-INFO', testCount: 10,
       sourceLabelFa: 'آزمون جمع آوری اطلاعات',
+      sourceHeadingFa: '۴.۱- آزمون جمع آوری اطلاعات (بند ۱۰-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'این آزمون شامل بررسی برخی از خطاها و تنظیمات نادرست سرویس دهنده که منجر به عواقبی خواهد شد که می تواند برنامه کاربردی را در شرایطی ناامن قرار دهد، است. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر بوده است:',
       nameFa: 'آزمون جمع‌آوری اطلاعات', nameEn: 'Information Gathering', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FDP_IFC', clause: '11.7' },
@@ -645,7 +647,9 @@ export const owaspWstgIso15408Crosswalk2026 = {
     },
     {
       order: '4.2', code: 'CONF', wstgPrefix: 'WSTG-CONF', testCount: 11,
-      sourceLabelFa: 'آزمون مدیریت پیکربندی و استقرار',
+      sourceLabelFa: 'آزمون پیکربندی و مدیریت استقرار',
+      sourceHeadingFa: '۴.۲- آزمون پیکربندی و مدیریت استقرار',
+      sourceDescriptionFa: 'هدف از آزمونهای این بخش تحلیل پیکر بندی و معماری زیرساخت، و بدست آوردن اطلاعاتی از محصول مورد ارزیابی است. درنهایت از طریق این اطلاعات نقشه کلی معماری محصول ترسیم می گردد. آزمون\u200cهایی نظیر بازبینی پیکربندی\u200cها، بررسی نحوه\u200cی پردازش پیوندهای مختلف، بررسی انواع پرونده\u200cها و واسطهای مدیریتی و نظایر آن، می\u200cتوانند نقشه\u200cی کلی معماری برنامه\u200cی کاربردی را به نحوی ترسیم کند که قضاوت در مورد امنیت پیکر بندی و مدیریت استقرار محصول را مقدور سازد. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر بوده است:',
       nameFa: 'آزمون مدیریت پیکربندی و استقرار', nameEn: 'Configuration and Deployment Management Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FMT_MOF', clause: '13.4' },
@@ -662,6 +666,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.3', code: 'IDNT', wstgPrefix: 'WSTG-IDNT', testCount: 5,
       sourceLabelFa: 'آزمون مدیریت هویت',
+      sourceHeadingFa: '۴.۳- آزمون مدیریت هویت',
+      sourceDescriptionFa: 'این آزمون شامل تعریف و پیاده\u200cسازی مناسب نقش\u200cها و سازوکارها و فرآیندهای مربوط به هر نقش و درستی سیاست\u200cهای امنیتی اعمال شده بر روی نقش\u200cها است. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است:',
       nameFa: 'آزمون مدیریت هویت', nameEn: 'Identity Management Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FIA_ATD', clause: '12.5' },
@@ -676,6 +682,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.4', code: 'ATHN', wstgPrefix: 'WSTG-ATHN', testCount: 10,
       sourceLabelFa: 'آزمون احراز هویت',
+      sourceHeadingFa: '۴.۴- آزمون احراز هویت (بند ۱۱-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'این آزمون، با هدف درک چگونگی عملکرد سازوکار اصالت سنجی و در ادامه استفاده از این اطلاعات به منظور دور زدن این سازوکار اصالت سنجی انجام می\u200cشود. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است:',
       nameFa: 'آزمون احراز هویت', nameEn: 'Authentication Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FIA_AFL', clause: '12.3' },
@@ -690,7 +698,9 @@ export const owaspWstgIso15408Crosswalk2026 = {
     },
     {
       order: '4.5', code: 'ATHZ', wstgPrefix: 'WSTG-ATHZ', testCount: 4,
-      sourceLabelFa: 'آزمون مجازی شماری',
+      sourceLabelFa: 'آزمون مجاز شماری',
+      sourceHeadingFa: '۴.۵- آزمون مجاز شماری',
+      sourceDescriptionFa: 'این آزمون به معنی درک چگونگی عملکرد روند مجاز شماری و در ادامه استفاده از این اطلاعات به منظور دور زدن سازوکار مجاز شماری است. طی این آزمون امکان دور زدن شمای مجاز شماری، آسیب پذیری پیمایش مسیر، و راه هایی به منظور افزایش دسترسی\u200cهای اختصاص یافته به آزمون گر، بررسی می گردد. این آزمون دربردارنده موارد آزمون و کنترل های زیر است :',
       nameFa: 'آزمون مجوزدهی و کنترل دسترسی', nameEn: 'Authorization Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FDP_ACC', clause: '11.3' },
@@ -705,6 +715,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.6', code: 'SESS', wstgPrefix: 'WSTG-SESS', testCount: 9,
       sourceLabelFa: 'آزمون مدیریت نشست',
+      sourceHeadingFa: '۴.۶- آزمون مدیریت نشست (بند ۱۶-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'مدیریت نشست، سازوکاری است که توسط آن تعاملات بین کاربر و برنامه\u200cی کاربردی از زمان اصالت\u200cسنجی تا زمان خروج کاربر از سامانه کنترل و مدیریت می\u200cشود. هدف از این آزمون بررسی صحت پیاده\u200cسازی سازوکار برای حالت\u200cمندی در پروتکل HTTP است. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است :',
       nameFa: 'آزمون مدیریت نشست', nameEn: 'Session Management Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FCS_RBG', clause: '10.5' },
@@ -720,7 +732,9 @@ export const owaspWstgIso15408Crosswalk2026 = {
     },
     {
       order: '4.7', code: 'INPV', wstgPrefix: 'WSTG-INPV', testCount: 19,
-      sourceLabelFa: 'آزمون اعتبار سنجی ورودی',
+      sourceLabelFa: 'آزمون اعتبارسنجی ورودی',
+      sourceHeadingFa: '۴.۷- آزمون اعتبارسنجی ورودی (بند ۱۴-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'عدم اعتبارسنجی داده\u200cهای ورودی از محیط بیرونی قبل از پردازش آن\u200cها در محصول، منجر به وقوع بسیاری از آسیب\u200cپذیری\u200cهای مهم شناخته\u200cشده در برنامه\u200cی کاربردی ازجمله XSS، تزریق کد SQL، حملات سرریز بافر، و غیره می\u200cشود. در این بخش با بررسی انواع گوناگونی از داده\u200cها در نقاط ورودی، صحت اعتبارسنجی داده\u200cها توسط برنامه کاربردی مورد آزمون قرار می\u200cگیرد. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است :',
       nameFa: 'آزمون اعتبارسنجی ورودی', nameEn: 'Input Validation Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FDP_IFC', clause: '11.7' },
@@ -734,6 +748,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.8', code: 'ERRH', wstgPrefix: 'WSTG-ERRH', testCount: 2,
       sourceLabelFa: 'آزمون مدیریت خطاها',
+      sourceHeadingFa: '۴.۸- آزمون مدیریت خطاها',
+      sourceDescriptionFa: 'خطاهای تولید شده حین ارزیابی امنیتی و آزمون نفوذ می\u200cتواند شامل اطلاعات حساسی باشد که از جمله\u200cی آن\u200cها می\u200cتوان به فناوری\u200cهای استفاده\u200cشده در سامانه ازجمله نوع و نسخه\u200cی سرویس دهنده وب و پایگاه داده، و اطلاعاتی در مورد کد برنامه مثل نام کلاس، متد و متغیرهای استفاده\u200cشده در کد برنامه کاربردی اشاره نمود. این آزمون دربردارنده موارد آزمون و کنترل های زیر است :',
       nameFa: 'آزمون مدیریت خطاها', nameEn: 'Testing for Error Handling', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FAU_GEN', clause: '8.4' },
@@ -746,6 +762,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.9', code: 'CRYP', wstgPrefix: 'WSTG-CRYP', testCount: 4,
       sourceLabelFa: 'آزمون رمزنگاری',
+      sourceHeadingFa: '۴.۹- آزمون رمزنگاری (بند ۹-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'به منظور انتقال امن داده\u200cهای حساس و محرمانه کاربران در ارتباط با سرویس دهنده لازم است تا از سازوکارهای رمزنگاری داده استفاده نمود. پروتکل ارتباطی HTTP به صورت متن واضح به تبادل اطلاعات می\u200cپردازد. از این رو توصیه می\u200cشود که در تبادل اطلاعات حساس و محرمانه کاربران، از پروتکل HTTPS استفاده گردد. به جهت افزایش امنیت ارتباط HTTPS لازم است از یک پیکربندی امن در سرویس دهنده استفاده گردد. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است :',
       nameFa: 'آزمون رمزنگاری و کانال‌های امن', nameEn: 'Testing for Weak Cryptography', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FCS_CKM', clause: '10.3' },
@@ -763,6 +781,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.10', code: 'BUSL', wstgPrefix: 'WSTG-BUSL', testCount: 9,
       sourceLabelFa: 'آزمون منطق کسب و کار',
+      sourceHeadingFa: '۴.۱۰- آزمون منطق کسب و کار (بند ۱۲-۸-۱۵۴۰۸)',
+      sourceDescriptionFa: 'بررسی آسیب\u200cپذیری\u200cهای منطق کسب و کار، شامل صحت سنجی داده\u200cها و جریان\u200cهای کاری برنامه است. تشخیص آسیب\u200cپذیری\u200cهای منطق کسب و کار در برنامه، همواره از طریق روش\u200cهای دستی و آزمون\u200cهای پیچیده منطقی انجام می\u200cشود؛ چراکه آسیب\u200cپذیری\u200cهای منطقی در برنامه\u200cها همواره دارای الگوهای ثابت و تکراری نیستند. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است :',
       nameFa: 'آزمون منطق کسب‌وکار', nameEn: 'Business Logic Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FDP_ACC', clause: '11.3' },
@@ -779,6 +799,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.11', code: 'CLNT', wstgPrefix: 'WSTG-CLNT', testCount: 13,
       sourceLabelFa: 'آزمون سمت مشتری',
+      sourceHeadingFa: '۴.۱۱- آزمون سمت مشتری',
+      sourceDescriptionFa: 'آزمونهای سمت مشتری، شامل بررسی امنیت دستورالعمل\u200cهای سمت مشتری در ارتباط با مرور گر یا افزونه\u200cهای مرور گر است. این آزمون دربردارنده موارد آزمون و کنترل\u200cهای زیر است :',
       nameFa: 'آزمون سمت مشتری', nameEn: 'Client-side Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FCS_COP', clause: '10.4' },
@@ -795,6 +817,8 @@ export const owaspWstgIso15408Crosswalk2026 = {
     {
       order: '4.12', code: 'APIT', wstgPrefix: 'WSTG-APIT', testCount: 1,
       sourceLabelFa: 'آزمون API',
+      sourceHeadingFa: '۴.۱۲- آزمون API',
+      sourceDescriptionFa: 'آزمون های API، شامل برقراری تماس با نقطه پایانی API، دریافت پاسخ API و تأیید اعتبار کدهای وضعیت API، زمان پاسخ و داده ها بر خلاف قوانین از پیش تعیین شده است. تست API معمولاً توسط یک ابزار نرم افزاری یا وب سرویس انجام می شود و عمدتاً بر آزمایش لایه منطق تجارت تمرکز دارد.',
       nameFa: 'آزمون API', nameEn: 'API Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
       isoRefs: [
         { code: 'FAU_GEN', clause: '8.4' },
@@ -812,6 +836,15 @@ export const owaspWstgIso15408Crosswalk2026 = {
       rationaleFa: 'آزمون API در WSTG v4.2 شامل GraphQL است و اهداف آن پیکربندی امن، اعتبارسنجی ورودی و کنترل دسترسی را پوشش می‌دهد؛ بنابراین نگاشت آن چندکلاسی و وابسته به قابلیت API است.',
     },
   ],
+};
+
+export const wstgCategoryDescriptionTranscriptionAudit = {
+  verifiedOn: '2026-09-05',
+  sourceScreenshotCount: 12,
+  categoryCount: 12,
+  sourceLocked: true,
+  transcriptionMethod: 'Manual visual transcription followed by a second visual comparison against the supplied screenshots.',
+  noteFa: 'عنوان و متن توضیحی هر ۱۲ دسته آزمون عیناً از تصاویر مستند مبنا رونویسی و Source-Locked شده است؛ متن توضیحی منبع از توضیح مهندسی نگاشت ISO/IEC 15408 جدا نگهداری می‌شود.',
 };
 
 export const owaspWstgIso15408CrosswalkAudit = {
@@ -836,6 +869,6 @@ export const sourceTranscriptionAudit = {
     'The English copyright block visibly contains joined words: 2024Corporation, orreduced, tothe, orthe, toCorporation.',
     'The test-result source sentence says «یکی از ۴ حالت» while five result states are visibly listed; this source-side inconsistency is preserved.',
     'The legacy ISO 15408 screenshots visibly use hyphenated spellings FCS-TLSS_EXT, FCS-TLSC_EXT and FCS-DTLS_EXT; those source spellings are preserved in the legacy table.',
-    'The WSTG category summary source visibly labels Authorization Testing as «آزمون مجازی شماری»; that legacy label is preserved only as source text while the current report uses the canonical category title.',
+    'The WSTG source description visibly uses «آزمون مجاز شماری» for category 4.5; this exact source wording is preserved while the canonical WSTG category remains Authorization Testing.',
   ],
 };
