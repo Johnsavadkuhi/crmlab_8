@@ -44,6 +44,7 @@ function OriginalReportFrame({ children, locale }: { children: ReactNode; locale
     doc.documentElement.lang = locale === "fa" ? "fa" : "en";
     doc.documentElement.dir = locale === "fa" ? "rtl" : "ltr";
     doc.body.dir = locale === "fa" ? "rtl" : "ltr";
+    doc.title = locale === "fa" ? "گزارش مهندسی امنیت" : "Security Engineering Report";
 
     const oldOverride = doc.getElementById("original-report-fa-overrides");
     oldOverride?.remove();
@@ -51,10 +52,48 @@ function OriginalReportFrame({ children, locale }: { children: ReactNode; locale
       const override = doc.createElement("style");
       override.id = "original-report-fa-overrides";
       override.textContent = `
-        body { direction: rtl; }
-        .data-table th, .data-table td, .finding-head, .wstg-head { text-align: right; }
-        .code-panel, .code-panel pre, code, pre { direction: ltr; text-align: left; unicode-bidi: isolate; }
-        .cover-kicker, .section-heading p, .sidebar-foot, .eyebrow { letter-spacing: 0; }
+        body {
+          direction: rtl;
+          font-family: Tahoma, "Vazirmatn", "Segoe UI", sans-serif;
+        }
+        .sidebar {
+          inset: 0 0 0 auto;
+          border-right: 0;
+          border-left: 1px solid rgba(255,255,255,.06);
+        }
+        .sidebar-foot { right: 24px; left: auto; }
+        .sidebar nav a, .brand, .topbar, .top-actions, .section-heading,
+        .report-page, .meta, .card, .callout, .method, .principle,
+        .finding-head, .wstg-head, .finding-body, .wstg-body,
+        .table-wrap th, .table-wrap td, .kv dt, .kv dd { text-align: right; }
+        .main { margin-left: 0; margin-right: 270px; }
+        .export-popover { right: auto; left: 0; }
+        .report-page ul, .report-page ol { padding-left: 0; padding-right: 18px; }
+        .numbered li { padding: 0 30px 10px 0; }
+        .numbered li:before { left: auto; right: 0; }
+        .callout { border-left: 0; border-right: 3px solid #087f5b; }
+        .requirement { border-left: 0; border-right: 3px solid #026aa2; }
+        .metric { padding: 15px 52px 15px 14px; }
+        .metric-icon { left: auto; right: 13px; }
+        .metric-grid.compact .metric { padding-right: 14px; }
+        .root-card>div:first-child { padding-right: 0; padding-left: 60px; }
+        .root-card>.severity { right: auto; left: 12px; }
+        .code-panel, .code-panel pre, code, pre, [dir="ltr"] {
+          direction: ltr;
+          text-align: left;
+          unicode-bidi: isolate;
+        }
+        .cover-kicker, .section-heading p, .sidebar-foot, .eyebrow,
+        .meta span, .cover-signoff span, .classification-strip { letter-spacing: 0; }
+        .section-heading h2 { letter-spacing: 0; }
+        @media(max-width:1050px) {
+          .sidebar { transform: translateX(100%); }
+          .sidebar.open { transform: none; }
+          .main { margin-right: 0; margin-left: 0; width: 100%; }
+        }
+        @media print {
+          .main { margin-right: 0 !important; margin-left: 0 !important; }
+        }
       `;
       doc.head.appendChild(override);
 
@@ -63,6 +102,11 @@ function OriginalReportFrame({ children, locale }: { children: ReactNode; locale
         const walker = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT);
         let node: Node | null = walker.nextNode();
         while (node) {
+          const parent = node.parentElement;
+          if (parent?.closest('[data-source-literal="true"]')) {
+            node = walker.nextNode();
+            continue;
+          }
           const raw = node.nodeValue || "";
           const key = raw.trim();
           const translated = translations.get(key);
@@ -96,11 +140,11 @@ export default function ProjectSecurityReport() {
   const { projectId } = useParams();
   const navigate = useNavigate();
   const { data: project, isLoading, error } = useGetProjectQuery(projectId || "", { skip: !projectId });
-  const [locale, setLocale] = useState<"en" | "fa">("en");
+  const [locale, setLocale] = useState<"en" | "fa">("fa");
 
-  if (isLoading) return <LoadingScreen text="Loading security report..." />;
+  if (isLoading) return <LoadingScreen text="در حال بارگذاری گزارش امنیتی..." />;
   if (error) return <ErrorState error={error} />;
-  if (!project) return <div>Project could not be loaded.</div>;
+  if (!project) return <div dir="rtl">پروژه برای تولید گزارش قابل بارگذاری نیست.</div>;
 
   const goBack = () => {
     if (window.history.length > 1) navigate(-1);

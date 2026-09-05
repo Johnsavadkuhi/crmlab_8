@@ -14,6 +14,12 @@ import {
   authorizationCoverage, limitations, assumptions, assuranceStatement, glossary,
   dataDictionary, reportAuditTrail, exportBundle
 } from './originalReportExtras';
+import {
+  officialDocumentProfile, reportQualityControl, assessmentPersonnelHistoryCaptionFa, assessmentPersonnelHistory, publicationRights,
+  assessmentBasisAndRiskDefinitions, severityDefinitionRows, documentAccessControl,
+  vulnerabilityIdentification, vulnerabilityIdentificationMethods,
+  testItemStructureSource, testItemStructure, cvss31Reference
+} from './officialReportSourceData';
 
 const slug = v => String(v || '').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
 const verdictClass = v => `badge verdict-${slug(v)}`;
@@ -37,6 +43,14 @@ function csvDownload(name, headers, rows) {
 }
 
 const TOC = [
+  ['F1','Official Document Profile','official-document-profile'],
+  ['F2','Report Quality Control','report-quality-control'],
+  ['F3','Assessment Team & Timeline','assessment-team-timeline'],
+  ['F4','Copyright & Publication Rights','publication-rights'],
+  ['F5','Assessment Basis & Risk Definitions','assessment-basis-risk-definitions'],
+  ['F6','Document Access Control & Vulnerability Identification','document-access-identification'],
+  ['F7','Test Item Structure & CVSS Reference','test-structure-cvss'],
+  ['F8','CVSS 3.1 Parameter Values','cvss31-parameter-values'],
   ['01','Document Control & Governance','document-control'],['02','Executive Summary','executive'],
   ['03','Assessment Context & Objectives','context'],['04','Scope & Rules of Engagement','scope'],
   ['05','Methodology & Scientific Assurance','methodology'],['06','Standards Baseline','standards'],
@@ -143,6 +157,302 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
       </section>
 
       {showCore && <>
+        <section className="report-page" id="official-document-profile">
+          <SectionHeading num="F1" title={locale === 'fa' ? 'شناسنامه مستند' : 'Official Document Profile'} subtitle={locale === 'fa' ? 'اطلاعات مندرج در مستند مبنا؛ بدون بازنویسی.' : 'Official identity, ownership and lifecycle metadata for the assessed system and issued report.'} icon={<Fingerprint/>}/>
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <div className="data-grid cols-4">
+                <Meta label={officialDocumentProfile.labelsFa.documentIdentifier} value={officialDocumentProfile.documentIdentifier}/>
+                <Meta label={officialDocumentProfile.labelsFa.documentCode} value={officialDocumentProfile.documentCode}/>
+                <Meta label={officialDocumentProfile.labelsFa.systemName} value={officialDocumentProfile.systemName}/>
+                <Meta label={officialDocumentProfile.labelsFa.documentClassification} value={officialDocumentProfile.documentClassification}/>
+                <Meta label={officialDocumentProfile.labelsFa.systemAcceptanceDate} value={officialDocumentProfile.systemAcceptanceDate}/>
+                <Meta label={officialDocumentProfile.labelsFa.assessmentDate} value={officialDocumentProfile.assessmentDate}/>
+                <Meta label={officialDocumentProfile.labelsFa.reportIssueDate} value={officialDocumentProfile.reportIssueDate}/>
+                <Meta label={officialDocumentProfile.labelsFa.systemVersion} value={officialDocumentProfile.systemVersion}/>
+                <Meta label={officialDocumentProfile.labelsFa.client} value={officialDocumentProfile.client}/>
+                <Meta label={officialDocumentProfile.labelsFa.contractor} value={officialDocumentProfile.contractor}/>
+                <Meta label={officialDocumentProfile.labelsFa.operator} value={officialDocumentProfile.operator}/>
+                <Meta label={officialDocumentProfile.labelsFa.incomingLetterNumber} value={officialDocumentProfile.incomingLetterNumber}/>
+                <Meta label={officialDocumentProfile.labelsFa.assessmentRound} value={officialDocumentProfile.assessmentRound}/>
+              </div>
+              <p className="muted" style={{textAlign:'center'}}>{officialDocumentProfile.sourceCaptionFa}</p>
+            </div>
+          ) : (
+            <div className="data-grid cols-4">
+              <Meta label="Document Identifier" value={officialDocumentProfile.documentIdentifier}/>
+              <Meta label="Document Code" value={officialDocumentProfile.documentCode}/>
+              <Meta label="System Name" value={officialDocumentProfile.systemName}/>
+              <Meta label="Document Classification" value={officialDocumentProfile.documentClassification}/>
+              <Meta label="System Acceptance Date" value={officialDocumentProfile.systemAcceptanceDate}/>
+              <Meta label="Assessment Date" value={officialDocumentProfile.assessmentDate}/>
+              <Meta label="Report Issue Date" value={officialDocumentProfile.reportIssueDate}/>
+              <Meta label="System Version" value={officialDocumentProfile.systemVersion}/>
+              <Meta label="Client" value={officialDocumentProfile.client}/>
+              <Meta label="Contractor" value={officialDocumentProfile.contractor}/>
+              <Meta label="Operator" value={officialDocumentProfile.operator}/>
+              <Meta label="Incoming Letter Number" value={officialDocumentProfile.incomingLetterNumber}/>
+              <Meta label="Assessment Round" value={officialDocumentProfile.assessmentRound}/>
+            </div>
+          )}
+        </section>
+
+        <section className="report-page" id="report-quality-control">
+          <SectionHeading num="F2" title={locale === 'fa' ? 'کنترل کیفیت گزارش' : 'Report Quality Control'} subtitle={locale === 'fa' ? 'متن کنترل کیفیت مندرج در مستند مبنا؛ بدون بازنویسی.' : 'Formal report-quality checks and the recorded controller approval.'} icon={<UserCheck/>}/>
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <div className="data-grid cols-4">
+                <Meta label="مسئول کنترل" value={reportQualityControl.controller}/>
+                <Meta label="تاریخ تایید" value={reportQualityControl.approvalDate}/>
+              </div>
+              <SimpleTable
+                headers={[reportQualityControl.checksHeadingFa, reportQualityControl.approvalHeadingFa]}
+                rows={reportQualityControl.checks.map(x=>[
+                  x.fa,
+                  <span>✓</span>
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{reportQualityControl.sourceCaptionFa}</p>
+            </div>
+          ) : (
+            <>
+              <div className="data-grid cols-4">
+                <Meta label="Quality Controller" value={reportQualityControl.controller}/>
+                <Meta label="Approval Date" value={reportQualityControl.approvalDate}/>
+                <Meta label="Control Result" value="Approved"/>
+                <Meta label="Checks Completed" value={`${reportQualityControl.checks.filter(x=>x.approved).length}/${reportQualityControl.checks.length}`}/>
+              </div>
+              <h3>Quality Control Checklist</h3>
+              <SimpleTable
+                headers={['Control','Source Wording','Status']}
+                rows={reportQualityControl.checks.map(x=>[
+                  x.label,
+                  <span dir="rtl" style={{display:'block',textAlign:'right'}}>{x.fa}</span>,
+                  <span className="badge verdict-pass">Approved</span>
+                ])}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="assessment-team-timeline">
+          <SectionHeading num="F3" title={locale === 'fa' ? 'تاریخچه آزمونگران' : 'Assessment Team & Timeline'} subtitle={locale === 'fa' ? 'سوابق مندرج در مستند مبنا؛ بدون بازنویسی.' : 'Recorded tester participation, assessment dates, documentation approval and report preparation milestones.'} icon={<Activity/>}/>
+          <div data-source-literal={locale === 'fa' ? 'true' : undefined} dir={locale === 'fa' ? 'rtl' : undefined}>
+            <SimpleTable
+              headers={locale === 'fa'
+                ? ['ردیف','نام آزمونگر','تاریخ شروع آزمون','تاریخ پایان آزمون','تاریخ تایید مستندات','تاریخ تهیه گزارش']
+                : ['Row','Tester','Assessment Start','Assessment End','Documentation Approval','Report Preparation']}
+              rows={assessmentPersonnelHistory.map(x=>[x.row,x.tester,x.assessmentStart,x.assessmentEnd,x.documentationApproval,x.reportPreparation])}
+            />
+            {locale === 'fa' && <p className="muted" style={{textAlign:'center'}}>{assessmentPersonnelHistoryCaptionFa}</p>}
+          </div>
+        </section>
+
+        <section className="report-page" id="publication-rights">
+          <SectionHeading num="F4" title={locale === 'fa' ? publicationRights.titleFa : 'Copyright & Publication Rights'} subtitle={locale === 'fa' ? 'متن حق طبع و نشر مندرج در مستند مبنا؛ بدون بازنویسی.' : 'Publication, copying, translation and document change-control terms.'} icon={<Scale/>}/>
+          <div data-source-literal="true">
+            <div className="card" dir="rtl" style={{textAlign:'right'}}><p>{publicationRights.persianText}</p></div>
+            <div className="card" dir="ltr" style={{textAlign:'left',marginTop:12}}>
+              <h3>{publicationRights.englishHeading}</h3>
+              {publicationRights.englishLines.map(line=><p key={line} style={{margin:'2px 0'}}>{line}</p>)}
+              <p style={{marginTop:16}}>{publicationRights.englishText}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="report-page" id="assessment-basis-risk-definitions">
+          <SectionHeading
+            num="F5"
+            title={locale === 'fa' ? assessmentBasisAndRiskDefinitions.sectionTitleFa : 'Assessment Basis & Risk Definitions'}
+            subtitle={locale === 'fa' ? 'متن منتقل‌شده از مستند مبنا؛ بدون بازنویسی محتوایی.' : 'Source-controlled assessment basis and risk definitions.'}
+            icon={<AlertTriangle/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <div className="card">
+                <p>{assessmentBasisAndRiskDefinitions.basis.fa}</p>
+              </div>
+              <Callout title="عدم قطعیت آزمون امنیت" icon={<AlertTriangle/>}>
+                <strong>{assessmentBasisAndRiskDefinitions.uncertainty.fa}</strong>
+              </Callout>
+              <h3>{assessmentBasisAndRiskDefinitions.riskTitleFa}</h3>
+              <p>{assessmentBasisAndRiskDefinitions.riskIntroFa}</p>
+              <SimpleTable
+                headers={['میزان مخاطرات', '']}
+                rows={severityDefinitionRows.map(x=>[
+                  <span dir="ltr">{x.level}</span>,
+                  x.descriptionFa
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{assessmentBasisAndRiskDefinitions.sourceCaptionFa}</p>
+            </div>
+          ) : (
+            <>
+              <div className="card">
+                <p>{assessmentBasisAndRiskDefinitions.basis.en}</p>
+                <div className="chip-row">{assessmentBasisAndRiskDefinitions.standards.map(x=><span className="chip" dir="ltr" key={x}>{x}</span>)}</div>
+              </div>
+              <Callout title="Security-Test Uncertainty" icon={<AlertTriangle/>}>
+                {assessmentBasisAndRiskDefinitions.uncertainty.en}
+              </Callout>
+              <h3>Severity / Risk-Level Definitions</h3>
+              <SimpleTable
+                headers={['Level','Definition']}
+                rows={severityDefinitionRows.map(x=>[
+                  x.level,
+                  x.descriptionEn
+                ])}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="document-access-identification">
+          <SectionHeading
+            num="F6"
+            title={locale === 'fa' ? documentAccessControl.titleFa : 'Document Access Control & Vulnerability Identification'}
+            subtitle={locale === 'fa' ? 'متن و مقادیر مندرج در مستند مبنا؛ بدون بازنویسی محتوایی.' : 'Source-controlled document access and vulnerability-identification content.'}
+            icon={<LockKeyhole/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <h3>{documentAccessControl.privilegesHeadingFa}</h3>
+              <SimpleTable
+                headers={['موجودیت', documentAccessControl.classificationHeadingFa, 'استفاده از محتوا', 'تغییر محتوا', 'چاپ', 'ذخیره رونوشت', 'ارسال و تبادل', 'امحاء']}
+                rows={documentAccessControl.permissions.map(x=>[
+                  x.entityFa,
+                  documentAccessControl.classification.fa,
+                  <span>{x.useContent ? '✓' : '⊠'}</span>,
+                  <span>{x.changeContent ? '✓' : '⊠'}</span>,
+                  <span>{x.print ? '✓' : '⊠'}</span>,
+                  <span>{x.copyStore ? '✓' : '⊠'}</span>,
+                  <span>{x.sendExchange ? '✓' : '⊠'}</span>,
+                  <span>{x.destroy ? '✓' : '⊠'}</span>,
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{documentAccessControl.sourceCaptionFa}</p>
+
+              <h3>{vulnerabilityIdentification.titleFa}</h3>
+              <p>{vulnerabilityIdentification.introFa}</p>
+              <ul>
+                {vulnerabilityIdentificationMethods.map(x=><li key={x.id}>{x.fa}</li>)}
+              </ul>
+            </div>
+          ) : (
+            <>
+              <h3>Access-Control Matrix</h3>
+              <SimpleTable
+                headers={['Entity','Classification','Use Content','Change Content','Print','Copy / Store','Send / Exchange','Destroy']}
+                rows={documentAccessControl.permissions.map(x=>[
+                  x.entityEn,
+                  documentAccessControl.classification.en,
+                  <PermissionMark allowed={x.useContent} locale={locale}/>,
+                  <PermissionMark allowed={x.changeContent} locale={locale}/>,
+                  <PermissionMark allowed={x.print} locale={locale}/>,
+                  <PermissionMark allowed={x.copyStore} locale={locale}/>,
+                  <PermissionMark allowed={x.sendExchange} locale={locale}/>,
+                  <PermissionMark allowed={x.destroy} locale={locale}/>
+                ])}
+              />
+              <h3>Vulnerability Identification Methods</h3>
+              <div className="method-grid">
+                {vulnerabilityIdentificationMethods.map((x,i)=>
+                  <div className="method" key={x.id}>
+                    <span>{String(i+1).padStart(2,'0')}</span>
+                    <div><strong>{x.en}</strong><p>{x.id}</p></div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="test-structure-cvss">
+          <SectionHeading
+            num="F7"
+            title={locale === 'fa' ? testItemStructureSource.titleFa : 'Test Item Structure & CVSS Reference'}
+            subtitle={locale === 'fa' ? 'متن ساختار موارد آزمون و پارامترهای CVSS مطابق مستند مبنا.' : 'Source-controlled test-item structure and CVSS reference.'}
+            icon={<Gauge/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <p>{testItemStructureSource.introFa}</p>
+              <ul>
+                {testItemStructure.map(x=>
+                  <li key={x.field}>
+                    <strong>{x.sourceLabelFa}</strong> {x.descriptionFa}
+                  </li>
+                )}
+              </ul>
+
+              <p>{cvss31Reference.intro.fa}</p>
+
+              <SimpleTable
+                headers={['کلاس','نام پارامتر','توضیحات']}
+                rows={cvss31Reference.parameters.map(x=>[
+                  <span dir="ltr">{x.classSource}</span>,
+                  <span dir="ltr">{x.sourceName}</span>,
+                  x.descriptionFa
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{cvss31Reference.sourceCaptionFa}</p>
+            </div>
+          ) : (
+            <>
+              <h3>Test Item Structure</h3>
+              <SimpleTable
+                headers={['Field','Description']}
+                rows={testItemStructure.map(x=>[x.field,x.descriptionEn])}
+              />
+              <Callout title="CVSS 3.1 Scoring Reference" icon={<Scale/>}>
+                {cvss31Reference.intro.en}
+              </Callout>
+              <SimpleTable
+                headers={['Class','Parameter','Description']}
+                rows={cvss31Reference.parameters.map(x=>[
+                  x.classSource,
+                  x.sourceName,
+                  x.descriptionEn
+                ])}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="cvss31-parameter-values">
+          <SectionHeading
+            num="F8"
+            title={locale === 'fa' ? 'مقادیر ممکن پارامترهای CVSS 3.1' : 'CVSS 3.1 Parameter Values'}
+            subtitle={locale === 'fa' ? 'مقادیر مندرج در مستند مبنا؛ بدون ترجمه یا بازنویسی اصطلاحات فنی.' : 'Possible parameter values retained from the source document.'}
+            icon={<ListChecks/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <p>{cvss31Reference.possibleValuesIntroFa}</p>
+              <SimpleTable
+                headers={['کلاس','نام پارامتر','مقادیر ممکن']}
+                rows={cvss31Reference.parameters.map(x=>[
+                  <span dir="ltr">{x.classSource}</span>,
+                  <span dir="ltr">{x.valuesSourceName}</span>,
+                  <div className="chip-row" dir="ltr">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{cvss31Reference.possibleValuesCaptionFa}</p>
+            </div>
+          ) : (
+            <>
+              <SimpleTable
+                headers={['Class','Parameter','Possible Values']}
+                rows={cvss31Reference.parameters.map(x=>[
+                  x.classSource,
+                  x.valuesSourceName,
+                  <div className="chip-row">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
+                ])}
+              />
+            </>
+          )}
+        </section>
+
         <section className="report-page" id="document-control">
           <SectionHeading num="01" title="Document Control & Governance" subtitle="Identity, ownership, handling, versioning, approvals and distribution of the controlled engineering record." icon={<FileCheck2/>}/>
           <div className="data-grid cols-4"><Meta label="Document ID" value={liveReportMeta.documentId}/><Meta label="Owner" value={documentControl.owner}/><Meta label="Classification" value={documentControl.classification}/><Meta label="Retention" value={liveReportMeta.retention}/><Meta label="Asset Owner" value={liveReportMeta.assetOwner}/><Meta label="Security Owner" value={liveReportMeta.securityOwner}/><Meta label="Risk Owner" value={liveReportMeta.riskOwner}/><Meta label="Document Hash" value={liveReportMeta.documentHash}/></div>
@@ -283,6 +593,8 @@ function Callout({title,icon,children}){return <div className="callout"><div>{ic
 function Bar({label,value,total}){const p=Math.max(5,(value/Math.max(total,1))*100);return <div className="bar"><div><span>{label}</span><b>{value}</b></div><div className="bar-track"><i style={{width:`${p}%`}}/></div></div>}
 function KeyValue({obj}){return <dl className="kv">{Object.entries(obj).map(([k,v])=><React.Fragment key={k}><dt>{k}</dt><dd>{String(v)}</dd></React.Fragment>)}</dl>}
 function SimpleTable({headers,rows}){return <div className="table-wrap"><table><thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{rows.map((r,i)=><tr key={i}>{r.map((c,j)=><td key={j}>{c}</td>)}</tr>)}</tbody></table></div>}
+
+function PermissionMark({allowed,locale}:{allowed:boolean;locale:'en'|'fa'}){return <span className={`badge ${allowed?'verdict-pass':'verdict-fail'}`}>{allowed?(locale==='fa'?'مجاز':'Allowed'):(locale==='fa'?'غیرمجاز':'Denied')}</span>}
 
 function FindingRecord({f,expanded,onToggle}){
   return <article className={`finding-record ${expanded?'expanded':''}`} id={f.id}>
