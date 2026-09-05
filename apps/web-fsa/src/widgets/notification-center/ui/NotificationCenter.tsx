@@ -1,0 +1,550 @@
+import { useState, type KeyboardEvent, type MouseEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Badge,
+  Box,
+  Button as ChakraButton,
+  Flex,
+  HStack,
+  IconButton,
+  Popover,
+  Portal,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { useNotifications } from "@/features/notifications/model/useNotifications";
+import { useLanguage } from "@/features/language/model";
+import type {
+  AppNotification,
+  NotificationConnectionStatus,
+} from "@/entities/notification/model/notification";
+import {
+  getBrowserNotificationPermission,
+  requestBrowserNotificationPermission,
+  type BrowserNotificationPermission,
+} from "@/features/notifications/browser/browserNotification";
+
+const connectionColors: Record<NotificationConnectionStatus, string> = {
+  idle: "#86868b",
+  connecting: "var(--apple-warning-text)",
+  connected: "var(--apple-success-text)",
+  disconnected: "#86868b",
+  error: "var(--apple-danger-text)",
+};
+
+const osNotificationLabels: Record<BrowserNotificationPermission, string> = {
+  default: "Enable OS alerts",
+  denied: "OS alerts blocked",
+  granted: "OS alerts on",
+  unsupported: "OS alerts unavailable",
+};
+
+function BellIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      focusable="false"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+    >
+      <path
+        d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M13.73 21a2 2 0 0 1-3.46 0"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function NotificationTypeIcon({ notification }: { notification: AppNotification }) {
+  const type = notification.entity?.type || notification.type.split(".")[0];
+
+  if (type === "project" || type === "deployment") {
+    return (
+      <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
+        <path
+          d="M4 7.5h16M7 4v3.5M17 4v3.5M5 20h14a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1Z"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.7"
+        />
+        <path d="m9 14 2 2 4-5" stroke="currentColor" strokeWidth="1.7" />
+      </svg>
+    );
+  }
+
+  if (type === "vulnerability") {
+    return (
+      <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
+        <path
+          d="M12 3 4.5 6v5.5c0 4.7 3.2 7.8 7.5 9.5 4.3-1.7 7.5-4.8 7.5-9.5V6L12 3Z"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.7"
+        />
+        <path
+          d="M12 8v5M12 16.5v.1"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.9"
+        />
+      </svg>
+    );
+  }
+
+  if (type === "user") {
+    return (
+      <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 24 24" width="18">
+        <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.7" />
+        <path
+          d="M5 21a7 7 0 0 1 14 0"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.7"
+        />
+      </svg>
+    );
+  }
+
+  return <BellIcon size={18} />;
+}
+
+function CheckIcon() {
+  return (
+    <svg aria-hidden="true" fill="none" height="16" viewBox="0 0 24 24" width="16">
+      <path
+        d="m5 12 4.5 4.5L19 7"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2.2"
+      />
+    </svg>
+  );
+}
+
+const formatTime = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const diffSeconds = Math.round((date.getTime() - Date.now()) / 1000);
+  const formatter = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" });
+
+  if (Math.abs(diffSeconds) < 60) return formatter.format(diffSeconds, "second");
+  if (Math.abs(diffSeconds) < 3600)
+    return formatter.format(Math.round(diffSeconds / 60), "minute");
+  if (Math.abs(diffSeconds) < 86400)
+    return formatter.format(Math.round(diffSeconds / 3600), "hour");
+  if (Math.abs(diffSeconds) < 604800)
+    return formatter.format(Math.round(diffSeconds / 86400), "day");
+
+  return new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(date);
+};
+
+function NotificationItem({
+  notification,
+  onClose,
+  onMarkRead,
+}: {
+  notification: AppNotification;
+  onClose: () => void;
+  onMarkRead: (id: string) => Promise<unknown>;
+}) {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const isClickable = Boolean(notification.actionUrl);
+
+  const markReadIfNeeded = async () => {
+    if (notification.isRead) return;
+
+    try {
+      await onMarkRead(notification.id);
+    } catch {
+      // Realtime state remains optimistic; the next server sync will reconcile failures.
+    }
+  };
+
+  const handleActivate = () => {
+    void markReadIfNeeded();
+    if (notification.actionUrl) {
+      onClose();
+      navigate(notification.actionUrl);
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    handleActivate();
+  };
+
+  const handleMarkReadClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    void markReadIfNeeded();
+  };
+
+  return (
+    <Box
+      role={isClickable ? "link" : "button"}
+      tabIndex={0}
+      bg={notification.isRead ? "var(--apple-surface)" : "var(--apple-blue-soft)"}
+      borderBottomColor="var(--apple-border-soft)"
+      borderBottomWidth="1px"
+      cursor="pointer"
+      position="relative"
+      px={{ base: 3, sm: 4 }}
+      py={3.5}
+      transition="background 0.2s ease, box-shadow 0.2s ease"
+      onClick={handleActivate}
+      onKeyDown={handleKeyDown}
+      _hover={{
+        bg: notification.isRead ? "var(--apple-surface-hover)" : "var(--apple-blue-soft)",
+        boxShadow: isClickable ? "inset 3px 0 0 var(--apple-blue)" : undefined,
+      }}
+      _focusVisible={{ boxShadow: "var(--focus-ring)" }}
+    >
+      {!notification.isRead && (
+        <Box
+          aria-hidden="true"
+          bg="var(--apple-blue)"
+          borderRadius="full"
+          h="7px"
+          insetStart="7px"
+          position="absolute"
+          top="20px"
+          w="7px"
+        />
+      )}
+
+      <Flex align="flex-start" gap={3} ps={notification.isRead ? 0 : 2}>
+        <Flex
+          align="center"
+          bg="var(--apple-blue-soft)"
+          borderColor="var(--apple-blue-border)"
+          borderRadius="md"
+          borderWidth="1px"
+          color="var(--apple-blue)"
+          flexShrink={0}
+          h="40px"
+          justify="center"
+          w="40px"
+        >
+          <NotificationTypeIcon notification={notification} />
+        </Flex>
+
+        <Box flex="1" minW={0}>
+          <Flex align="flex-start" gap={2} justify="space-between">
+            <Box minW={0}>
+              <Text
+                color="var(--apple-text)"
+                fontSize="sm"
+                fontWeight={notification.isRead ? "700" : "800"}
+                lineClamp={1}
+              >
+                {notification.title}
+              </Text>
+              {notification.actor?.name && (
+                <Text color="var(--apple-muted)" fontSize="xs" mt={0.5} truncate>
+                  {notification.actor.name}
+                  {notification.actor.role ? ` / ${notification.actor.role}` : ""}
+                </Text>
+              )}
+            </Box>
+          </Flex>
+
+          <Text color="var(--apple-secondary)" fontSize="sm" lineClamp={2} lineHeight="1.55" mt={1.5}>
+            {notification.message}
+          </Text>
+
+          <Flex align="center" gap={2} justify="space-between" mt={2.5}>
+            <Text color="#86868b" fontSize="xs" fontWeight="600">
+              {formatTime(notification.createdAt)}
+            </Text>
+            <HStack gap={1}>
+              {!notification.isRead && (
+                <IconButton
+                  aria-label={t("common.read")}
+                  color="var(--apple-muted)"
+                  h="28px"
+                  minW="28px"
+                  size="xs"
+                  variant="ghost"
+                  onClick={handleMarkReadClick}
+                  _hover={{ bg: "var(--apple-success-bg)", color: "var(--apple-success-text)" }}
+                >
+                  <CheckIcon />
+                </IconButton>
+              )}
+            </HStack>
+          </Flex>
+        </Box>
+      </Flex>
+    </Box>
+  );
+}
+
+export default function NotificationCenter() {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [browserPermission, setBrowserPermission] =
+    useState<BrowserNotificationPermission>(() => getBrowserNotificationPermission());
+  const {
+    connectionStatus,
+    notifications,
+    unreadCount,
+    isLoading,
+    isMarkingAllRead,
+    markAllRead,
+    markRead,
+  } = useNotifications();
+
+  const handleEnableBrowserNotifications = async () => {
+    const permission = await requestBrowserNotificationPermission();
+    setBrowserPermission(permission);
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await markAllRead();
+    } catch {
+      // Realtime state remains optimistic; the next server sync will reconcile failures.
+    }
+  };
+
+  return (
+    <Popover.Root
+      open={isOpen}
+      onOpenChange={(details) => setIsOpen(details.open)}
+      positioning={{ placement: "bottom-end", gutter: 8 }}
+      lazyMount
+      unmountOnExit
+    >
+      <Popover.Trigger asChild>
+        <IconButton
+          aria-label={t("notifications.aria", { count: unreadCount })}
+          bg="transparent"
+          border="none"
+          borderRadius="full"
+          color={unreadCount > 0 ? "var(--apple-blue)" : "var(--apple-muted)"}
+          h="46px"
+          minW="46px"
+          position="relative"
+          transition="all 0.2s ease"
+          variant="ghost"
+          _hover={{
+            bg: "transparent",
+            color: "var(--apple-blue)",
+            transform: "scale(1.05)",
+          }}
+          _open={{
+            bg: "transparent",
+            color: "var(--apple-blue)",
+            transform: "scale(1.05)",
+          }}
+          _focusVisible={{ boxShadow: "var(--focus-ring)" }}
+        >
+          <BellIcon />
+          {unreadCount > 0 && (
+            <Flex
+              align="center"
+              bg="var(--apple-danger-text)"
+              borderColor="var(--apple-surface)"
+              borderRadius="full"
+              borderWidth="2px"
+              color="var(--apple-surface)"
+              fontSize="9px"
+              fontWeight="800"
+              h="20px"
+              justify="center"
+              minW="20px"
+              position="absolute"
+              px={1}
+              right="-6px"
+              top="-6px"
+            >
+              {unreadCount > 99 ? "99+" : unreadCount}
+            </Flex>
+          )}
+        </IconButton>
+      </Popover.Trigger>
+
+      <Portal>
+        <Popover.Positioner>
+          <Popover.Content
+            bg="var(--apple-surface-raised)"
+            borderColor="var(--apple-border)"
+            borderRadius="md"
+            borderWidth="1px"
+            boxShadow="0 24px 55px var(--apple-border)"
+            backdropFilter="blur(20px) saturate(180%)"
+            maxH="min(680px, calc(100vh - 96px))"
+            overflow="hidden"
+            width={{ base: "calc(100vw - 24px)", sm: "430px" }}
+          >
+            <Popover.Header
+              borderBottomColor="var(--apple-border-soft)"
+              borderBottomWidth="1px"
+              px={4}
+              py={3.5}
+            >
+              <Flex align="center" gap={3} justify="space-between">
+                <Box minW={0}>
+                  <HStack gap={2}>
+                    <Popover.Title color="var(--apple-text)" fontSize="md" fontWeight="800">
+                      {t("notifications.title")}
+                    </Popover.Title>
+                    {unreadCount > 0 && (
+                      <Badge
+                        bg="var(--apple-blue-soft)"
+                        border="1px solid"
+                        borderColor="var(--apple-blue-border)"
+                        color="var(--apple-blue)"
+                        size="sm"
+                        variant="subtle"
+                      >
+                        {unreadCount}
+                      </Badge>
+                    )}
+                  </HStack>
+                  <HStack gap={1.5} mt={1}>
+                    <Box
+                      bg={connectionColors[connectionStatus]}
+                      borderRadius="full"
+                      h="7px"
+                      w="7px"
+                    />
+                    <Text color="var(--apple-muted)" fontSize="xs">
+                      {t("notifications.realtimeStatus", { status: connectionStatus })}
+                    </Text>
+                  </HStack>
+                </Box>
+
+                <HStack gap={1} flexShrink={0}>
+                  {browserPermission === "default" && (
+                    <ChakraButton
+                      color="var(--apple-blue)"
+                      fontSize="xs"
+                      fontWeight="800"
+                      h="32px"
+                      px={2.5}
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleEnableBrowserNotifications}
+                      _hover={{ bg: "var(--apple-blue-soft)" }}
+                    >
+                      {osNotificationLabels[browserPermission]}
+                    </ChakraButton>
+                  )}
+                  {browserPermission !== "default" && (
+                    <Badge
+                      bg={browserPermission === "granted" ? "var(--apple-success-bg)" : "var(--apple-surface-hover)"}
+                      border="1px solid"
+                      borderColor={browserPermission === "granted" ? "var(--apple-success-border)" : "var(--apple-border-soft)"}
+                      color={browserPermission === "granted" ? "var(--apple-success-text)" : "var(--apple-muted)"}
+                      size="sm"
+                      variant="subtle"
+                    >
+                      {osNotificationLabels[browserPermission]}
+                    </Badge>
+                  )}
+                  {unreadCount > 0 && (
+                    <ChakraButton
+                      color="var(--apple-blue)"
+                      disabled={isMarkingAllRead}
+                      fontSize="xs"
+                      fontWeight="800"
+                      h="32px"
+                      px={2.5}
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleMarkAllRead}
+                      _hover={{ bg: "var(--apple-blue-soft)" }}
+                    >
+                      {isMarkingAllRead ? <Spinner size="xs" /> : <CheckIcon />}
+                      {t("notifications.markAllRead")}
+                    </ChakraButton>
+                  )}
+                  <ChakraButton
+                    color="var(--apple-blue)"
+                    fontSize="xs"
+                    fontWeight="800"
+                    h="32px"
+                    px={2.5}
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setIsOpen(false);
+                      navigate("/notifications");
+                    }}
+                  >
+                    {t("notifications.viewAll")}
+                  </ChakraButton>
+                </HStack>
+              </Flex>
+            </Popover.Header>
+
+            <Popover.Body p={0}>
+              {isLoading ? (
+                <VStack gap={3} justify="center" minH="220px">
+                  <Spinner color="var(--apple-blue)" size="md" />
+                  <Text color="var(--apple-muted)" fontSize="sm">
+                    {t("common.loading")}
+                  </Text>
+                </VStack>
+              ) : notifications.length === 0 ? (
+                <VStack gap={3} justify="center" minH="280px" px={8} textAlign="center">
+                  <Flex
+                    align="center"
+                    bg="var(--apple-blue-soft)"
+                    borderColor="var(--apple-blue-border)"
+                    borderRadius="md"
+                    borderWidth="1px"
+                    color="var(--apple-blue)"
+                    h="64px"
+                    justify="center"
+                    w="64px"
+                  >
+                    <BellIcon size={28} />
+                  </Flex>
+                  <Box>
+                    <Text color="var(--apple-text)" fontWeight="800">
+                      {t("notifications.emptyTitle")}
+                    </Text>
+                    <Text color="var(--apple-muted)" fontSize="sm" lineHeight="1.6" mt={1}>
+                      {t("notifications.emptyDescription")}
+                    </Text>
+                  </Box>
+                </VStack>
+              ) : (
+                <Box maxH="540px" overflowY="auto" overscrollBehavior="contain">
+                  {notifications.slice(0, 20).map((notification) => (
+                    <NotificationItem
+                      key={notification.id}
+                      notification={notification}
+                      onClose={() => setIsOpen(false)}
+                      onMarkRead={markRead}
+                    />
+                  ))}
+                </Box>
+              )}
+            </Popover.Body>
+          </Popover.Content>
+        </Popover.Positioner>
+      </Portal>
+    </Popover.Root>
+  );
+}

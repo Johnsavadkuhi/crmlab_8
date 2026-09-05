@@ -1,0 +1,113 @@
+import { PERMISSIONS } from "@/entities/permission/model/permissions";
+import type { Permission, Role } from "@/shared/types";
+
+export type AccessPolicy = {
+  permissions?: Permission[];
+  roles?: Role[];
+};
+
+export type DashboardAccessPolicy = AccessPolicy & {
+  path: string;
+};
+
+export const PROJECT_ACCESS_PERMISSIONS: Permission[] = [
+  PERMISSIONS.ADMIN_SYSTEM_MANAGE,
+  PERMISSIONS.SECURITY_PROJECTS_READ,
+  PERMISSIONS.QUALITY_PROJECTS_READ,
+  PERMISSIONS.PENTEST_PROJECTS_READ,
+  PERMISSIONS.QA_PROJECTS_READ,
+  PERMISSIONS.REPRESENTATIVE_PROJECTS_READ,
+];
+
+export const PROJECT_REPORT_ACCESS_PERMISSIONS: Permission[] = [
+  ...PROJECT_ACCESS_PERMISSIONS,
+  PERMISSIONS.DEVOPS_PROJECTS_READ,
+];
+
+export const DASHBOARD_ACCESS_PERMISSIONS: Permission[] = [
+  PERMISSIONS.ADMIN_SYSTEM_MANAGE,
+  PERMISSIONS.ADMIN_DASHBOARD_READ,
+  PERMISSIONS.ADMIN_USERS_READ,
+  PERMISSIONS.SECURITY_DASHBOARD_READ,
+  PERMISSIONS.SECURITY_PROJECTS_READ,
+  PERMISSIONS.QUALITY_DASHBOARD_READ,
+  PERMISSIONS.QUALITY_PROJECTS_READ,
+  PERMISSIONS.PENTEST_DASHBOARD_READ,
+  PERMISSIONS.PENTEST_PROJECTS_READ,
+  PERMISSIONS.DEVOPS_DASHBOARD_READ,
+  PERMISSIONS.DEVOPS_PROJECTS_READ,
+  PERMISSIONS.REPRESENTATIVE_DASHBOARD_READ,
+  PERMISSIONS.REPRESENTATIVE_PROJECTS_READ,
+  PERMISSIONS.QA_DASHBOARD_READ,
+  PERMISSIONS.QA_PROJECTS_READ,
+];
+
+export const ROUTE_ACCESS_POLICIES = {
+  dashboard: {
+    path: "/dashboard",
+    permissions: DASHBOARD_ACCESS_PERMISSIONS,
+  },
+  adminUsers: {
+    path: "/admin/users",
+    permissions: [PERMISSIONS.ADMIN_SYSTEM_MANAGE, PERMISSIONS.ADMIN_USERS_READ],
+  },
+  adminAuditLogs: {
+    path: "/admin/audit-logs",
+    permissions: [PERMISSIONS.ADMIN_AUDIT_READ],
+    roles: ["admin"],
+  },
+  projects: {
+    path: "/projects",
+    permissions: PROJECT_ACCESS_PERMISSIONS,
+  },
+  devopsProjects: {
+    path: "/devops",
+    permissions: [
+      PERMISSIONS.DEVOPS_DASHBOARD_READ,
+      PERMISSIONS.DEVOPS_PROJECTS_READ,
+    ],
+    roles: ["devops"],
+  },
+  projectDetails: {
+    path: "/projects/:projectId",
+    permissions: PROJECT_ACCESS_PERMISSIONS,
+  },
+  projectReport: {
+    path: "/projects/:projectId/report",
+    permissions: PROJECT_REPORT_ACCESS_PERMISSIONS,
+  },
+  pentestWorkspace: {
+    path: "/projects/pentest/:projectId",
+    permissions: [PERMISSIONS.PENTEST_PROJECTS_READ],
+  },
+  securityProjectBugs: {
+    path: "/projects/:projectId/bugs",
+    permissions: [
+      PERMISSIONS.SECURITY_VULNERABILITIES_READ,
+      PERMISSIONS.PENTEST_VULNERABILITIES_READ,
+    ],
+  },
+  securityBugDetails: {
+    path: "/projects/:projectId/bugs/:bugId",
+    permissions: [
+      PERMISSIONS.SECURITY_VULNERABILITIES_READ,
+      PERMISSIONS.PENTEST_VULNERABILITIES_READ,
+    ],
+  },
+  createProject: {
+    path: "/projects/create",
+    permissions: [PERMISSIONS.ADMIN_PROJECTS_CREATE],
+  },
+  profile: {
+    path: "/profile",
+    permissions: [],
+  },
+  settings: {
+    path: "/settings",
+    permissions: [],
+  },
+} satisfies Record<string, AccessPolicy & { path: string }>;
+
+export const DASHBOARD_ACCESS_PRIORITY: DashboardAccessPolicy[] = [
+  ROUTE_ACCESS_POLICIES.dashboard,
+];

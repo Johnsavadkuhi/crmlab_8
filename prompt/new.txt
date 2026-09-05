@@ -1,0 +1,207 @@
+Update the **Project Workspace** page so that the `FindingComposer` section displays **all findings/bugs registered for the current project by default**, without requiring the user to select a project item first.
+
+## Current Problem
+
+Currently, `FindingComposer` appears to depend on a selected item and only displays bugs/findings related to that selected item.
+
+As a result, when no item is selected, the user cannot see the bugs already registered for the project.
+
+## Required Behavior
+
+When the Project Workspace page loads:
+
+1. Fetch all findings/bugs associated with the current project or project assignment.
+2. Display all of them inside the `FindingComposer` section immediately.
+3. Do not require the user to select an item before the findings are shown.
+4. The default state of `FindingComposer` must represent the complete project-level findings list.
+
+Selecting an item may still be supported, but item selection must not be required to display the existing findings.
+
+## Filtering Behavior
+
+Use the following behavior:
+
+* When no item is selected, show all findings for the current project.
+* When an item is selected, keep showing all project findings unless the existing UI explicitly provides a separate filtering control.
+* Do not automatically hide findings that belong to other items merely because one item is selected.
+* Item selection should only be used when creating a new finding or editing its item association, if that relationship is required by the existing data model.
+
+The main findings list should remain project-wide.
+
+## Data Loading
+
+Review the existing data flow for:
+
+* `FindingComposer`
+* Project Workspace
+* Selected project item state
+* Findings API requests
+* Findings hooks, contexts, stores, or query parameters
+
+Remove any unnecessary condition similar to:
+
+```js
+if (!selectedItem) {
+  return;
+}
+```
+
+or:
+
+```js
+enabled: Boolean(selectedItemId)
+```
+
+when that condition prevents project-level findings from loading.
+
+The findings request should primarily use the current:
+
+```text
+projectId
+```
+
+or:
+
+```text
+projectAssignmentId
+```
+
+depending on the existing backend architecture.
+
+Do not use `selectedItemId` as the required identifier for fetching the complete findings list.
+
+## API Behavior
+
+Check whether the existing findings endpoint supports retrieving findings by project.
+
+Prefer reusing an existing endpoint such as:
+
+```text
+GET /findings?projectId=...
+```
+
+or its equivalent in the current codebase.
+
+When fetching the default findings list:
+
+* Filter by the current project or assignment.
+* Do not require an item ID.
+* Return findings belonging to all items in that project.
+* Include findings that may not be associated with any item, if the schema allows that.
+
+Only modify the backend if the current endpoint cannot retrieve findings at the project level.
+
+Do not create a duplicate endpoint when the existing endpoint can be extended safely.
+
+## Finding Creation
+
+Preserve the existing finding creation behavior.
+
+If creating a finding requires selecting an item:
+
+1. The user may still select an item before submitting the finding.
+2. The selected item ID can be included in the create request.
+3. After successful creation, add or refetch the new finding in the project-wide findings list.
+4. Do not replace the full findings list with only the findings of the selected item.
+
+If item association is optional, allow the finding to be created without an item according to the existing schema and validation rules.
+
+## Finding Updates and Deletion
+
+After a finding is:
+
+* Created
+* Updated
+* Resolved
+* Reopened
+* Deleted
+
+refresh or update the complete project-wide findings list.
+
+Do not refresh only a selected item's findings.
+
+Avoid duplicate findings after optimistic updates or refetching.
+
+## UI Requirements
+
+Inside `FindingComposer`:
+
+* Show all registered project findings when the page first loads.
+* Show an appropriate loading state while findings are being fetched.
+* Show the existing empty state only when the project genuinely has no findings.
+* Do not show a message such as “Select an item to view findings.”
+* Item selection must not clear the findings list.
+* Changing the selected item must not cause the complete list to disappear.
+* Preserve existing finding cards, status controls, editing, deletion, and creation UI.
+
+Where useful, each finding can continue displaying its associated item name or item identifier so the user can understand which item the finding belongs to.
+
+## State Management
+
+Separate these two concepts:
+
+```js
+selectedItem
+```
+
+and:
+
+```js
+projectFindings
+```
+
+`selectedItem` should represent the item currently selected for interaction or new finding creation.
+
+`projectFindings` should contain all findings belonging to the current project.
+
+Do not derive the entire displayed findings list exclusively from `selectedItem.findings`.
+
+Avoid code patterns where clearing `selectedItem` also clears all loaded findings.
+
+## Edge Cases
+
+Handle these cases safely:
+
+* No item is selected.
+* The project contains findings from multiple items.
+* A finding has no associated item.
+* The selected item changes.
+* The selected item is deleted or becomes unavailable.
+* The findings request fails.
+* The project has no findings.
+* A new finding is created for the currently selected item.
+* The user rapidly switches between items.
+* Existing findings API responses contain populated item objects instead of only item IDs.
+
+## Token-Efficient Implementation
+
+Keep the implementation focused and token-efficient.
+
+Inspect only files directly related to:
+
+* Project Workspace
+* `FindingComposer`
+* Findings fetching and mutations
+* Selected item state
+* Relevant findings backend controller/service, only if required
+
+Do not explore or refactor unrelated parts of the repository.
+
+Do not create new unit, integration, or end-to-end test files for this task.
+
+Run the existing type-check, lint, or build command if available, and fix only errors caused by this implementation.
+
+## Deliverables
+
+Apply the changes directly to the codebase.
+
+After implementation:
+
+1. List every modified file.
+2. Explain why findings previously required an item selection.
+3. Explain how findings are now fetched at the project level.
+4. Confirm that all project findings are displayed when no item is selected.
+5. Confirm that selecting or clearing an item no longer removes the findings list.
+6. Mention any backend changes, if they were necessary.
+
+Do not provide only instructions or sample code. Inspect the existing implementation and make the required changes directly.

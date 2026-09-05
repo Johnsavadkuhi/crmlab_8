@@ -1,0 +1,65 @@
+import type { ReactNode } from "react";
+import type { TranslationKey } from "@/features/language/model";
+import type { Project, ProjectAssignment } from "@/shared/types";
+import type { ProjectListView } from "@/shared/types/api/projects";
+
+export type Align = "start" | "center" | "end";
+export type SortDirection = "asc" | "desc";
+export type ProjectTableColumnKind =
+  | "text"
+  | "longText"
+  | "date"
+  | "user"
+  | "link"
+  | "number"
+  | "percent";
+export type ProjectTableRow = Project & Partial<ProjectAssignment>;
+
+export type ProjectTableColumn = {
+  key:
+    | keyof ProjectTableRow
+    | "summary"
+    | "pentesters"
+    | "qaUsers"
+    | "securityBugs"
+    | "report"
+    | "projectManager"
+    | "labRepresentative"
+    | "devopsResponsible";
+  label: string;
+  minW?: string;
+  maxW?: string;
+  kind?: ProjectTableColumnKind;
+  wrap?: boolean;
+  align?: Align;
+  sortable?: boolean;
+  labelKey?: TranslationKey;
+  render?: (
+    project: ProjectTableRow,
+    t: (key: TranslationKey, values?: Record<string, string | number>) => string
+  ) => ReactNode;
+  sortValue?: (project: ProjectTableRow) => string | number;
+};
+
+export type ProjectTableBaseProps = {
+  projects: ProjectTableRow[];
+  columns: ProjectTableColumn[];
+  paginationId?: string;
+  title?: string;
+  emptyTitle?: string;
+  actionLabel?: string;
+  onAction?: (project: ProjectTableRow) => void;
+  onOpenPentestWorkspace?: (project: ProjectTableRow) => void;
+  onRowClick?: (project: ProjectTableRow) => void;
+  onRowDoubleClick?: (project: ProjectTableRow) => void;
+  onCreateFromProject?: (project: ProjectTableRow) => void;
+  onAssignPentesters?: (project: ProjectTableRow) => void;
+};
+
+export type ProjectTableViewProps = {
+  view?: ProjectListView;
+  projects: ProjectTableRow[];
+  title: string;
+  onCreateFromProject?: (project: ProjectTableRow) => void;
+  onAssignPentesters?: (project: ProjectTableRow) => void;
+};

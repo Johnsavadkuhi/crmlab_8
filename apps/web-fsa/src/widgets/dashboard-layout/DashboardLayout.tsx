@@ -1,0 +1,46 @@
+import { Outlet, useLocation } from "react-router-dom";
+import { Box, Flex } from "@chakra-ui/react";
+import AuthSessionSync from "@/features/auth/ui/AuthSessionSync";
+import Sidebar from "@/widgets/sidebar/ui/Sidebar";
+import Navbar from "@/widgets/navbar/ui/Navbar";
+import { SocketProvider } from "@/shared/realtime/SocketProvider";
+import NotificationSync from "@/features/notifications/realtime/NotificationSync";
+
+export default function DashboardLayout() {
+  const location = useLocation();
+  const isProjectReport = /^\/projects\/[^/]+\/report\/?$/.test(location.pathname);
+
+  if (isProjectReport) {
+    return (
+      <Box minH="100vh" bg="var(--apple-bg)">
+        <AuthSessionSync />
+        <SocketProvider>
+          <NotificationSync />
+          <Outlet />
+        </SocketProvider>
+      </Box>
+    );
+  }
+
+  return (
+    <Flex minH="100vh" direction={{ base: "column", md: "row" }} bg="var(--apple-bg)">
+      <AuthSessionSync />
+      <SocketProvider>
+        <NotificationSync />
+        <Sidebar />
+        <Box flex="1" minW={0}>
+          <Navbar />
+          <Box
+            as="main"
+            p={{ base: 4, md: 7 }}
+            maxW="1680px"
+            mx="auto"
+            w="full"
+          >
+            <Outlet />
+          </Box>
+        </Box>
+      </SocketProvider>
+    </Flex>
+  );
+}

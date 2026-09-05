@@ -1,0 +1,159 @@
+import type {
+  ApiErrorContract,
+  AuthResponseContract,
+  RoleCatalogItemContract,
+  RolesAndPermissionsContract,
+  UploadResponseContract,
+  UserContract,
+  UserFormPayloadContract,
+  UserStatus as ContractUserStatus,
+  ProjectRowActionContract,
+  ProjectResponsibilityKey,
+  ProjectResponsibilityContextContract,
+} from "@role-dashboard/contracts";
+import type { ProjectPlatform as ApiProjectPlatform } from "@/shared/types/api/projects";
+import type {
+  Permission as AuthzPermission,
+  Role as AuthzRole,
+} from "@role-dashboard/authz";
+
+export type {
+  CertificateAuthority,
+  CreateProjectRequest,
+  CreateProjectResponse,
+  ProjectPlatform,
+  ProjectType,
+} from "@/shared/types/api/projects";
+
+export type Role = AuthzRole;
+export type Permission = AuthzPermission;
+export type UserStatus = ContractUserStatus;
+export type RoleCatalogItem = RoleCatalogItemContract;
+export type RolesAndPermissions = RolesAndPermissionsContract;
+export type User = UserContract;
+export type AuthResponse = AuthResponseContract;
+export type UploadResponse = UploadResponseContract;
+export type ApiError = ApiErrorContract;
+export type UserFormPayload = UserFormPayloadContract;
+
+export type ProjectStatus =
+  | "new"
+  | "in_progress"
+  | "pending"
+  | "planning"
+  | "active"
+  | "blocked"
+  | "review"
+  | "completed";
+export type ProjectPriority = "low" | "medium" | "high" | "critical";
+export type ProjectDiscipline = "security" | "quality" | "devops" | "platform";
+export type ProjectAssignmentRole = "pentester" | "qa" | "devops" | "manager";
+export type ProjectWorkStatus = "pending" | "in_progress" | "finished";
+export type ProjectAssignmentStatus =
+  | "new"
+  | "pending"
+  | "completed"
+  | "assigned"
+  | "in_progress"
+  | "submitted"
+  | "changes_requested"
+  | "accepted";
+
+export type Project = {
+  id: string;
+  name: string;
+  client: string;
+  projectGroupId?: string;
+  canonicalName?: string;
+  createdByUserId?: string;
+  securityManagerId?: string;
+  qualityManagerId?: string;
+  devopsAssigneeId?: string;
+  representativeId?: string;
+  assignedUserIds?: string[];
+  version?: string;
+  letterNumber?: string;
+  platform?: ApiProjectPlatform | string;
+  createdAt?: string;
+  testExpiresAt?: string;
+  deadlineEnabled?: boolean;
+  deadlinePassed?: boolean;
+  closureReason?: "deadline" | "manual";
+  discipline: ProjectDiscipline;
+  status: ProjectStatus;
+  workStatus?: ProjectWorkStatus;
+  assignmentStatus?: ProjectAssignmentStatus;
+  totalWorkTime?: number;
+  workTimerStartedAt?: string | null;
+  priority: ProjectPriority;
+  owner: string;
+  assignee: string;
+  dueDate: string;
+  progress: number;
+  riskScore: number;
+  vulnerabilities: number;
+  testCoverage: number;
+  openBugs: number;
+  environment: string;
+  repository: string;
+  pipeline: string;
+  devopsInfo?: {
+    environment?: string;
+    repository?: string;
+    pipeline?: string;
+    deploymentUrl?: string;
+    serverInventory?: string;
+    releaseBranch?: string;
+    notes?: string;
+  };
+  lastActivity: string;
+  allowedActions?: ProjectRowActionContract[];
+  myResponsibilities?: ProjectResponsibilityKey[];
+  responsibilityContext?: ProjectResponsibilityContextContract;
+  provisioningStatus?:
+    | "AWAITING_DEVOPS_SETUP"
+    | "DEVOPS_IN_PROGRESS"
+    | "DEVOPS_READY"
+    | "DEVOPS_BLOCKED"
+    | "READY_FOR_DEVOPS_RETRY";
+  provisioningAttemptNumber?: number;
+  provisioningHistory?: Array<{
+    previousStatus: string;
+    newStatus: string;
+    actingUserId: string;
+    actingUserRole: string;
+    timestamp: string;
+    notes?: string;
+    failureReason?: string;
+    technicalDescription?: string;
+    recommendedAction?: string;
+    resolutionMessage?: string;
+    evidence?: string[];
+    attemptNumber: number;
+  }>;
+  devopsConfirmedBy?: string;
+  devopsConfirmedAt?: string;
+  devopsNotes?: string;
+  devopsFailureReason?: string;
+  devopsFailureDescription?: string;
+  devopsRecommendedAction?: string;
+  devopsFailureEvidence?: string[];
+  devopsFailureAt?: string;
+  provisioningBlockedDurationMs?: number;
+  devopsResolutionMessage?: string;
+  devopsResolutionSubmittedAt?: string;
+  devopsResolutionSubmittedBy?: string;
+};
+
+export type ProjectAssignment = Project & {
+  assignmentId: string;
+  assignedUserId?: string;
+  assignmentRole: ProjectAssignmentRole;
+  assignmentStatus: ProjectAssignmentStatus;
+  assignedAt: string;
+  assignmentDueDate: string;
+  reviewer: string;
+  scope: string;
+  phase: string;
+  submittedItems: number;
+};
