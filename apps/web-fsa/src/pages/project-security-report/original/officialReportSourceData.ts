@@ -318,15 +318,117 @@ export const cvss31Reference = {
   ],
 };
 
+
+/**
+ * Page 9 source: test-result semantics, evidence, remediation / hardening fields,
+ * WAF hardening note, and the source OWASP ↔ CVSS 3.1 qualitative mapping.
+ * Persian wording below is source-locked to the supplied screenshot.
+ */
+export const testOutcomeAndHardeningSource = {
+  titleFa: 'نتیجه آزمون',
+  resultIntroFa: 'در بخش، نتیجه هر آزمون، با یکی از ۴ حالت زیر مشخص می‌شود:',
+  resultStates: [
+    {
+      code: 'PASS',
+      fa: 'به این معنی است که محصول مورد ارزیابی، مورد آزمون را برآورده کرده است.',
+    },
+    {
+      code: 'FAIL',
+      fa: 'به این معنی است که محصول مورد ارزیابی این مورد آزمون را برآورده نکرده است.',
+    },
+    {
+      code: 'Not Accessible',
+      fa: 'به معنی آن است که این آزمون به هر دلیلی از جمله درخواست کارفرما، و یا عدم وجود عملکرد مربوطه در محصول مورد ارزیابی، انجام نشده است',
+    },
+    {
+      code: 'Not Applicable',
+      fa: 'به معنی آن است که این آزمون به هر دلیلی از جمله عدم کارکرد صحیح عملکرد مربوطه در محصول مورد ارزیابی، و یا عدم وجود دسترسی کافی برای انجام آزمون، انجام نشده است.',
+    },
+    {
+      code: 'In Progress',
+      fa: 'به معنی در حال اجرا می باشد.',
+    },
+  ],
+  evidenceTitleFa: 'شواهد آزمون',
+  evidenceTextFa: 'در این بخش، شواهد مربوط به اثبات نتایج بدست آمده در هر مورد آزمون، بصورت تصویر یا عکس و یا ارجاع به پرونده‌های دیگر ارائه می‌شود.',
+  securitySolutionTitleFa: 'راهکار امنیتی',
+  securitySolutionTextFa: 'در این بخش توضیحات مربوط به آسیب پذیری سامانه و راهکارهای ایمن سازی ارائه میگردد.',
+  hardeningByTitleFa: 'امکان امن سازی توسط',
+  hardeningByTextFa: 'در این بخش مشخص می شود که آسیب پذیری از کدام یک از دو حالت زیر قابل امن سازی است:',
+  hardeningOptions: [
+    {
+      labelFa: 'تغییر در کد برنامه',
+      descriptionFa: 'به این معنی که آسیب پذیری توسط توسعه دهنده سامانه مربوطه قابل رفع است.',
+    },
+    {
+      labelFa: 'تغییر در تنظیمات وب سرور',
+      descriptionFa: 'به این معنی که آسیب پذیری توسط ارائه دهنده سرویس سامانه مربوطه قابل رفع می باشد.',
+    },
+  ],
+  wafTitleFa: 'امکان امن سازی توسط WAF',
+  wafTextFa: 'در این بخش مشخص می شود که آسیب پذیری تا چه میزان توسط WAF قابلیت پنهان سازی دارد . (به عنوان یک راهکار کوتاه مدت می باشد.)',
+  mappingIntroFa: 'در نگاشت کمی به کیفی این رتبه بندی، آسیب پذیری های بحرانی ( Critical )، پرخطر ( High )، خطرناک ( Medium ) و کم خطر (Low) با رنگ های متفاوت مشخص شده اند.',
+  rankingHeadersFa: ['رتبه‌بندی OWASP', 'بازه امتیاز CVSS'],
+  rankingRows: [
+    { owaspFa: 'بحرانی', cvssRange: '9.0 - 10' },
+    { owaspFa: 'پرخطر', cvssRange: '7.0 – 8.9' },
+    { owaspFa: 'خطرناک', cvssRange: '4.0 – 6.9' },
+    { owaspFa: 'کم‌خطر', cvssRange: '0.1 – 3.9' },
+    { owaspFa: 'قبول', cvssRange: '0.0' },
+  ],
+  sourceCaptionFa: 'جدول ۸ : راهنمای رتبه بندی CVSS3.1',
+};
+
+/**
+ * Page 10 source: penetration-test approach and assessment-team location.
+ * Persian wording below is source-locked to the supplied screenshot.
+ */
+export const penetrationTestApproachSource = {
+  approachTitleFa: '۲.۱-رویکرد آزمون نفوذ',
+  introFa: 'بر اساس میزان آگاهی اولیه‌ی نفوذگر از محیط هدف ارزیابی، آزمون به ۳ مورد جعبه سیاه، جعبه سفید و جعبه خاکستری تقسیم می‌گردد که وجه تمایز آن‌ها به قرار زیر است:',
+  boxDefinitions: [
+    {
+      labelFa: 'جعبه سفید',
+      textFa: 'نفوذگر از تمامی سازوکارهای مقصد نفوذ آگاهی دارد (اطلاعاتی نظیر: نمودار معماری شبکه، کد منبع برنامه‌ی کاربردی، حساب های ریشه و فایل های پیکربندی)',
+    },
+    {
+      labelFa: 'جعبه سیاه',
+      textFa: 'نفوذگر اطلاعاتی بیشتر از یک کاربر معمولی از مقصد نفوذ ندارد.',
+    },
+    {
+      labelFa: 'جعبه خاکستری',
+      textFa: 'نفوذگر اطلاعات محدودی از مقصد دارد و برحسب میزان اطلاعات بین دو روش قبلی قرار می گیرد.',
+    },
+  ],
+  selectedApproachFa: 'حال با توجه به اینکه اطلاعات کاربر ادمین در اختیار تیم ارزیاب بوده است، این ارزیابی در طیف جعبه خاکستری قرار می گیرد.',
+  testTypesTitleFa: 'انواع تست نفوذ',
+  reviewedHeadingFa: 'موارد بررسی شده',
+  approvalHeadingFa: 'تایید',
+  testTypes: [
+    { labelFa: 'تست جعبه سیاه', approved: false },
+    { labelFa: 'تست جعبه خاکستری', approved: true },
+    { labelFa: 'تست جعبه سفید', approved: false },
+  ],
+  sourceCaptionFa: 'جدول ۱۱ : انواع تست نفوذ',
+  locationTitleFa: '۲.۲-مکان گروه ارزیاب',
+  locationIntroFa: 'جایگاه تیم ارزیاب به دو شکل کلی بوده است:',
+  locationItemsFa: [
+    'داخل سازمان کارفرما و دسترسی به پرتال خدمات غیر حضوری مانند دیگر کارکنان عمومی سازمان',
+    'خارج از سازمان، مانند کاربران عمومی پرتال',
+    'مکان آزمون آزمایشگاه امنیت و کیفیت نرم افزار بانک ملی ایران با سطح دسترسی داخلی/خارجی',
+  ],
+};
+
 /**
  * Items observed in the source that may look unusual but are intentionally not
  * changed without source-owner approval. This object is not rendered in the report.
  */
 export const sourceTranscriptionAudit = {
   verifiedAgainstScreenshots: true,
-  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8],
+  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   preservedSourceAnomalies: [
     'Tester row 2 assessment-end date is shown as ۱۳۴۸/۱۰/۱۱ in the supplied source.',
     'The English copyright block visibly contains joined words: 2024Corporation, orreduced, tothe, orthe, toCorporation.',
+    'The test-result source sentence says «یکی از ۴ حالت» while five result states are visibly listed; this source-side inconsistency is preserved.',
   ],
 };

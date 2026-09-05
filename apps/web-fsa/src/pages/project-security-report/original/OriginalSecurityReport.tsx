@@ -18,7 +18,8 @@ import {
   officialDocumentProfile, reportQualityControl, assessmentPersonnelHistoryCaptionFa, assessmentPersonnelHistory, publicationRights,
   assessmentBasisAndRiskDefinitions, severityDefinitionRows, documentAccessControl,
   vulnerabilityIdentification, vulnerabilityIdentificationMethods,
-  testItemStructureSource, testItemStructure, cvss31Reference
+  testItemStructureSource, testItemStructure, cvss31Reference,
+  testOutcomeAndHardeningSource, penetrationTestApproachSource
 } from './officialReportSourceData';
 
 const slug = v => String(v || '').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
@@ -51,6 +52,8 @@ const TOC = [
   ['F6','Document Access Control & Vulnerability Identification','document-access-identification'],
   ['F7','Test Item Structure & CVSS Reference','test-structure-cvss'],
   ['F8','CVSS 3.1 Parameter Values','cvss31-parameter-values'],
+  ['F9','Test Result, Evidence & Hardening','test-result-evidence-hardening'],
+  ['F10','Penetration Test Approach & Assessment Team Location','penetration-test-approach-location'],
   ['01','Document Control & Governance','document-control'],['02','Executive Summary','executive'],
   ['03','Assessment Context & Objectives','context'],['04','Scope & Rules of Engagement','scope'],
   ['05','Methodology & Scientific Assurance','methodology'],['06','Standards Baseline','standards'],
@@ -449,6 +452,116 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                   <div className="chip-row">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
                 ])}
               />
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="test-result-evidence-hardening">
+          <SectionHeading
+            num="F9"
+            title={locale === 'fa' ? testOutcomeAndHardeningSource.titleFa : 'Test Result, Evidence & Hardening'}
+            subtitle={locale === 'fa' ? 'متن مندرج در مستند مبنا؛ بدون بازنویسی محتوایی.' : 'Source-controlled result semantics, evidence, remediation and hardening guidance.'}
+            icon={<ShieldCheck/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <h3>{testOutcomeAndHardeningSource.titleFa}:</h3>
+              <p>{testOutcomeAndHardeningSource.resultIntroFa}</p>
+              <ul>
+                {testOutcomeAndHardeningSource.resultStates.map(x=><li key={x.code}><strong dir="ltr">{x.code}:</strong> {x.fa}</li>)}
+              </ul>
+
+              <h3>{testOutcomeAndHardeningSource.evidenceTitleFa}:</h3>
+              <p>{testOutcomeAndHardeningSource.evidenceTextFa}</p>
+
+              <h3>{testOutcomeAndHardeningSource.securitySolutionTitleFa}:</h3>
+              <p>{testOutcomeAndHardeningSource.securitySolutionTextFa}</p>
+
+              <h3>{testOutcomeAndHardeningSource.hardeningByTitleFa}:</h3>
+              <p>{testOutcomeAndHardeningSource.hardeningByTextFa}</p>
+              <ul>
+                {testOutcomeAndHardeningSource.hardeningOptions.map(x=><li key={x.labelFa}><strong>{x.labelFa}</strong> ({x.descriptionFa})</li>)}
+              </ul>
+
+              <h3>{testOutcomeAndHardeningSource.wafTitleFa}:</h3>
+              <p>{testOutcomeAndHardeningSource.wafTextFa}</p>
+
+              <p>{testOutcomeAndHardeningSource.mappingIntroFa}</p>
+              <SimpleTable
+                headers={testOutcomeAndHardeningSource.rankingHeadersFa}
+                rows={testOutcomeAndHardeningSource.rankingRows.map(x=>[
+                  <strong>{x.owaspFa}</strong>,
+                  <span dir="ltr">{x.cvssRange}</span>
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{testOutcomeAndHardeningSource.sourceCaptionFa}</p>
+            </div>
+          ) : (
+            <>
+              <h3>Result States</h3>
+              <SimpleTable
+                headers={['State','Meaning']}
+                rows={testOutcomeAndHardeningSource.resultStates.map(x=>[
+                  <span dir="ltr">{x.code}</span>,
+                  <span dir="rtl" lang="fa">{x.fa}</span>
+                ])}
+              />
+              <Callout title="Evidence & Security Guidance" icon={<ShieldCheck/>}>
+                Source-controlled Persian wording is preserved in the Persian report view for test evidence, security guidance, hardening ownership and WAF-based short-term mitigation.
+              </Callout>
+              <SimpleTable
+                headers={['OWASP Rating','CVSS Score Range']}
+                rows={testOutcomeAndHardeningSource.rankingRows.map(x=>[x.owaspFa,<span dir="ltr">{x.cvssRange}</span>])}
+              />
+            </>
+          )}
+        </section>
+
+        <section className="report-page" id="penetration-test-approach-location">
+          <SectionHeading
+            num="F10"
+            title={locale === 'fa' ? penetrationTestApproachSource.approachTitleFa : 'Penetration Test Approach & Assessment Team Location'}
+            subtitle={locale === 'fa' ? 'متن و نتیجه انتخاب رویکرد آزمون نفوذ مطابق مستند مبنا.' : 'Source-controlled penetration-test approach and assessor-location record.'}
+            icon={<Radar/>}
+          />
+          {locale === 'fa' ? (
+            <div data-source-literal="true" dir="rtl">
+              <h3>{penetrationTestApproachSource.approachTitleFa}</h3>
+              <p>{penetrationTestApproachSource.introFa}</p>
+              {penetrationTestApproachSource.boxDefinitions.map(x=><p key={x.labelFa}><strong>{x.labelFa} :</strong> {x.textFa}</p>)}
+              <p>{penetrationTestApproachSource.selectedApproachFa}</p>
+
+              <h3>{penetrationTestApproachSource.testTypesTitleFa}</h3>
+              <SimpleTable
+                headers={[penetrationTestApproachSource.reviewedHeadingFa, penetrationTestApproachSource.approvalHeadingFa]}
+                rows={penetrationTestApproachSource.testTypes.map(x=>[
+                  x.labelFa,
+                  <span>{x.approved ? '✓' : '×'}</span>
+                ])}
+              />
+              <p className="muted" style={{textAlign:'center'}}>{penetrationTestApproachSource.sourceCaptionFa}</p>
+
+              <h3>{penetrationTestApproachSource.locationTitleFa}</h3>
+              <p>{penetrationTestApproachSource.locationIntroFa}</p>
+              <ul>
+                {penetrationTestApproachSource.locationItemsFa.map(x=><li key={x}>{x}</li>)}
+              </ul>
+            </div>
+          ) : (
+            <>
+              <h3>Penetration-Test Knowledge Model</h3>
+              <SimpleTable
+                headers={['Approach','Source Definition']}
+                rows={penetrationTestApproachSource.boxDefinitions.map(x=>[
+                  x.labelFa,
+                  <span dir="rtl" lang="fa">{x.textFa}</span>
+                ])}
+              />
+              <Callout title="Selected Approach" icon={<Radar/>}>
+                Gray-box testing is the selected source-recorded approach because administrator account information was available to the assessment team.
+              </Callout>
+              <h3>Assessment Team Location</h3>
+              <ul>{penetrationTestApproachSource.locationItemsFa.map(x=><li dir="rtl" lang="fa" key={x}>{x}</li>)}</ul>
             </>
           )}
         </section>
