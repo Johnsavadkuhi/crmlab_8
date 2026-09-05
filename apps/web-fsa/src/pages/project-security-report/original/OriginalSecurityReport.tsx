@@ -19,7 +19,9 @@ import {
   assessmentBasisAndRiskDefinitions, severityDefinitionRows, documentAccessControl,
   vulnerabilityIdentification, vulnerabilityIdentificationMethods,
   testItemStructureSource, testItemStructure, cvss31Reference,
-  testOutcomeAndHardeningSource, penetrationTestApproachSource
+  testOutcomeAndHardeningSource, penetrationTestApproachSource,
+  iso15408_2026Baseline, iso15408_2026FunctionalClasses, iso15408LegacyBaseFamilyResults,
+  iso15408LegacyExtendedRequirements, iso15408_2026StandardsResearchAudit
 } from './officialReportSourceData';
 
 const slug = v => String(v || '').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
@@ -54,6 +56,7 @@ const TOC = [
   ['F8','CVSS 3.1 Parameter Values','cvss31-parameter-values'],
   ['F9','Test Result, Evidence & Hardening','test-result-evidence-hardening'],
   ['F10','Penetration Test Approach & Assessment Team Location','penetration-test-approach-location'],
+  ['F11','ISO/IEC 15408:2026 Functional Requirements Baseline','iso15408-2026-requirements'],
   ['01','Document Control & Governance','document-control'],['02','Executive Summary','executive'],
   ['03','Assessment Context & Objectives','context'],['04','Scope & Rules of Engagement','scope'],
   ['05','Methodology & Scientific Assurance','methodology'],['06','Standards Baseline','standards'],
@@ -64,6 +67,15 @@ const TOC = [
   ['15','Limitations & Assurance','limitations'],['A','Evidence Annex','evidence'],
   ['B','Registers & Data Dictionary','registers']
 ];
+
+const ISO15408_LEGACY_PASS = new Set(iso15408LegacyBaseFamilyResults.pass);
+const ISO15408_LEGACY_FAIL = new Set(iso15408LegacyBaseFamilyResults.fail);
+
+function iso15408FamilyStatus(code: string, locale: 'en' | 'fa') {
+  if (ISO15408_LEGACY_PASS.has(code)) return { label: locale === 'fa' ? 'PASS قدیمی — نیازمند بازتأیید 2026' : 'Legacy PASS — revalidation required', className: 'badge verdict-pass' };
+  if (ISO15408_LEGACY_FAIL.has(code)) return { label: locale === 'fa' ? 'FAIL قدیمی — نیازمند بازتأیید 2026' : 'Legacy FAIL — revalidation required', className: 'badge verdict-fail' };
+  return { label: locale === 'fa' ? 'نیازمند ارزیابی / تعیین قابلیت اعمال' : 'Assessment / applicability pending', className: 'badge verdict-na' };
+}
 
 export default function OriginalSecurityReport({ projectMeta, onBack, locale, onToggleLocale }: { projectMeta?: Record<string, unknown>; onBack: () => void; locale: "en" | "fa"; onToggleLocale: () => void }){
   const liveReportMeta = useMemo(() => ({ ...reportMeta, ...(projectMeta || {}) }), [projectMeta]);
@@ -566,6 +578,91 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
           )}
         </section>
 
+        <section className="report-page" id="iso15408-2026-requirements">
+          <SectionHeading
+            num="F11"
+            title={locale === 'fa' ? 'خط مبنای الزامات کارکردی ISO/IEC 15408:2026' : 'ISO/IEC 15408:2026 Functional Requirements Baseline'}
+            subtitle={locale === 'fa' ? 'فهرست جاری خانواده‌های الزامات کارکردی بر اساس ISO/IEC 15408-2:2026؛ با تفکیک نتایج قدیمی از وضعیت ارزیابی 2026.' : 'Current ISO/IEC 15408-2:2026 functional-family catalogue with legacy results explicitly separated from 2026 assessment status.'}
+            icon={<ListChecks/>}
+          />
+          {locale === 'fa' ? (
+            <div dir="rtl">
+              <div className="data-grid cols-4">
+                <Meta label="خط مبنای جاری" value={iso15408_2026Baseline.currentPart2}/>
+                <Meta label="ویرایش" value={iso15408_2026Baseline.edition}/>
+                <Meta label="تعداد کلاس‌های کارکردی" value={iso15408_2026StandardsResearchAudit.classCount}/>
+                <Meta label="تعداد خانواده‌های الزامات" value={iso15408_2026StandardsResearchAudit.familyCount}/>
+              </div>
+
+              <Callout title="وضعیت نسخه استاندارد" icon={<BookOpen/>}>{iso15408_2026Baseline.revisionNoteFa}</Callout>
+              <Callout title="قاعده مهم قابلیت اعمال" icon={<AlertTriangle/>}>{iso15408_2026Baseline.applicabilityNoteFa}</Callout>
+
+              <h3>خط مبنای جاری مجموعه استاندارد ISO/IEC 15408</h3>
+              <SimpleTable
+                headers={['مرجع استاندارد','ویرایش','تاریخ انتشار','کاربرد در گزارش']}
+                rows={iso15408_2026Baseline.seriesParts.map(x=>[
+                  <span dir="ltr">{x.reference}</span>,
+                  <span dir="ltr">{x.edition}</span>,
+                  <span dir="ltr">{x.publication}</span>,
+                  x.purposeFa
+                ])}
+              />
+
+              <h3>خانواده‌های الزامات کارکردی ISO/IEC 15408-2:2026</h3>
+              <p>{iso15408_2026Baseline.resultCarryForwardNoteFa}</p>
+
+              {iso15408_2026FunctionalClasses.map(group=><div key={group.classCode} style={{marginTop:18}}>
+                <h3><span dir="ltr">{group.classCode}</span> — {group.classNameFa}</h3>
+                <SimpleTable
+                  headers={['کد خانواده الزام','شرح فارسی','بند در ISO/IEC 15408-2:2026','وضعیت در این گزارش']}
+                  rows={group.families.map(f=>{
+                    const status=iso15408FamilyStatus(f.code,'fa');
+                    return [
+                      <strong dir="ltr">{f.code}</strong>,
+                      f.nameFa,
+                      <span dir="ltr">{f.clause}</span>,
+                      <span className={status.className}>{status.label}</span>
+                    ];
+                  })}
+                />
+              </div>)}
+
+              <Callout title="تفکیک الزامات توسعه‌یافته از کاتالوگ پایه" icon={<FileSearch/>}>{iso15408_2026Baseline.extendedRequirementsNoteFa}</Callout>
+              <SimpleTable
+                headers={['کد توسعه‌یافته مشاهده‌شده در مستند قدیمی','نتیجه قدیمی','وضعیت در خط مبنای 2026']}
+                rows={iso15408LegacyExtendedRequirements.map(x=>[
+                  <strong dir="ltr">{x.code}</strong>,
+                  <span className="badge verdict-pass">{locale === 'fa' ? `${x.legacyResult} قدیمی — نیازمند بازتأیید 2026` : `Legacy ${x.legacyResult} — revalidation required`}</span>,
+                  x.noteFa
+                ])}
+              />
+            </div>
+          ) : (
+            <>
+              <div className="data-grid cols-4">
+                <Meta label="Current baseline" value={iso15408_2026Baseline.currentPart2}/>
+                <Meta label="Edition" value={iso15408_2026Baseline.edition}/>
+                <Meta label="Functional classes" value={iso15408_2026StandardsResearchAudit.classCount}/>
+                <Meta label="Requirement families" value={iso15408_2026StandardsResearchAudit.familyCount}/>
+              </div>
+              <SimpleTable
+                headers={['Standard','Edition','Publication','Report role']}
+                rows={iso15408_2026Baseline.seriesParts.map(x=>[x.reference,x.edition,x.publication,x.purposeEn])}
+              />
+              {iso15408_2026FunctionalClasses.map(group=><div key={group.classCode} style={{marginTop:18}}>
+                <h3>{group.classCode}</h3>
+                <SimpleTable
+                  headers={['Family','Clause','Assessment status']}
+                  rows={group.families.map(f=>{
+                    const status=iso15408FamilyStatus(f.code,'en');
+                    return [<strong>{f.code}</strong>,f.clause,<span className={status.className}>{status.label}</span>];
+                  })}
+                />
+              </div>)}
+            </>
+          )}
+        </section>
+
         <section className="report-page" id="document-control">
           <SectionHeading num="01" title="Document Control & Governance" subtitle="Identity, ownership, handling, versioning, approvals and distribution of the controlled engineering record." icon={<FileCheck2/>}/>
           <div className="data-grid cols-4"><Meta label="Document ID" value={liveReportMeta.documentId}/><Meta label="Owner" value={documentControl.owner}/><Meta label="Classification" value={documentControl.classification}/><Meta label="Retention" value={liveReportMeta.retention}/><Meta label="Asset Owner" value={liveReportMeta.assetOwner}/><Meta label="Security Owner" value={liveReportMeta.securityOwner}/><Meta label="Risk Owner" value={liveReportMeta.riskOwner}/><Meta label="Document Hash" value={liveReportMeta.documentHash}/></div>
@@ -618,6 +715,10 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
 
         <section className="report-page" id="standards">
           <SectionHeading num="06" title="Standards Baseline" subtitle="Version-pinned references used for testing, classification, severity, risk and handling." icon={<BookOpen/>}/>
+          <Callout title={locale === 'fa' ? 'خط مبنای جاری ISO/IEC 15408' : 'Current ISO/IEC 15408 baseline'} icon={<BookOpen/>}>
+            {locale === 'fa' ? `خط مبنای این گزارش برای مجموعه ISO/IEC 15408 به نسخه‌های 2026 به‌روزرسانی شده است. بخش 2 جاری: ${iso15408_2026Baseline.currentPart2}.` : `The ISO/IEC 15408 baseline is pinned to the 2026 editions. Current Part 2: ${iso15408_2026Baseline.currentPart2}.`}
+          </Callout>
+          <SimpleTable headers={locale === 'fa' ? ['مرجع','ویرایش','انتشار','کاربرد'] : ['Reference','Edition','Publication','Purpose']} rows={iso15408_2026Baseline.seriesParts.map(x=>[x.reference,x.edition,x.publication,locale === 'fa' ? x.purposeFa : x.purposeEn])}/>
           <SimpleTable headers={['ID','Reference','Version','Purpose','Use in Report']} rows={standards.map(s=>[s.id,s.name,s.version,s.purpose,s.use])}/>
           <Callout title="Version Pinning Rule" icon={<FileSearch/>}>Every assessment records the exact baseline used. Production implementation should never reference an unversioned external standard where identifiers or requirements may change.</Callout>
           <h3>Tools & Instrumentation Register</h3><SimpleTable headers={['Tool','Version','Purpose','Operator']} rows={tools.map(t=>[t.name,t.version,t.purpose,t.operator])}/>

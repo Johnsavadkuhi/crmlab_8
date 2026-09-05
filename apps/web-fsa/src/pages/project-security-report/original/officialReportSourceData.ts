@@ -419,16 +419,202 @@ export const penetrationTestApproachSource = {
   ],
 };
 
+
+/**
+ * Current ISO/IEC 15408 baseline researched for the 2026 report update.
+ * The family codes and clause locations below are identifiers/catalogue metadata,
+ * not reproductions of the normative requirement text.
+ * Persian labels are internal report translations and are not asserted to be an
+ * official Persian translation of ISO/IEC 15408.
+ */
+export const iso15408_2026Baseline = {
+  researchedOn: '2026-09-05',
+  currentPart2: 'ISO/IEC 15408-2:2026',
+  edition: '5',
+  publication: '2026-05',
+  titleFa: 'خط مبنای جاری الزامات کارکردی ISO/IEC 15408 در سال 2026',
+  revisionNoteFa: 'ISO/IEC 15408-2:2026 جایگزین نسخه 2022 شده و یک بازنگری فنی است. ساختار سند بازآرایی شده، اصطلاحات و روابط وابستگی و سلسله‌مراتب مؤلفه‌ها بازبینی شده و یادداشت‌های جدید مربوط به عملیات الزامات افزوده شده است.',
+  applicabilityNoteFa: 'وجود یک خانواده الزام در کاتالوگ ISO/IEC 15408-2 به معنی قابل‌اعمال بودن خودکار آن برای هر محصول نیست. الزامات قابل‌اعمال باید بر اساس TOE و Security Target و در صورت استفاده، Protection Profile یا Package مربوط انتخاب و سپس ارزیابی شوند.',
+  resultCarryForwardNoteFa: 'نتایج PASS/FAIL که در جدول زیر نمایش داده می‌شوند فقط از مستند مبنای قدیمی منتقل شده‌اند. این نتایج برای ادعای انطباق با نسخه 2026 باید در خط مبنای جدید دوباره تأیید یا بازآزمایی شوند. مواردی که نتیجه قدیمی قابل استناد برای آن‌ها در تصاویر موجود نیست با وضعیت «نیازمند ارزیابی» نمایش داده می‌شوند.',
+  extendedRequirementsNoteFa: 'کدهای دارای پسوند _EXT که در گزارش قدیمی دیده می‌شوند جزء خانواده‌های پایه کاتالوگ ISO/IEC 15408-2:2026 نیستند. این موارد باید فقط در صورت تعریف در Protection Profile، PP-Module، Functional Package یا Security Target پروژه به عنوان الزام توسعه‌یافته نگهداری و ارزیابی شوند.',
+  seriesParts: [
+    { reference: 'ISO/IEC 15408-1:2026', edition: '5', publication: '2026-05', purposeFa: 'مقدمه و مدل عمومی ارزیابی امنیت فناوری اطلاعات', purposeEn: 'Introduction and general evaluation model' },
+    { reference: 'ISO/IEC 15408-2:2026', edition: '5', publication: '2026-05', purposeFa: 'مؤلفه‌ها و کاتالوگ الزامات کارکردی امنیتی', purposeEn: 'Security functional components and catalogue' },
+    { reference: 'ISO/IEC 15408-3:2026', edition: '5', publication: '2026-05', purposeFa: 'مؤلفه‌های الزامات اطمینان امنیتی', purposeEn: 'Security assurance components' },
+    { reference: 'ISO/IEC 15408-4:2026', edition: '2', publication: '2026-05', purposeFa: 'چارچوب تعیین روش‌ها و فعالیت‌های ارزیابی', purposeEn: 'Framework for evaluation methods and activities' },
+    { reference: 'ISO/IEC 15408-5:2026', edition: '2', publication: '2026-04', purposeFa: 'بسته‌های از پیش تعریف‌شده الزامات امنیتی', purposeEn: 'Pre-defined packages of security requirements' },
+  ],
+};
+
+export const iso15408_2026FunctionalClasses = [
+  {
+    classCode: 'FAU', classNameFa: 'ممیزی امنیتی', clause: '8', families: [
+      { code: 'FAU_ARP', clause: '8.3', nameFa: 'پاسخ خودکار به رویدادهای ممیزی امنیتی' },
+      { code: 'FAU_GEN', clause: '8.4', nameFa: 'تولید داده‌های ممیزی امنیتی' },
+      { code: 'FAU_SAA', clause: '8.5', nameFa: 'تحلیل داده‌های ممیزی امنیتی' },
+      { code: 'FAU_SAR', clause: '8.6', nameFa: 'بازبینی داده‌های ممیزی امنیتی' },
+      { code: 'FAU_SEL', clause: '8.7', nameFa: 'انتخاب رویدادهای ممیزی امنیتی' },
+      { code: 'FAU_STG', clause: '8.8', nameFa: 'ذخیره‌سازی و حفاظت از داده‌های ممیزی امنیتی' },
+    ],
+  },
+  {
+    classCode: 'FCO', classNameFa: 'ارتباطات', clause: '9', families: [
+      { code: 'FCO_NRO', clause: '9.3', nameFa: 'عدم انکار مبدأ' },
+      { code: 'FCO_NRR', clause: '9.4', nameFa: 'عدم انکار دریافت' },
+    ],
+  },
+  {
+    classCode: 'FCS', classNameFa: 'پشتیبانی رمزنگاری', clause: '10', families: [
+      { code: 'FCS_CKM', clause: '10.3', nameFa: 'مدیریت کلیدهای رمزنگاری' },
+      { code: 'FCS_COP', clause: '10.4', nameFa: 'عملیات رمزنگاری' },
+      { code: 'FCS_RBG', clause: '10.5', nameFa: 'تولید بیت تصادفی' },
+      { code: 'FCS_RNG', clause: '10.6', nameFa: 'تولید عدد تصادفی' },
+    ],
+  },
+  {
+    classCode: 'FDP', classNameFa: 'حفاظت از داده‌های کاربر', clause: '11', families: [
+      { code: 'FDP_ACC', clause: '11.3', nameFa: 'سیاست کنترل دسترسی' },
+      { code: 'FDP_ACF', clause: '11.4', nameFa: 'توابع کنترل دسترسی' },
+      { code: 'FDP_DAU', clause: '11.5', nameFa: 'اصالت‌سنجی داده‌ها' },
+      { code: 'FDP_ETC', clause: '11.6', nameFa: 'خروج داده از TOE' },
+      { code: 'FDP_IFC', clause: '11.7', nameFa: 'سیاست کنترل جریان اطلاعات' },
+      { code: 'FDP_IFF', clause: '11.8', nameFa: 'توابع کنترل جریان اطلاعات' },
+      { code: 'FDP_IRC', clause: '11.9', nameFa: 'کنترل نگهداری اطلاعات' },
+      { code: 'FDP_ITC', clause: '11.10', nameFa: 'ورود داده از خارج TOE' },
+      { code: 'FDP_ITT', clause: '11.11', nameFa: 'انتقال داخلی داده در TOE' },
+      { code: 'FDP_RIP', clause: '11.12', nameFa: 'حفاظت از اطلاعات باقیمانده' },
+      { code: 'FDP_ROL', clause: '11.13', nameFa: 'بازگردانی عملیات و داده' },
+      { code: 'FDP_SDC', clause: '11.14', nameFa: 'محرمانگی داده‌های ذخیره‌شده' },
+      { code: 'FDP_SDI', clause: '11.15', nameFa: 'یکپارچگی داده‌های ذخیره‌شده' },
+      { code: 'FDP_UCT', clause: '11.16', nameFa: 'حفاظت از محرمانگی انتقال داده کاربر بین TSFها' },
+      { code: 'FDP_UIT', clause: '11.17', nameFa: 'حفاظت از یکپارچگی انتقال داده کاربر بین TSFها' },
+    ],
+  },
+  {
+    classCode: 'FIA', classNameFa: 'شناسایی و احراز هویت', clause: '12', families: [
+      { code: 'FIA_AFL', clause: '12.3', nameFa: 'مدیریت شکست‌های احراز هویت' },
+      { code: 'FIA_API', clause: '12.4', nameFa: 'اثبات هویت در فرایند احراز هویت' },
+      { code: 'FIA_ATD', clause: '12.5', nameFa: 'تعریف ویژگی‌های کاربر' },
+      { code: 'FIA_SOS', clause: '12.6', nameFa: 'مشخص‌سازی و کنترل اسرار احراز هویت' },
+      { code: 'FIA_UAU', clause: '12.7', nameFa: 'احراز هویت کاربر' },
+      { code: 'FIA_UID', clause: '12.8', nameFa: 'شناسایی کاربر' },
+      { code: 'FIA_USB', clause: '12.9', nameFa: 'پیوند کاربر و موضوع امنیتی' },
+    ],
+  },
+  {
+    classCode: 'FMT', classNameFa: 'مدیریت امنیت', clause: '13', families: [
+      { code: 'FMT_LIM', clause: '13.3', nameFa: 'محدودسازی قابلیت‌ها و دسترس‌پذیری' },
+      { code: 'FMT_MOF', clause: '13.4', nameFa: 'مدیریت رفتار توابع امنیتی TSF' },
+      { code: 'FMT_MSA', clause: '13.5', nameFa: 'مدیریت ویژگی‌های امنیتی' },
+      { code: 'FMT_MTD', clause: '13.6', nameFa: 'مدیریت داده‌های TSF' },
+      { code: 'FMT_REV', clause: '13.7', nameFa: 'ابطال مجوزها و ویژگی‌های امنیتی' },
+      { code: 'FMT_SAE', clause: '13.8', nameFa: 'انقضای ویژگی‌های امنیتی' },
+      { code: 'FMT_SMF', clause: '13.9', nameFa: 'مشخص‌سازی توابع مدیریتی' },
+      { code: 'FMT_SMR', clause: '13.10', nameFa: 'نقش‌های مدیریت امنیت' },
+    ],
+  },
+  {
+    classCode: 'FPR', classNameFa: 'حریم خصوصی', clause: '14', families: [
+      { code: 'FPR_ANO', clause: '14.3', nameFa: 'ناشناس‌بودن' },
+      { code: 'FPR_PSE', clause: '14.4', nameFa: 'استفاده از نام مستعار' },
+      { code: 'FPR_UNL', clause: '14.5', nameFa: 'غیرقابل‌پیوند بودن فعالیت‌ها' },
+      { code: 'FPR_UNO', clause: '14.6', nameFa: 'غیرقابل‌مشاهده بودن فعالیت‌ها' },
+    ],
+  },
+  {
+    classCode: 'FPT', classNameFa: 'حفاظت از TSF', clause: '15', families: [
+      { code: 'FPT_EMS', clause: '15.3', nameFa: 'کنترل نشت و انتشار ناخواسته داده از TOE' },
+      { code: 'FPT_FLS', clause: '15.4', nameFa: 'حفظ حالت امن در هنگام خطا' },
+      { code: 'FPT_INI', clause: '15.5', nameFa: 'مقداردهی اولیه TSF' },
+      { code: 'FPT_ITA', clause: '15.6', nameFa: 'دسترس‌پذیری داده‌های TSF صادرشده' },
+      { code: 'FPT_ITC', clause: '15.7', nameFa: 'محرمانگی داده‌های TSF صادرشده' },
+      { code: 'FPT_ITI', clause: '15.8', nameFa: 'یکپارچگی داده‌های TSF صادرشده' },
+      { code: 'FPT_ITT', clause: '15.9', nameFa: 'حفاظت از انتقال داخلی داده‌های TSF در TOE' },
+      { code: 'FPT_PHP', clause: '15.10', nameFa: 'حفاظت فیزیکی TSF' },
+      { code: 'FPT_RCV', clause: '15.11', nameFa: 'بازیابی مورد اعتماد' },
+      { code: 'FPT_RPL', clause: '15.12', nameFa: 'تشخیص حمله بازپخش' },
+      { code: 'FPT_SSP', clause: '15.13', nameFa: 'پروتکل همگامی وضعیت' },
+      { code: 'FPT_STM', clause: '15.14', nameFa: 'مهر زمانی و منبع زمان قابل اعتماد' },
+      { code: 'FPT_TDC', clause: '15.15', nameFa: 'سازگاری داده‌های TSF میان TSFها' },
+      { code: 'FPT_TEE', clause: '15.16', nameFa: 'آزمون موجودیت‌های خارجی' },
+      { code: 'FPT_TRC', clause: '15.17', nameFa: 'سازگاری تکثیر داده‌های TSF در داخل TOE' },
+      { code: 'FPT_TST', clause: '15.18', nameFa: 'خودآزمایی TSF' },
+    ],
+  },
+  {
+    classCode: 'FRU', classNameFa: 'استفاده از منابع', clause: '16', families: [
+      { code: 'FRU_FLT', clause: '16.3', nameFa: 'تحمل خطا' },
+      { code: 'FRU_PRS', clause: '16.4', nameFa: 'اولویت ارائه خدمت' },
+      { code: 'FRU_RSA', clause: '16.5', nameFa: 'تخصیص منابع' },
+    ],
+  },
+  {
+    classCode: 'FTA', classNameFa: 'دسترسی به TOE', clause: '17', families: [
+      { code: 'FTA_LSA', clause: '17.3', nameFa: 'محدودسازی دامنه ویژگی‌های قابل انتخاب' },
+      { code: 'FTA_MCS', clause: '17.4', nameFa: 'محدودسازی نشست‌های همزمان' },
+      { code: 'FTA_SSL', clause: '17.5', nameFa: 'قفل و خاتمه نشست' },
+      { code: 'FTA_TAB', clause: '17.6', nameFa: 'بنرها و پیام‌های دسترسی TOE' },
+      { code: 'FTA_TAH', clause: '17.7', nameFa: 'سابقه دسترسی به TOE' },
+      { code: 'FTA_TSE', clause: '17.8', nameFa: 'برقراری نشست TOE' },
+    ],
+  },
+  {
+    classCode: 'FTP', classNameFa: 'مسیرها و کانال‌های مورد اعتماد', clause: '18', families: [
+      { code: 'FTP_ITC', clause: '18.3', nameFa: 'کانال مورد اعتماد بین TSFها' },
+      { code: 'FTP_PRO', clause: '18.4', nameFa: 'پروتکل کانال مورد اعتماد' },
+      { code: 'FTP_TRP', clause: '18.5', nameFa: 'مسیر مورد اعتماد' },
+    ],
+  },
+];
+
+/**
+ * Historical result marks visible in the supplied legacy ISO/IEC 15408 report
+ * screenshots. They are carried only as legacy evidence and are not treated as
+ * a 2026 conformance claim without revalidation.
+ */
+export const iso15408LegacyBaseFamilyResults = {
+  pass: [
+    'FAU_GEN','FAU_STG','FAU_SAR','FAU_SEL','FCS_CKM','FCS_COP','FIA_AFL','FIA_UAU','FIA_ATD','FIA_UID','FIA_USB',
+    'FRU_FLT','FDP_RIP','FDP_ITC','FMT_MOF','FMT_MTD','FMT_SMF','FMT_SMR','FMT_MSA','FPT_FLS','FPT_TDC','FPT_STM',
+    'FTA_SSL','FTA_MCS','FTA_TAH','FTA_TSE','FDP_ETC','FDP_SDI','FDP_ACC','FDP_ACF',
+  ],
+  fail: ['FTP_TRP','FPT_ITT'],
+};
+
+export const iso15408LegacyExtendedRequirements = [
+  // These codes preserve the spelling/punctuation visible in the supplied legacy screenshots.
+  { code: 'FCS-TLSS_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+  { code: 'FCS-TLSC_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+  { code: 'FIA_PMG_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+  { code: 'FPT_TUD_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+  { code: 'FCS_HTTPS_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+  { code: 'FCS-DTLS_EXT', legacyResult: 'PASS', noteFa: 'الزام توسعه‌یافته مشاهده‌شده در مستند مبنا؛ خارج از کاتالوگ پایه ISO/IEC 15408-2:2026.' },
+];
+
+export const iso15408_2026StandardsResearchAudit = {
+  verifiedAsCurrentOn: '2026-09-05',
+  part2Status: 'Published',
+  part2PublicationDate: '2026-05-19',
+  part2Supersedes: 'ISO/IEC 15408-2:2022',
+  familyCount: 74,
+  classCount: 11,
+  legacyScreenshotBasePassCount: 30,
+  legacyScreenshotBaseFailCount: 2,
+  legacyScreenshotExtendedPassCount: 6,
+  basis: 'ISO/IEC 15408-2:2026 published catalogue / table of contents and ISO current-edition records for Parts 1–5.',
+};
+
 /**
  * Items observed in the source that may look unusual but are intentionally not
  * changed without source-owner approval. This object is not rendered in the report.
  */
 export const sourceTranscriptionAudit = {
   verifiedAgainstScreenshots: true,
-  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   preservedSourceAnomalies: [
     'Tester row 2 assessment-end date is shown as ۱۳۴۸/۱۰/۱۱ in the supplied source.',
     'The English copyright block visibly contains joined words: 2024Corporation, orreduced, tothe, orthe, toCorporation.',
     'The test-result source sentence says «یکی از ۴ حالت» while five result states are visibly listed; this source-side inconsistency is preserved.',
+    'The legacy ISO 15408 screenshots visibly use hyphenated spellings FCS-TLSS_EXT, FCS-TLSC_EXT and FCS-DTLS_EXT; those source spellings are preserved in the legacy table.',
   ],
 };
