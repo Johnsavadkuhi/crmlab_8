@@ -604,17 +604,238 @@ export const iso15408_2026StandardsResearchAudit = {
   basis: 'ISO/IEC 15408-2:2026 published catalogue / table of contents and ISO current-edition records for Parts 1–5.',
 };
 
+
+
+/**
+ * OWASP WSTG v4.2 ↔ ISO/IEC 15408-2:2026 technical traceability crosswalk.
+ *
+ * IMPORTANT COMPLIANCE NOTE:
+ * - OWASP does not publish an official normative equivalence table to ISO/IEC 15408.
+ * - Therefore this is an engineering traceability mapping for this assessment/report,
+ *   at ISO/IEC 15408-2 SFR-family level, not a claim that a WSTG category is
+ *   normatively equivalent to, or sufficient for, an ISO/IEC 15408 requirement.
+ * - Final SFR applicability remains controlled by the TOE, ST and any PP/Package.
+ * - Legacy Persian labels/results are transcribed from the supplied source screenshot.
+ */
+export const owaspWstgIso15408Crosswalk2026 = {
+  researchedOn: '2026-09-05',
+  wstgBaseline: 'OWASP Web Security Testing Guide v4.2',
+  wstgStatus: 'Current stable release; OWASP v5.0 is under development as of the research date.',
+  isoBaseline: 'ISO/IEC 15408-2:2026',
+  categoryCount: 12,
+  topLevelTestCount: 97,
+  legacyFinalEvaluation: '42%',
+  legacyFinalEvaluationLabelFa: 'نتیجه نهایی ارزیابی (درصد انطباق بیان شود) : 42%',
+  sourceCaptionFa: 'جدول ۱۲ : خلاصه آزمون های انجام گرفته',
+  executionDeclarationFa: 'در این ارزیابی، آزمون‌های امنیتی وب بر روی پروژه در چارچوب دوازده دسته آزمون OWASP WSTG انجام شده‌اند. نتیجه هر آزمون باید در رجیستر اجرای آزمون و شواهد مرتبط قابل ردیابی باشد.',
+  executionDeclarationEn: 'The project was assessed across all twelve OWASP WSTG web-security testing categories. Each test result is expected to remain traceable to the execution register and supporting evidence.',
+  mappingRuleFa: 'نگاشت زیر یک «ماتریس ردیابی فنی» در سطح خانواده‌های الزامات کارکردی امنیتی (SFR) است. OWASP WSTG یک راهنمای آزمون است و ISO/IEC 15408 یک چارچوب الزامات و ارزیابی؛ بنابراین این جدول ادعای هم‌ارزی هنجاری یا انطباق خودکار نمی‌کند. قابلیت اعمال نهایی هر خانواده ISO/IEC 15408 باید با توجه به TOE، سند Security Target و در صورت وجود Protection Profile یا Package پروژه تعیین شود.',
+  mappingRuleEn: 'This is an engineering traceability matrix at ISO/IEC 15408-2 SFR-family level. WSTG is a testing guide while ISO/IEC 15408 is a requirements/evaluation framework; the matrix does not claim normative equivalence or automatic conformance. Final SFR applicability is determined by the TOE, Security Target and any applicable Protection Profile or Package.',
+  categories: [
+    {
+      order: '4.1', code: 'INFO', wstgPrefix: 'WSTG-INFO', testCount: 10,
+      sourceLabelFa: 'آزمون جمع آوری اطلاعات',
+      nameFa: 'آزمون جمع‌آوری اطلاعات', nameEn: 'Information Gathering', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FDP_IFC', clause: '11.7' },
+        { code: 'FDP_IFF', clause: '11.8' },
+        { code: 'FDP_SDC', clause: '11.14' },
+      ],
+      rationaleFa: 'آزمون‌های این دسته سطح افشای اطلاعات، معماری، متادیتا و نقاط ورود را آشکار می‌کنند؛ از دید ISO/IEC 15408 این موضوع عمدتاً با کنترل جریان اطلاعات و محرمانگی داده‌های ذخیره‌شده مرتبط است.',
+    },
+    {
+      order: '4.2', code: 'CONF', wstgPrefix: 'WSTG-CONF', testCount: 11,
+      sourceLabelFa: 'آزمون مدیریت پیکربندی و استقرار',
+      nameFa: 'آزمون مدیریت پیکربندی و استقرار', nameEn: 'Configuration and Deployment Management Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FMT_MOF', clause: '13.4' },
+        { code: 'FMT_MTD', clause: '13.6' },
+        { code: 'FMT_SMF', clause: '13.9' },
+        { code: 'FPT_FLS', clause: '15.4' },
+        { code: 'FDP_ACC', clause: '11.3' },
+        { code: 'FDP_ACF', clause: '11.4' },
+        { code: 'FCS_COP', clause: '10.4' },
+        { code: 'FTP_ITC', clause: '18.3' },
+      ],
+      rationaleFa: 'این دسته تنظیمات بستر، روش‌های HTTP، مجوز فایل، HSTS، رابط‌های مدیریتی و استقرار را می‌آزماید؛ بنابراین به مدیریت توابع و داده‌های TSF، کنترل دسترسی، رفتار امن در خطا و حفاظت کانال/رمزنگاری مرتبط است.',
+    },
+    {
+      order: '4.3', code: 'IDNT', wstgPrefix: 'WSTG-IDNT', testCount: 5,
+      sourceLabelFa: 'آزمون مدیریت هویت',
+      nameFa: 'آزمون مدیریت هویت', nameEn: 'Identity Management Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FIA_ATD', clause: '12.5' },
+        { code: 'FIA_UID', clause: '12.8' },
+        { code: 'FIA_USB', clause: '12.9' },
+        { code: 'FMT_MSA', clause: '13.5' },
+        { code: 'FMT_SMR', clause: '13.10' },
+        { code: 'FMT_REV', clause: '13.7' },
+      ],
+      rationaleFa: 'مدیریت نقش، ثبت کاربر، چرخه ایجاد حساب، ویژگی‌های هویتی و پیوند کاربر با موضوع امنیتی مستقیماً به خانواده‌های FIA و مدیریت ویژگی‌ها/نقش‌های امنیتی در FMT مرتبط است.',
+    },
+    {
+      order: '4.4', code: 'ATHN', wstgPrefix: 'WSTG-ATHN', testCount: 10,
+      sourceLabelFa: 'آزمون احراز هویت',
+      nameFa: 'آزمون احراز هویت', nameEn: 'Authentication Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FIA_AFL', clause: '12.3' },
+        { code: 'FIA_API', clause: '12.4' },
+        { code: 'FIA_SOS', clause: '12.6' },
+        { code: 'FIA_UAU', clause: '12.7' },
+        { code: 'FIA_UID', clause: '12.8' },
+        { code: 'FCS_COP', clause: '10.4' },
+        { code: 'FTP_TRP', clause: '18.5' },
+      ],
+      rationaleFa: 'کنترل شکست‌های احراز هویت، اسرار احراز هویت، شناسایی/احراز کاربر و انتقال امن اعتبارنامه‌ها هسته آزمون‌های این دسته را تشکیل می‌دهند.',
+    },
+    {
+      order: '4.5', code: 'ATHZ', wstgPrefix: 'WSTG-ATHZ', testCount: 4,
+      sourceLabelFa: 'آزمون مجازی شماری',
+      nameFa: 'آزمون مجوزدهی و کنترل دسترسی', nameEn: 'Authorization Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FDP_ACC', clause: '11.3' },
+        { code: 'FDP_ACF', clause: '11.4' },
+        { code: 'FIA_USB', clause: '12.9' },
+        { code: 'FMT_MSA', clause: '13.5' },
+        { code: 'FMT_REV', clause: '13.7' },
+        { code: 'FMT_SMR', clause: '13.10' },
+      ],
+      rationaleFa: 'آزمون دورزدن مجوز، افزایش سطح دسترسی و دسترسی مستقیم به اشیاء در سطح هدف کنترل با سیاست و تابع کنترل دسترسی، ویژگی‌های امنیتی و نقش‌ها منطبق است.',
+    },
+    {
+      order: '4.6', code: 'SESS', wstgPrefix: 'WSTG-SESS', testCount: 9,
+      sourceLabelFa: 'آزمون مدیریت نشست',
+      nameFa: 'آزمون مدیریت نشست', nameEn: 'Session Management Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FCS_RBG', clause: '10.5' },
+        { code: 'FCS_RNG', clause: '10.6' },
+        { code: 'FIA_USB', clause: '12.9' },
+        { code: 'FPT_RPL', clause: '15.12' },
+        { code: 'FTA_MCS', clause: '17.4' },
+        { code: 'FTA_SSL', clause: '17.5' },
+        { code: 'FTA_TAH', clause: '17.7' },
+        { code: 'FTA_TSE', clause: '17.8' },
+      ],
+      rationaleFa: 'شناسه نشست، تثبیت/ربایش نشست، خاتمه و Timeout، نشست‌های همزمان و مقاومت در برابر بازپخش به خانواده‌های تولید تصادفی، پیوند کاربر-موضوع، بازپخش و دسترسی TOE مرتبط می‌شوند.',
+    },
+    {
+      order: '4.7', code: 'INPV', wstgPrefix: 'WSTG-INPV', testCount: 19,
+      sourceLabelFa: 'آزمون اعتبار سنجی ورودی',
+      nameFa: 'آزمون اعتبارسنجی ورودی', nameEn: 'Input Validation Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FDP_IFC', clause: '11.7' },
+        { code: 'FDP_IFF', clause: '11.8' },
+        { code: 'FDP_ITC', clause: '11.10' },
+        { code: 'FDP_SDI', clause: '11.15' },
+        { code: 'FPT_FLS', clause: '15.4' },
+      ],
+      rationaleFa: 'خانواده آزمون‌های تزریق، XSS، SSRF، دستکاری پارامتر و سایر ورودی‌های مخرب به کنترل ورود/جریان اطلاعات، حفظ یکپارچگی و رفتار امن در شرایط خطا مرتبط است.',
+    },
+    {
+      order: '4.8', code: 'ERRH', wstgPrefix: 'WSTG-ERRH', testCount: 2,
+      sourceLabelFa: 'آزمون مدیریت خطاها',
+      nameFa: 'آزمون مدیریت خطاها', nameEn: 'Testing for Error Handling', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FAU_GEN', clause: '8.4' },
+        { code: 'FAU_STG', clause: '8.8' },
+        { code: 'FDP_SDC', clause: '11.14' },
+        { code: 'FPT_FLS', clause: '15.4' },
+      ],
+      rationaleFa: 'مدیریت امن خطا باید از افشای داده جلوگیری کند، حالت امن را حفظ کند و در صورت نیاز رویدادهای امنیتی را برای ممیزی تولید و محافظت کند.',
+    },
+    {
+      order: '4.9', code: 'CRYP', wstgPrefix: 'WSTG-CRYP', testCount: 4,
+      sourceLabelFa: 'آزمون رمزنگاری',
+      nameFa: 'آزمون رمزنگاری و کانال‌های امن', nameEn: 'Testing for Weak Cryptography', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FCS_CKM', clause: '10.3' },
+        { code: 'FCS_COP', clause: '10.4' },
+        { code: 'FCS_RBG', clause: '10.5' },
+        { code: 'FCS_RNG', clause: '10.6' },
+        { code: 'FDP_UCT', clause: '11.16' },
+        { code: 'FDP_UIT', clause: '11.17' },
+        { code: 'FTP_ITC', clause: '18.3' },
+        { code: 'FTP_PRO', clause: '18.4' },
+        { code: 'FTP_TRP', clause: '18.5' },
+      ],
+      rationaleFa: 'آزمون TLS، الگوریتم‌ها، کلیدها، تصادفی‌بودن و حفاظت داده در انتقال مستقیماً با کلاس پشتیبانی رمزنگاری و خانواده‌های حفاظت انتقال/کانال مورد اعتماد مرتبط است.',
+    },
+    {
+      order: '4.10', code: 'BUSL', wstgPrefix: 'WSTG-BUSL', testCount: 9,
+      sourceLabelFa: 'آزمون منطق کسب و کار',
+      nameFa: 'آزمون منطق کسب‌وکار', nameEn: 'Business Logic Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FDP_ACC', clause: '11.3' },
+        { code: 'FDP_ACF', clause: '11.4' },
+        { code: 'FDP_ROL', clause: '11.13' },
+        { code: 'FDP_SDI', clause: '11.15' },
+        { code: 'FMT_MOF', clause: '13.4' },
+        { code: 'FMT_MSA', clause: '13.5' },
+        { code: 'FMT_SMF', clause: '13.9' },
+        { code: 'FRU_RSA', clause: '16.5' },
+      ],
+      rationaleFa: 'صحت گردش‌کار، محدودیت استفاده، جعل درخواست، کنترل یکپارچگی و سوءاستفاده از منطق کاربردی بسته به Security Target به کنترل دسترسی، مدیریت رفتار امنیتی، یکپارچگی، Rollback و تخصیص منابع نگاشت می‌شود.',
+    },
+    {
+      order: '4.11', code: 'CLNT', wstgPrefix: 'WSTG-CLNT', testCount: 13,
+      sourceLabelFa: 'آزمون سمت مشتری',
+      nameFa: 'آزمون سمت مشتری', nameEn: 'Client-side Testing', legacyResult: 'FAIL', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FCS_COP', clause: '10.4' },
+        { code: 'FDP_IFC', clause: '11.7' },
+        { code: 'FDP_IFF', clause: '11.8' },
+        { code: 'FDP_SDC', clause: '11.14' },
+        { code: 'FDP_UCT', clause: '11.16' },
+        { code: 'FDP_UIT', clause: '11.17' },
+        { code: 'FTP_ITC', clause: '18.3' },
+        { code: 'FTP_TRP', clause: '18.5' },
+      ],
+      rationaleFa: 'XSS سمت مشتری، Web Messaging، CORS، Browser Storage، WebSocket و سایر کنترل‌های مرورگر با جریان/محرمانگی اطلاعات، حفاظت داده در انتقال، رمزنگاری و کانال/مسیر مورد اعتماد ارتباط دارند.',
+    },
+    {
+      order: '4.12', code: 'APIT', wstgPrefix: 'WSTG-APIT', testCount: 1,
+      sourceLabelFa: 'آزمون API',
+      nameFa: 'آزمون API', nameEn: 'API Testing', legacyResult: 'PASS', executionStatusFa: 'انجام شده',
+      isoRefs: [
+        { code: 'FAU_GEN', clause: '8.4' },
+        { code: 'FCS_COP', clause: '10.4' },
+        { code: 'FDP_ACC', clause: '11.3' },
+        { code: 'FDP_ACF', clause: '11.4' },
+        { code: 'FDP_IFC', clause: '11.7' },
+        { code: 'FDP_IFF', clause: '11.8' },
+        { code: 'FIA_UAU', clause: '12.7' },
+        { code: 'FIA_UID', clause: '12.8' },
+        { code: 'FMT_MOF', clause: '13.4' },
+        { code: 'FTP_ITC', clause: '18.3' },
+        { code: 'FTP_PRO', clause: '18.4' },
+      ],
+      rationaleFa: 'آزمون API در WSTG v4.2 شامل GraphQL است و اهداف آن پیکربندی امن، اعتبارسنجی ورودی و کنترل دسترسی را پوشش می‌دهد؛ بنابراین نگاشت آن چندکلاسی و وابسته به قابلیت API است.',
+    },
+  ],
+};
+
+export const owaspWstgIso15408CrosswalkAudit = {
+  verifiedOn: '2026-09-05',
+  wstgCategoryCount: 12,
+  wstgTopLevelTestCount: 97,
+  legacyResultCount: 12,
+  isoFamilyReferenceLevel: 'ISO/IEC 15408-2:2026 family clauses',
+  normativeEquivalenceClaimed: false,
+  note: 'Crosswalk is maintained as project technical traceability, not an official OWASP/ISO mapping.',
+};
+
 /**
  * Items observed in the source that may look unusual but are intentionally not
  * changed without source-owner approval. This object is not rendered in the report.
  */
 export const sourceTranscriptionAudit = {
   verifiedAgainstScreenshots: true,
-  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+  verifiedPages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
   preservedSourceAnomalies: [
     'Tester row 2 assessment-end date is shown as ۱۳۴۸/۱۰/۱۱ in the supplied source.',
     'The English copyright block visibly contains joined words: 2024Corporation, orreduced, tothe, orthe, toCorporation.',
     'The test-result source sentence says «یکی از ۴ حالت» while five result states are visibly listed; this source-side inconsistency is preserved.',
     'The legacy ISO 15408 screenshots visibly use hyphenated spellings FCS-TLSS_EXT, FCS-TLSC_EXT and FCS-DTLS_EXT; those source spellings are preserved in the legacy table.',
+    'The WSTG category summary source visibly labels Authorization Testing as «آزمون مجازی شماری»; that legacy label is preserved only as source text while the current report uses the canonical category title.',
   ],
 };

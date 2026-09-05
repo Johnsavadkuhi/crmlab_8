@@ -16,7 +16,8 @@ const categoryDefinitions = [
   ['ERRH','Testing for Error Handling', ['Testing for Improper Error Handling','Testing for Stack Traces']],
   ['CRYP','Testing for Weak Cryptography', ['Testing for Weak Transport Layer Security','Testing for Padding Oracle','Testing for Sensitive Information Sent via Unencrypted Channels','Testing for Weak Encryption']],
   ['BUSL','Business Logic Testing', ['Test Business Logic Data Validation','Test Ability to Forge Requests','Test Integrity Checks','Test for Process Timing','Test Number of Times a Function Can Be Used Limits','Testing for the Circumvention of Work Flows','Test Defenses Against Application Misuse','Test Upload of Unexpected File Types','Test Upload of Malicious Files']],
-  ['CLNT','Client-side Testing', ['Testing for DOM-Based Cross Site Scripting','Testing for JavaScript Execution','Testing for HTML Injection','Testing for Client-side URL Redirect','Testing for CSS Injection','Testing for Client-side Resource Manipulation','Testing Cross Origin Resource Sharing','Testing for Cross Site Flashing','Testing for Clickjacking','Testing WebSockets','Testing Web Messaging','Testing Browser Storage','Testing for Cross Site Script Inclusion']]
+  ['CLNT','Client-side Testing', ['Testing for DOM-Based Cross Site Scripting','Testing for JavaScript Execution','Testing for HTML Injection','Testing for Client-side URL Redirect','Testing for CSS Injection','Testing for Client-side Resource Manipulation','Testing Cross Origin Resource Sharing','Testing for Cross Site Flashing','Testing for Clickjacking','Testing WebSockets','Testing Web Messaging','Testing Browser Storage','Testing for Cross Site Script Inclusion']],
+  ['APIT','API Testing', ['Testing GraphQL']]
 ];
 
 export const categories = categoryDefinitions.map(([code,name,items])=>({code,name,count:items.length}));

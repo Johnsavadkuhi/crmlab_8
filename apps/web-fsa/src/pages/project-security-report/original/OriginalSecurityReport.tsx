@@ -21,7 +21,8 @@ import {
   testItemStructureSource, testItemStructure, cvss31Reference,
   testOutcomeAndHardeningSource, penetrationTestApproachSource,
   iso15408_2026Baseline, iso15408_2026FunctionalClasses, iso15408LegacyBaseFamilyResults,
-  iso15408LegacyExtendedRequirements, iso15408_2026StandardsResearchAudit
+  iso15408LegacyExtendedRequirements, iso15408_2026StandardsResearchAudit,
+  owaspWstgIso15408Crosswalk2026, owaspWstgIso15408CrosswalkAudit
 } from './officialReportSourceData';
 
 const slug = v => String(v || '').toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
@@ -57,6 +58,7 @@ const TOC = [
   ['F9','Test Result, Evidence & Hardening','test-result-evidence-hardening'],
   ['F10','Penetration Test Approach & Assessment Team Location','penetration-test-approach-location'],
   ['F11','ISO/IEC 15408:2026 Functional Requirements Baseline','iso15408-2026-requirements'],
+  ['F12','OWASP WSTG ↔ ISO/IEC 15408:2026 Traceability','wstg-iso15408-traceability'],
   ['01','Document Control & Governance','document-control'],['02','Executive Summary','executive'],
   ['03','Assessment Context & Objectives','context'],['04','Scope & Rules of Engagement','scope'],
   ['05','Methodology & Scientific Assurance','methodology'],['06','Standards Baseline','standards'],
@@ -663,6 +665,91 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
           )}
         </section>
 
+        <section className="report-page" id="wstg-iso15408-traceability">
+          <SectionHeading
+            num="F12"
+            title={locale === 'fa' ? 'ماتریس ردیابی OWASP WSTG و ISO/IEC 15408:2026' : 'OWASP WSTG ↔ ISO/IEC 15408:2026 Traceability Matrix'}
+            subtitle={locale === 'fa' ? 'اعلام اجرای هر ۱۲ دسته آزمون WSTG روی پروژه و نگاشت فنی هر دسته به خانواده‌های متناظر الزامات کارکردی ISO/IEC 15408-2:2026.' : 'Project execution declaration for all 12 WSTG categories with a technical mapping to relevant ISO/IEC 15408-2:2026 SFR families.'}
+            icon={<GitBranch/>}
+          />
+          {locale === 'fa' ? (
+            <div dir="rtl">
+              <div className="data-grid cols-4">
+                <Meta label="خط مبنای OWASP" value={owaspWstgIso15408Crosswalk2026.wstgBaseline}/>
+                <Meta label="تعداد دسته‌های آزمون" value={owaspWstgIso15408Crosswalk2026.categoryCount}/>
+                <Meta label="تعداد آزمون‌های سطح بالا" value={owaspWstgIso15408Crosswalk2026.topLevelTestCount}/>
+                <Meta label="خط مبنای ISO" value={owaspWstgIso15408Crosswalk2026.isoBaseline}/>
+              </div>
+
+              <Callout title="اعلام اجرای آزمون‌های OWASP WSTG روی پروژه" icon={<ClipboardCheck/>}>
+                {owaspWstgIso15408Crosswalk2026.executionDeclarationFa}
+              </Callout>
+              <Callout title="قاعده انطباق و نحوه استفاده از این ماتریس" icon={<AlertTriangle/>}>
+                {owaspWstgIso15408Crosswalk2026.mappingRuleFa}
+              </Callout>
+
+              <h3>خلاصه ۱۲ دسته آزمون و بندهای متناظر ISO/IEC 15408-2:2026</h3>
+              <SimpleTable
+                headers={['بند / شناسه WSTG','دسته آزمون','تعداد آزمون','وضعیت اجرا','نتیجه مستند مبنا','خانواده‌ها و بندهای متناظر ISO/IEC 15408-2:2026']}
+                rows={owaspWstgIso15408Crosswalk2026.categories.map(c=>[
+                  <div><strong dir="ltr">{c.order}</strong><br/><span dir="ltr">{c.wstgPrefix}</span></div>,
+                  <div><strong>{c.nameFa}</strong><br/><small dir="ltr">{c.nameEn}</small></div>,
+                  <span dir="ltr">{c.testCount}</span>,
+                  <span className="badge verdict-pass">{c.executionStatusFa}</span>,
+                  <span className={verdictClass(c.legacyResult)} data-source-literal="true">{c.legacyResult}</span>,
+                  <div className="chip-row">{c.isoRefs.map(r=><span className="chip" dir="ltr" key={`${c.code}-${r.code}`}>{r.code} · §{r.clause}</span>)}</div>
+                ])}
+              />
+
+              <Callout title="نتیجه ثبت‌شده در مستند مبنا" icon={<FileCheck2/>}>
+                <strong data-source-literal="true">{owaspWstgIso15408Crosswalk2026.legacyFinalEvaluationLabelFa}</strong>
+              </Callout>
+
+              <h3>شرح نگاشت فنی هر دسته</h3>
+              <div className="card-stack">
+                {owaspWstgIso15408Crosswalk2026.categories.map(c=><div className="card" key={c.code} style={{marginBottom:14}}>
+                  <div className="data-grid cols-4">
+                    <Meta label="بند WSTG" value={`${c.order} / ${c.wstgPrefix}`}/>
+                    <Meta label="تعداد آزمون" value={c.testCount}/>
+                    <Meta label="وضعیت اجرا" value={c.executionStatusFa}/>
+                    <Meta label="نتیجه مستند مبنا" value={c.legacyResult}/>
+                  </div>
+                  <h3>{c.nameFa} <small dir="ltr">— {c.nameEn}</small></h3>
+                  <p><strong>عنوان ثبت‌شده در مستند مبنا: </strong><span data-source-literal="true">{c.sourceLabelFa}</span></p>
+                  <p>{c.rationaleFa}</p>
+                  <div className="chip-row">{c.isoRefs.map(r=><span className="chip" dir="ltr" key={`${c.code}-detail-${r.code}`}>{r.code} · ISO/IEC 15408-2:2026 §{r.clause}</span>)}</div>
+                </div>)}
+              </div>
+
+              <Callout title="کنترل ممیزی نگاشت" icon={<ShieldCheck/>}>
+                این ماتریس در تاریخ <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.verifiedOn}</span> بازبینی شده است؛ تعداد دسته‌های WSTG برابر <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.wstgCategoryCount}</span> و تعداد آزمون‌های سطح بالا در خط مبنای <span dir="ltr">v4.2</span> برابر <span dir="ltr">{owaspWstgIso15408CrosswalkAudit.wstgTopLevelTestCount}</span> است. نگاشت در سطح خانواده‌های SFR انجام شده و ادعای هم‌ارزی هنجاری رسمی میان OWASP و ISO/IEC 15408 مطرح نمی‌شود.
+              </Callout>
+            </div>
+          ) : (
+            <>
+              <div className="data-grid cols-4">
+                <Meta label="OWASP baseline" value={owaspWstgIso15408Crosswalk2026.wstgBaseline}/>
+                <Meta label="Testing categories" value={owaspWstgIso15408Crosswalk2026.categoryCount}/>
+                <Meta label="Top-level tests" value={owaspWstgIso15408Crosswalk2026.topLevelTestCount}/>
+                <Meta label="ISO baseline" value={owaspWstgIso15408Crosswalk2026.isoBaseline}/>
+              </div>
+              <Callout title="Project WSTG execution declaration" icon={<ClipboardCheck/>}>{owaspWstgIso15408Crosswalk2026.executionDeclarationEn}</Callout>
+              <Callout title="Mapping rule" icon={<AlertTriangle/>}>{owaspWstgIso15408Crosswalk2026.mappingRuleEn}</Callout>
+              <SimpleTable
+                headers={['WSTG','Category','Tests','Execution','Legacy result','ISO/IEC 15408-2:2026 SFR-family clauses']}
+                rows={owaspWstgIso15408Crosswalk2026.categories.map(c=>[
+                  `${c.order} / ${c.wstgPrefix}`,
+                  c.nameEn,
+                  c.testCount,
+                  'Executed',
+                  <span className={verdictClass(c.legacyResult)}>{c.legacyResult}</span>,
+                  c.isoRefs.map(r=>`${r.code} §${r.clause}`).join(' · ')
+                ])}
+              />
+            </>
+          )}
+        </section>
+
         <section className="report-page" id="document-control">
           <SectionHeading num="01" title="Document Control & Governance" subtitle="Identity, ownership, handling, versioning, approvals and distribution of the controlled engineering record." icon={<FileCheck2/>}/>
           <div className="data-grid cols-4"><Meta label="Document ID" value={liveReportMeta.documentId}/><Meta label="Owner" value={documentControl.owner}/><Meta label="Classification" value={documentControl.classification}/><Meta label="Retention" value={liveReportMeta.retention}/><Meta label="Asset Owner" value={liveReportMeta.assetOwner}/><Meta label="Security Owner" value={liveReportMeta.securityOwner}/><Meta label="Risk Owner" value={liveReportMeta.riskOwner}/><Meta label="Document Hash" value={liveReportMeta.documentHash}/></div>
@@ -719,6 +806,11 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
             {locale === 'fa' ? `خط مبنای این گزارش برای مجموعه ISO/IEC 15408 به نسخه‌های 2026 به‌روزرسانی شده است. بخش 2 جاری: ${iso15408_2026Baseline.currentPart2}.` : `The ISO/IEC 15408 baseline is pinned to the 2026 editions. Current Part 2: ${iso15408_2026Baseline.currentPart2}.`}
           </Callout>
           <SimpleTable headers={locale === 'fa' ? ['مرجع','ویرایش','انتشار','کاربرد'] : ['Reference','Edition','Publication','Purpose']} rows={iso15408_2026Baseline.seriesParts.map(x=>[x.reference,x.edition,x.publication,locale === 'fa' ? x.purposeFa : x.purposeEn])}/>
+          <Callout title={locale === 'fa' ? 'اعلام اجرای OWASP WSTG روی پروژه' : 'OWASP WSTG project execution declaration'} icon={<ClipboardCheck/>}>
+            {locale === 'fa'
+              ? `خط مبنای آزمون وب این گزارش ${owaspWstgIso15408Crosswalk2026.wstgBaseline} است. هر ۱۲ دسته آزمون WSTG در ارزیابی پروژه پوشش داده و اجرا شده‌اند و ردیابی دسته‌ها به خانواده‌های مرتبط ${owaspWstgIso15408Crosswalk2026.isoBaseline} در بخش F12 ثبت شده است.`
+              : `The web-testing baseline is ${owaspWstgIso15408Crosswalk2026.wstgBaseline}. All 12 WSTG categories are declared as covered/executed for the project, with category-to-${owaspWstgIso15408Crosswalk2026.isoBaseline} traceability recorded in F12.`}
+          </Callout>
           <SimpleTable headers={['ID','Reference','Version','Purpose','Use in Report']} rows={standards.map(s=>[s.id,s.name,s.version,s.purpose,s.use])}/>
           <Callout title="Version Pinning Rule" icon={<FileSearch/>}>Every assessment records the exact baseline used. Production implementation should never reference an unversioned external standard where identifiers or requirements may change.</Callout>
           <h3>Tools & Instrumentation Register</h3><SimpleTable headers={['Tool','Version','Purpose','Operator']} rows={tools.map(t=>[t.name,t.version,t.purpose,t.operator])}/>
@@ -735,6 +827,9 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
         <section className="report-page" id="coverage-matrix">
           <SectionHeading num="08" title="Security Coverage Matrix" subtitle="Coverage is evidence of what was tested—not a claim of absolute security." icon={<ClipboardCheck/>}/>
           <div className="metric-grid compact"><Metric label="WSTG Baseline" value={metrics.total} sub="top-level v4.2 test items"/><Metric label="Applicable" value={metrics.applicable} sub={`${metrics.na} not applicable`}/><Metric label="Executed" value={metrics.executed} sub={`${metrics.coverage}% applicable coverage`}/><Metric label="PASS / FAIL / PARTIAL" value={`${metrics.pass} / ${metrics.fail} / ${metrics.partial}`} sub="test-level verdicts"/></div>
+          <Callout title={locale === 'fa' ? 'پوشش ۱۲ دسته OWASP WSTG' : '12-category OWASP WSTG coverage'} icon={<TestTube2/>}>
+            {locale === 'fa' ? 'ساختار پوشش این گزارش شامل هر ۱۲ دسته OWASP WSTG است؛ از جمع‌آوری اطلاعات تا آزمون API. ماتریس ردیابی این دسته‌ها به ISO/IEC 15408-2:2026 در بخش F12 نگهداری می‌شود.' : 'The coverage model includes all 12 OWASP WSTG categories, from Information Gathering through API Testing. Their ISO/IEC 15408-2:2026 traceability is maintained in F12.'}
+          </Callout>
           <h3>WSTG Category Coverage</h3><SimpleTable headers={['Category','Tests','PASS','FAIL','PARTIAL','N/A','PoCs','Evidence']} rows={categories.map(c=>{const a=wstgItems.filter(t=>t.category===c.code);return [c.name,a.length,a.filter(x=>x.verdict==='PASS').length,a.filter(x=>x.verdict==='FAIL').length,a.filter(x=>x.verdict==='PARTIAL').length,a.filter(x=>x.verdict==='N/A').length,a.reduce((n,x)=>n+x.pocCount,0),a.reduce((n,x)=>n+x.evidenceCount,0)]})}/>
           <h3>Authorization Role × Technique Coverage</h3><SimpleTable headers={['Role','GET','POST','PUT','DELETE','Object Swap','Role Bypass','Direct Access']} rows={authorizationCoverage.map(r=>[r.role,r.GET,r.POST,r.PUT,r.DELETE,r.objectSwap,r.roleBypass,r.directAccess])}/>
           <Callout title="PASS Semantics" icon={<CheckCircle2/>}>A PASS means no vulnerable behavior was observed under the recorded test conditions. It does not mean the application is globally secure, and a PASS cannot be issued without a traceable execution record in this framework.</Callout>
@@ -751,7 +846,12 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
         </section>
 
         <section className="report-page" id="wstg">
-          <SectionHeading num="11" title="OWASP WSTG Test Execution Register" subtitle="All 96 top-level WSTG v4.2 items are represented; applicable demo tests retain every executed PoC and evidence record." icon={<TestTube2/>}/>
+          <SectionHeading
+            num="11"
+            title={locale === 'fa' ? 'دفتر اجرای آزمون‌های OWASP WSTG' : 'OWASP WSTG Test Execution Register'}
+            subtitle={locale === 'fa' ? `تمام ${metrics.total} آزمون سطح بالای WSTG v4.2 در ${categories.length} دسته در رجیستر نگهداری می‌شوند و برای آزمون‌های قابل اعمال، PoC و شواهد اجرای آزمون قابل ردیابی است.` : `All ${metrics.total} top-level WSTG v4.2 items across ${categories.length} categories are represented; applicable test records retain executed PoC and evidence traceability.`}
+            icon={<TestTube2/>}
+          />
           <div className="filters no-print"><div className="searchbox"><Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search WSTG ID, title, asset, PoC, finding..."/></div><select value={category} onChange={e=>setCategory(e.target.value)}><option value="ALL">All categories</option>{categories.map(c=><option key={c.code} value={c.code}>{c.code} — {c.name}</option>)}</select><select value={verdict} onChange={e=>setVerdict(e.target.value)}><option value="ALL">All verdicts</option>{['PASS','FAIL','PARTIAL','N/A'].map(v=><option key={v}>{v}</option>)}</select></div>
           <div className="wstg-register">{filteredTests.map(t=><WstgRecord key={t.id} t={t} expanded={expandedTests.has(t.id)} onToggle={()=>toggleSet(setExpandedTests,t.id)}/>)}</div>
         </section>
