@@ -26,6 +26,7 @@ import settingsRoutes from "@/modules/settings/routes/projectTableSetting.routes
 import taskRoutes from "@/modules/tasks/routes/task.routes";
 import securityStandardRoutes from "@/modules/security-standards/routes/securityStandard.routes";
 import adminAnalyticsRoutes from "@/modules/admin-analytics/routes/adminAnalytics.routes";
+import personalDashboardRoutes from "@/modules/personal-dashboard/routes/personalDashboard.routes";
 
 export function createApp() {
   const app = express();
@@ -79,6 +80,7 @@ export function createApp() {
   app.use(ROUTES.AUTH.BASE, authRoutes);
   app.use(ROUTES.AUDIT_LOGS.BASE, auditRoutes);
   app.use(ROUTES.ADMIN_ANALYTICS.BASE, adminAnalyticsRoutes);
+  app.use(ROUTES.MY_DASHBOARD.BASE, personalDashboardRoutes);
   app.use(ROUTES.USERS.BASE, userRoutes);
   app.use(ROUTES.PROJECTS.BASE, projectRoutes);
   app.use(ROUTES.TASKS.BASE, taskRoutes);

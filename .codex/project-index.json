@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatorVersion": 2,
   "generatedBy": "scripts/generate-project-index.mjs",
-  "sourceFingerprint": "ec7d101cd3d087fa",
+  "sourceFingerprint": "46b623ad512d4766",
   "workflow": [
     "Read AGENTS.md, then this index or docs/PROJECT_INDEX.md.",
     "Search domains, keywords, symbols, endpoints, and relationships before broad search.",
@@ -59,9 +59,9 @@
     "vendored source"
   ],
   "stats": {
-    "indexedFiles": 381,
+    "indexedFiles": 389,
     "domains": 13,
-    "apiEndpoints": 80,
+    "apiEndpoints": 87,
     "frontendRoutes": 26
   },
   "majorRelationships": [
@@ -721,11 +721,46 @@
     },
     {
       "method": "GET",
+      "path": "/base",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/devops",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
       "path": "/overview",
       "routeFile": "apps/api/src/modules/admin-analytics/routes/adminAnalytics.routes.ts",
       "permissions": [
         "ADMIN_DASHBOARD_READ"
       ]
+    },
+    {
+      "method": "GET",
+      "path": "/qa",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/quality",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/representative",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/security",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/testing",
+      "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
     },
     {
       "method": "POST",
@@ -6569,6 +6604,54 @@
           "contentHash": "9338c3f02b09"
         },
         {
+          "path": "apps/web-fsa/src/entities/personal-dashboard/api/personalDashboardApi.ts",
+          "kind": "api-client",
+          "responsibility": "Frontend API client for personal Dashboard Api.",
+          "keywords": [
+            "web",
+            "entities",
+            "personal",
+            "dashboard",
+            "api",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "personalDashboardApi"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/personal-dashboard/model/types.ts",
+            "apps/web-fsa/src/shared/api/baseApi.ts",
+            "apps/web-fsa/src/shared/api/unwrapApiData.ts"
+          ],
+          "contentHash": "9a3f7d212db2"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/personal-dashboard/model/types.ts",
+          "kind": "type-contract",
+          "responsibility": "Shared types/contracts for types.",
+          "keywords": [
+            "web",
+            "entities",
+            "personal",
+            "dashboard",
+            "model",
+            "types",
+            "React"
+          ],
+          "symbols": [
+            "PersonalProject",
+            "PersonalTask",
+            "PersonalActivity",
+            "BaseDashboardData",
+            "TestingDashboardData",
+            "WorkDashboardData",
+            "DevopsDashboardData",
+            "SecurityDashboardData"
+          ],
+          "contentHash": "ddc72f7a7ea3"
+        },
+        {
           "path": "apps/web-fsa/src/features/language/model/index.tsx",
           "kind": "component",
           "responsibility": "React UI component for index.",
@@ -6649,13 +6732,13 @@
             "default"
           ],
           "related": [
-            "apps/web-fsa/src/entities/permission/model/permissionGrants.ts",
+            "apps/web-fsa/src/entities/permission/model/roles.ts",
             "apps/web-fsa/src/features/access-control/model/usePermission.ts",
             "apps/web-fsa/src/features/auth/model/useAuth.ts",
             "apps/web-fsa/src/features/language/model/index.tsx",
             "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx"
           ],
-          "contentHash": "141b6f7436dc"
+          "contentHash": "5b3cca707fdb"
         },
         {
           "path": "apps/web-fsa/src/pages/dashboard/DashboardRedirect.tsx",
@@ -6856,7 +6939,7 @@
             "apps/web-fsa/src/features/auth/model/authSlice.ts",
             "apps/web-fsa/src/shared/config/backend.ts"
           ],
-          "contentHash": "f2f0871700f0"
+          "contentHash": "d3e683869a17"
         },
         {
           "path": "apps/web-fsa/src/shared/api/unwrapApiData.ts",
@@ -7511,6 +7594,25 @@
           "contentHash": "24920090ddcc"
         },
         {
+          "path": "apps/web-fsa/src/widgets/dashboard/model/dashboardWidgetRegistry.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for dashboard Widget Registry test.",
+          "keywords": [
+            "web",
+            "widgets",
+            "dashboard",
+            "model",
+            "widget",
+            "registry",
+            "test"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/permission/model/permissions.ts",
+            "apps/web-fsa/src/widgets/dashboard/model/dashboardWidgetRegistry.ts"
+          ],
+          "contentHash": "db8603822130"
+        },
+        {
           "path": "apps/web-fsa/src/widgets/dashboard/model/dashboardWidgetRegistry.ts",
           "kind": "registry",
           "responsibility": "Shared constants or registry for dashboard Widget Registry.",
@@ -7525,14 +7627,19 @@
           ],
           "symbols": [
             "DashboardWidgetId",
+            "DashboardWidgetCategory",
+            "DashboardDataSource",
             "DashboardWidgetConfig",
-            "dashboardWidgetRegistry"
+            "dashboardWidgetRegistry",
+            "dashboardCategoryOrder",
+            "canRenderDashboardWidget",
+            "getAllowedDashboardWidgets"
           ],
           "related": [
             "apps/web-fsa/src/entities/permission/model/permissions.ts",
             "apps/web-fsa/src/shared/types/index.ts"
           ],
-          "contentHash": "25afffac2ac0"
+          "contentHash": "01d38eee08ce"
         },
         {
           "path": "apps/web-fsa/src/widgets/dashboard/ui/DashboardWidgets.tsx",
@@ -7552,12 +7659,12 @@
           ],
           "related": [
             "apps/web-fsa/src/entities/permission/model/permissions.ts",
-            "apps/web-fsa/src/entities/project/api/projectsApi.ts",
-            "apps/web-fsa/src/entities/user/api/usersApi.ts",
+            "apps/web-fsa/src/entities/personal-dashboard/api/personalDashboardApi.ts",
+            "apps/web-fsa/src/entities/personal-dashboard/model/types.ts",
             "apps/web-fsa/src/features/access-control/ui/PermissionGate.tsx",
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
-          "contentHash": "10970667e7ac"
+          "contentHash": "866ab7cede2f"
         },
         {
           "path": "apps/web-fsa/src/widgets/navbar/ui/Navbar.tsx",
@@ -7710,7 +7817,7 @@
             "apps/api/src/constants/routes.ts",
             "apps/api/src/middlewares/csrf.middleware.ts"
           ],
-          "contentHash": "92c372982371"
+          "contentHash": "1e90eaafd9d9"
         },
         {
           "path": "apps/api/src/config/env.ts",
@@ -7783,7 +7890,7 @@
             "ROUTES",
             "API_ENDPOINTS"
           ],
-          "contentHash": "687f57fde0f6"
+          "contentHash": "7ca3b07e538c"
         },
         {
           "path": "apps/api/src/constants/security.ts",
@@ -8046,6 +8153,133 @@
             "AdminAnalyticsQuery"
           ],
           "contentHash": "f34a79f67c90"
+        },
+        {
+          "path": "apps/api/src/modules/personal-dashboard/controllers/personalDashboard.controller.ts",
+          "kind": "controller",
+          "responsibility": "HTTP request handlers for personal Dashboard controller.",
+          "keywords": [
+            "api",
+            "modules",
+            "personal",
+            "dashboard",
+            "controllers",
+            "controller",
+            "Express"
+          ],
+          "symbols": [
+            "getBaseDashboardOverview",
+            "getTestingDashboardOverview",
+            "getQaDashboardOverview",
+            "getQualityDashboardOverview",
+            "getDevopsDashboardOverview",
+            "getSecurityDashboardOverview",
+            "getRepresentativeDashboardOverview"
+          ],
+          "related": [
+            "apps/api/src/modules/personal-dashboard/services/personalDashboard.service.ts",
+            "apps/api/src/utils/response.ts"
+          ],
+          "contentHash": "c949337eb0e8"
+        },
+        {
+          "path": "apps/api/src/modules/personal-dashboard/policies/personalDashboard.policy.ts",
+          "kind": "module",
+          "responsibility": "Implementation module for personal Dashboard policy.",
+          "keywords": [
+            "api",
+            "modules",
+            "personal",
+            "dashboard",
+            "policies",
+            "policy",
+            "Express"
+          ],
+          "symbols": [
+            "PERSONAL_DASHBOARD_PERMISSIONS"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts"
+          ],
+          "contentHash": "406e3bfb4a5e"
+        },
+        {
+          "path": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts",
+          "kind": "route",
+          "responsibility": "Express routes and access guards for personal Dashboard routes.",
+          "keywords": [
+            "api",
+            "modules",
+            "personal",
+            "dashboard",
+            "routes",
+            "Express",
+            "backend"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/api/src/constants/routes.ts",
+            "apps/api/src/middlewares/auth.middleware.ts",
+            "apps/api/src/middlewares/permission.middleware.ts",
+            "apps/api/src/modules/personal-dashboard/controllers/personalDashboard.controller.ts",
+            "apps/api/src/modules/personal-dashboard/policies/personalDashboard.policy.ts"
+          ],
+          "contentHash": "e233d98e7ce3"
+        },
+        {
+          "path": "apps/api/src/modules/personal-dashboard/services/personalDashboard.service.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for personal Dashboard service test.",
+          "keywords": [
+            "api",
+            "modules",
+            "personal",
+            "dashboard",
+            "services",
+            "service",
+            "test"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/middlewares/permission.middleware.ts",
+            "apps/api/src/modules/personal-dashboard/policies/personalDashboard.policy.ts",
+            "apps/api/src/modules/personal-dashboard/services/personalDashboard.service.ts"
+          ],
+          "contentHash": "160fe705b3b6"
+        },
+        {
+          "path": "apps/api/src/modules/personal-dashboard/services/personalDashboard.service.ts",
+          "kind": "service",
+          "responsibility": "Business logic for personal Dashboard service.",
+          "keywords": [
+            "api",
+            "modules",
+            "personal",
+            "dashboard",
+            "services",
+            "service",
+            "Express"
+          ],
+          "symbols": [
+            "PersonalDashboardCapability",
+            "buildCapabilityAssignmentFilter",
+            "buildCapabilityProjectFilter",
+            "buildOwnFindingFilter",
+            "getCapabilityProjectIds",
+            "getBaseDashboard",
+            "getTestingDashboard",
+            "getQaDashboard"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/constants/projects.ts",
+            "apps/api/src/constants/tasks.ts",
+            "apps/api/src/middlewares/projectAccess.middleware.ts",
+            "apps/api/src/modules/audit/models/auditLog.model.ts"
+          ],
+          "contentHash": "9d0aa8071d49"
         },
         {
           "path": "apps/api/src/server.ts",

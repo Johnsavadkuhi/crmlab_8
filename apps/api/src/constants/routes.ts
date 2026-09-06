@@ -34,6 +34,17 @@ export const ROUTES = {
     OVERVIEW: "/overview",
   },
 
+  MY_DASHBOARD: {
+    BASE: "/api/me/dashboard",
+    SUMMARY: "/base",
+    TESTING: "/testing",
+    QA: "/qa",
+    QUALITY: "/quality",
+    DEVOPS: "/devops",
+    SECURITY: "/security",
+    REPRESENTATIVE: "/representative",
+  },
+
   PROJECTS: {
     BASE: "/api/projects",
     ELIGIBLE_ASSIGNEES: "/:id/eligible-assignees",
