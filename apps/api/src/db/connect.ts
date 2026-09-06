@@ -3,6 +3,7 @@ import { env } from "@/config/env";
 import { validateLegacyCollections } from "./legacyCompatibility";
 import { ensureProjectPersistenceIndexes } from "@/modules/projects/services/projectIndex.service";
 import { ensureNotificationIndexes } from "@/modules/notifications/services/notificationIndex.service";
+import { ensureAssetIndexes } from "@/modules/assets/services/assetIndex.service";
 
 export async function connectDB() {
   mongoose.set("strictQuery", true);
@@ -21,5 +22,6 @@ export async function connectDB() {
   await validateLegacyCollections();
   await ensureProjectPersistenceIndexes();
   await ensureNotificationIndexes();
+  await ensureAssetIndexes();
   console.log(`MongoDB connected to database=${connectedDatabase}`);
 }

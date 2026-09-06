@@ -8,12 +8,14 @@ import { ROLES } from "@/constants/roles";
 import { ProjectModel } from "@/modules/projects/models/project.model";
 import { ProjectAssignmentModel } from "@/modules/projects/models/projectAssignment.model";
 import { VulnerabilityModel } from "@/modules/pentest/models/vulnerability.model";
+import { AssetModel } from "@/modules/assets/models/asset.model";
 
-test("current model names are pinned to the four legacy collections", () => {
+test("current model names are pinned to the legacy collections", () => {
   assert.equal(UserModel.collection.collectionName, LEGACY_COLLECTIONS.users);
   assert.equal(ProjectModel.collection.collectionName, LEGACY_COLLECTIONS.projects);
   assert.equal(ProjectAssignmentModel.collection.collectionName, LEGACY_COLLECTIONS.projectUsers);
   assert.equal(VulnerabilityModel.collection.collectionName, LEGACY_COLLECTIONS.foundedBugs);
+  assert.equal(AssetModel.collection.collectionName, LEGACY_COLLECTIONS.assets);
   assert.equal(mongoose.models.FoundedBug, undefined);
 });
 
@@ -27,7 +29,7 @@ test("legacy ObjectId relationship fields retain their model references", () => 
 test("collection validation reports missing collections without changing names", () => {
   assert.deepEqual(getLegacyCollectionStatus(["users", "projects"]), {
     available: ["users", "projects"],
-    missing: ["foundedbugs", "projectusers"],
+    missing: ["foundedbugs", "projectusers", "assets"],
   });
 });
 

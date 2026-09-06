@@ -26,6 +26,7 @@ const SecurityBugDetailsPage = lazy(
   () => import("@/pages/security-bugs/SecurityBugDetailsPage")
 );
 const DevopsProjects = lazy(() => import("@/pages/devops-projects/DevopsProjects"));
+const Inventory = lazy(() => import("@/pages/inventory/Inventory"));
 
 export const protectedRouteConfig = [
   {
@@ -58,6 +59,11 @@ export const protectedRouteConfig = [
     path: "/notifications",
     element: Notifications,
     permissions: [],
+  },
+  {
+    path: ROUTE_ACCESS_POLICIES.inventory.path,
+    element: Inventory,
+    permissions: ROUTE_ACCESS_POLICIES.inventory.permissions,
   },
   {
     path: ROUTE_ACCESS_POLICIES.projectDetails.path,

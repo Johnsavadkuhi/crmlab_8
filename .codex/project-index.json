@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatorVersion": 2,
   "generatedBy": "scripts/generate-project-index.mjs",
-  "sourceFingerprint": "46b623ad512d4766",
+  "sourceFingerprint": "b8db3917848f4fb8",
   "workflow": [
     "Read AGENTS.md, then this index or docs/PROJECT_INDEX.md.",
     "Search domains, keywords, symbols, endpoints, and relationships before broad search.",
@@ -59,10 +59,10 @@
     "vendored source"
   ],
   "stats": {
-    "indexedFiles": 389,
+    "indexedFiles": 410,
     "domains": 13,
-    "apiEndpoints": 87,
-    "frontendRoutes": 26
+    "apiEndpoints": 98,
+    "frontendRoutes": 27
   },
   "majorRelationships": [
     {
@@ -119,6 +119,60 @@
     }
   ],
   "apiEndpoints": [
+    {
+      "method": "GET",
+      "path": "/",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
+    },
+    {
+      "method": "POST",
+      "path": "/",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts",
+      "permissions": [
+        "ASSETS_CREATE_OWN"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/:id",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts",
+      "permissions": [
+        "ASSETS_MANAGE_ALL"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/:id",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
+    },
+    {
+      "method": "PATCH",
+      "path": "/:id",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
+    },
+    {
+      "method": "POST",
+      "path": "/:id/assign",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts",
+      "permissions": [
+        "ASSETS_ASSIGN_ALL",
+        "ASSETS_MANAGE_ALL"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/:id/license-key",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
+    },
+    {
+      "method": "POST",
+      "path": "/:id/unassign",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts",
+      "permissions": [
+        "ASSETS_ASSIGN_ALL",
+        "ASSETS_MANAGE_ALL"
+      ]
+    },
     {
       "method": "GET",
       "path": "/api/audit-logs",
@@ -721,6 +775,11 @@
     },
     {
       "method": "GET",
+      "path": "/assigned-to-me",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
+    },
+    {
+      "method": "GET",
       "path": "/base",
       "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
     },
@@ -728,6 +787,11 @@
       "method": "GET",
       "path": "/devops",
       "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/my",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
     },
     {
       "method": "GET",
@@ -756,6 +820,11 @@
       "method": "GET",
       "path": "/security",
       "routeFile": "apps/api/src/modules/personal-dashboard/routes/personalDashboard.routes.ts"
+    },
+    {
+      "method": "GET",
+      "path": "/summary",
+      "routeFile": "apps/api/src/modules/assets/routes/asset.routes.ts"
     },
     {
       "method": "GET",
@@ -813,6 +882,10 @@
     {
       "path": "/forgot-password",
       "source": "apps/web-fsa/src/app/router/AppRoutes.tsx"
+    },
+    {
+      "path": "/inventory",
+      "source": "apps/web-fsa/src/entities/permission/domain/accessPolicy.ts"
     },
     {
       "path": "/login",
@@ -4146,7 +4219,7 @@
             "apps/api/src/modules/users/models/user.model.ts",
             "apps/api/src/modules/users/models/userPermission.model.ts"
           ],
-          "contentHash": "adf276219b6b"
+          "contentHash": "e7982a749486"
         },
         {
           "path": "apps/api/src/modules/users/validators/user.validators.ts",
@@ -4312,7 +4385,7 @@
             "apps/web-fsa/src/entities/permission/model/permissions.ts",
             "apps/web-fsa/src/shared/types/index.ts"
           ],
-          "contentHash": "f3a6131d55aa"
+          "contentHash": "78e62ed4fe6c"
         },
         {
           "path": "apps/web-fsa/src/entities/permission/domain/accessRules.ts",
@@ -4764,7 +4837,7 @@
             "PermissionDefinition",
             "PERMISSIONS"
           ],
-          "contentHash": "5be60f1522f4"
+          "contentHash": "c2d8d19c32f0"
         },
         {
           "path": "packages/authz/src/rolePermissions.ts",
@@ -4786,7 +4859,7 @@
             "packages/authz/src/permissions.ts",
             "packages/authz/src/roles.ts"
           ],
-          "contentHash": "2e0ee3377916"
+          "contentHash": "89b99e14179a"
         },
         {
           "path": "packages/authz/src/roles.ts",
@@ -5959,7 +6032,7 @@
             "AuditAction",
             "AuditEntityType"
           ],
-          "contentHash": "58ab56090195"
+          "contentHash": "47c3b1ec3bfe"
         },
         {
           "path": "apps/api/src/constants/tasks.ts",
@@ -6513,7 +6586,27 @@
             "apps/web-fsa/src/entities/permission/domain/accessPolicy.ts",
             "apps/web-fsa/src/entities/permission/model/permissions.ts"
           ],
-          "contentHash": "bb1472dad62a"
+          "contentHash": "42023e37e8d4"
+        },
+        {
+          "path": "apps/web-fsa/src/app/store/store.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for store test.",
+          "keywords": [
+            "web",
+            "app",
+            "store",
+            "test",
+            "React",
+            "frontend"
+          ],
+          "related": [
+            "apps/web-fsa/src/app/store/store.ts",
+            "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+            "apps/web-fsa/src/entities/asset/model/types.ts",
+            "apps/web-fsa/src/features/auth/model/authSlice.ts"
+          ],
+          "contentHash": "e092c11be22f"
         },
         {
           "path": "apps/web-fsa/src/app/store/store.ts",
@@ -6539,7 +6632,7 @@
             "apps/web-fsa/src/features/ui-state/model/uiSlice.ts",
             "apps/web-fsa/src/shared/api/baseApi.ts"
           ],
-          "contentHash": "4b3c1b3d0abf"
+          "contentHash": "db116cbba4d6"
         },
         {
           "path": "apps/web-fsa/src/app/styles/styles.css",
@@ -6602,6 +6695,210 @@
             "ProjectRiskMetric"
           ],
           "contentHash": "9338c3f02b09"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+          "kind": "api-client",
+          "responsibility": "Frontend API client for assets Api.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "api",
+            "assets",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "assetsApi"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/model/types.ts",
+            "apps/web-fsa/src/shared/api/baseApi.ts",
+            "apps/web-fsa/src/shared/api/unwrapApiData.ts"
+          ],
+          "contentHash": "9a7445bdd273"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/model/jalaliDate.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for jalali Date test.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "model",
+            "jalali",
+            "date",
+            "test"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/model/jalaliDate.ts"
+          ],
+          "contentHash": "559a7cbca6a1"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/model/jalaliDate.ts",
+          "kind": "module",
+          "responsibility": "Implementation module for jalali Date.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "model",
+            "jalali",
+            "date",
+            "React"
+          ],
+          "symbols": [
+            "toLatinDigits",
+            "toPersianDigits",
+            "parseJalaliDate",
+            "jalaliToGregorianDate",
+            "gregorianToJalaliDate"
+          ],
+          "contentHash": "e49006c3cbd3"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/model/types.ts",
+          "kind": "type-contract",
+          "responsibility": "Shared types/contracts for types.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "model",
+            "types",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "Asset",
+            "AssetInput",
+            "AssetList",
+            "AssetSummary",
+            "AssetFilters"
+          ],
+          "related": [
+            "packages/contracts/src/index.ts"
+          ],
+          "contentHash": "4462ab8c5376"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/ui/AssetBadges.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Asset Badges.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "badges",
+            "tsx",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "OwnershipBadge",
+            "StatusBadge",
+            "AssetTypeBadge",
+            "AssetBadges"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/model/types.ts"
+          ],
+          "contentHash": "4944dfefc8f7"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/ui/AssetDetailsDialog.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Asset Details Dialog.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "details",
+            "dialog",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+            "apps/web-fsa/src/entities/asset/ui/AssetBadges.tsx",
+            "apps/web-fsa/src/shared/lib/getApiErrorMessage.ts",
+            "apps/web-fsa/src/shared/types/index.ts",
+            "apps/web-fsa/src/shared/ui/primitives/Button.tsx"
+          ],
+          "contentHash": "1f9a59ac17fa"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/ui/AssetDistributionCharts.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Asset Distribution Charts.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "distribution",
+            "charts",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/model/types.ts"
+          ],
+          "contentHash": "9b1c89ac2c43"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/ui/AssetFormDialog.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Asset Form Dialog.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "form",
+            "dialog",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+            "apps/web-fsa/src/entities/asset/model/jalaliDate.ts",
+            "apps/web-fsa/src/entities/asset/model/types.ts",
+            "apps/web-fsa/src/shared/lib/getApiErrorMessage.ts",
+            "apps/web-fsa/src/shared/types/index.ts"
+          ],
+          "contentHash": "ce50b82e4a61"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/asset/ui/InventoryAnalytics.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Inventory Analytics.",
+          "keywords": [
+            "web",
+            "entities",
+            "asset",
+            "inventory",
+            "analytics",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/model/types.ts"
+          ],
+          "contentHash": "a76959cf880a"
         },
         {
           "path": "apps/web-fsa/src/entities/personal-dashboard/api/personalDashboardApi.ts",
@@ -6670,7 +6967,7 @@
             "LanguageProvider",
             "useLanguage"
           ],
-          "contentHash": "2842b871b7fb"
+          "contentHash": "f7057dfafc58"
         },
         {
           "path": "apps/web-fsa/src/features/language/ui/LanguageSwitcher.tsx",
@@ -6738,7 +7035,7 @@
             "apps/web-fsa/src/features/language/model/index.tsx",
             "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx"
           ],
-          "contentHash": "5b3cca707fdb"
+          "contentHash": "c7772a90da77"
         },
         {
           "path": "apps/web-fsa/src/pages/dashboard/DashboardRedirect.tsx",
@@ -6778,6 +7075,30 @@
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
           "contentHash": "5b372364a71b"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/inventory/Inventory.tsx",
+          "kind": "page",
+          "responsibility": "React route page for Inventory.",
+          "keywords": [
+            "web",
+            "pages",
+            "inventory",
+            "tsx",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+            "apps/web-fsa/src/entities/asset/model/types.ts",
+            "apps/web-fsa/src/entities/asset/ui/AssetBadges.tsx",
+            "apps/web-fsa/src/entities/asset/ui/AssetDetailsDialog.tsx",
+            "apps/web-fsa/src/entities/asset/ui/AssetDistributionCharts.tsx"
+          ],
+          "contentHash": "e80e7200ceb0"
         },
         {
           "path": "apps/web-fsa/src/pages/login/Login.tsx",
@@ -6939,7 +7260,7 @@
             "apps/web-fsa/src/features/auth/model/authSlice.ts",
             "apps/web-fsa/src/shared/config/backend.ts"
           ],
-          "contentHash": "d3e683869a17"
+          "contentHash": "bdc365e4e3bf"
         },
         {
           "path": "apps/web-fsa/src/shared/api/unwrapApiData.ts",
@@ -6977,7 +7298,7 @@
             "SOCKET_URL",
             "SOCKET_PATH"
           ],
-          "contentHash": "700b8563aada"
+          "contentHash": "d287bf13371a"
         },
         {
           "path": "apps/web-fsa/src/shared/lib/dashboard.ts",
@@ -7423,7 +7744,7 @@
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx"
           ],
-          "contentHash": "0c94e4e0f7ee"
+          "contentHash": "a8151d581c07"
         },
         {
           "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsCharts.tsx",
@@ -7667,6 +7988,31 @@
           "contentHash": "866ab7cede2f"
         },
         {
+          "path": "apps/web-fsa/src/widgets/inventory-dashboard/ui/AssetDashboardWidget.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Asset Dashboard Widget.",
+          "keywords": [
+            "web",
+            "widgets",
+            "inventory",
+            "dashboard",
+            "asset",
+            "widget",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/asset/api/assetsApi.ts",
+            "apps/web-fsa/src/entities/asset/ui/InventoryAnalytics.tsx",
+            "apps/web-fsa/src/features/auth/model/useAuth.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/primitives/Button.tsx"
+          ],
+          "contentHash": "68090c25e3e7"
+        },
+        {
           "path": "apps/web-fsa/src/widgets/navbar/ui/Navbar.tsx",
           "kind": "component",
           "responsibility": "React UI component for Navbar.",
@@ -7760,7 +8106,7 @@
             "apps/web-fsa/src/features/language/model/index.tsx",
             "apps/web-fsa/src/shared/types/index.ts"
           ],
-          "contentHash": "22017497b4d7"
+          "contentHash": "27a735f91a0c"
         },
         {
           "path": "apps/web-fsa/src/widgets/sidebar/ui/Sidebar.tsx",
@@ -7784,7 +8130,7 @@
             "apps/web-fsa/src/features/auth/model/useAuth.ts",
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
-          "contentHash": "f0fa38269690"
+          "contentHash": "1ed046f07ab2"
         }
       ]
     },
@@ -7817,7 +8163,7 @@
             "apps/api/src/constants/routes.ts",
             "apps/api/src/middlewares/csrf.middleware.ts"
           ],
-          "contentHash": "1e90eaafd9d9"
+          "contentHash": "971784181249"
         },
         {
           "path": "apps/api/src/config/env.ts",
@@ -7837,7 +8183,7 @@
           "related": [
             "apps/api/src/constants/cors.ts"
           ],
-          "contentHash": "685743a71091"
+          "contentHash": "f27712e8dd01"
         },
         {
           "path": "apps/api/src/constants/cors.ts",
@@ -7890,7 +8236,7 @@
             "ROUTES",
             "API_ENDPOINTS"
           ],
-          "contentHash": "7ca3b07e538c"
+          "contentHash": "d99758786ebe"
         },
         {
           "path": "apps/api/src/constants/security.ts",
@@ -7947,10 +8293,11 @@
           "related": [
             "apps/api/src/config/env.ts",
             "apps/api/src/db/legacyCompatibility.ts",
+            "apps/api/src/modules/assets/services/assetIndex.service.ts",
             "apps/api/src/modules/notifications/services/notificationIndex.service.ts",
             "apps/api/src/modules/projects/services/projectIndex.service.ts"
           ],
-          "contentHash": "b9e1e76526fe"
+          "contentHash": "e0caefc6ff73"
         },
         {
           "path": "apps/api/src/db/seed.ts",
@@ -8153,6 +8500,189 @@
             "AdminAnalyticsQuery"
           ],
           "contentHash": "f34a79f67c90"
+        },
+        {
+          "path": "apps/api/src/modules/assets/controllers/asset.controller.ts",
+          "kind": "controller",
+          "responsibility": "HTTP request handlers for asset controller.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "controllers",
+            "asset",
+            "controller",
+            "Express"
+          ],
+          "symbols": [
+            "getAssets",
+            "getMyAssets",
+            "getAssignedToMeAssets",
+            "getAssetsSummary",
+            "getAssetById",
+            "revealAssetLicenseKey",
+            "postAsset",
+            "patchAsset"
+          ],
+          "related": [
+            "apps/api/src/constants/audit.ts",
+            "apps/api/src/constants/http.ts",
+            "apps/api/src/modules/assets/services/asset.service.ts",
+            "apps/api/src/modules/assets/validators/asset.validators.ts",
+            "apps/api/src/modules/audit/services/audit.service.ts"
+          ],
+          "contentHash": "e2d31922cd8b"
+        },
+        {
+          "path": "apps/api/src/modules/assets/models/asset.model.ts",
+          "kind": "model",
+          "responsibility": "Data schema and persistence rules for asset model.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "models",
+            "asset",
+            "model",
+            "Express"
+          ],
+          "symbols": [
+            "AssetDocument",
+            "AssetModel"
+          ],
+          "related": [
+            "apps/api/src/constants/legacyCollections.ts",
+            "packages/contracts/src/index.ts"
+          ],
+          "contentHash": "70d0f56373ce"
+        },
+        {
+          "path": "apps/api/src/modules/assets/routes/asset.routes.ts",
+          "kind": "route",
+          "responsibility": "Express routes and access guards for asset routes.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "routes",
+            "asset",
+            "Express",
+            "backend"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/constants/routes.ts",
+            "apps/api/src/middlewares/auth.middleware.ts",
+            "apps/api/src/middlewares/permission.middleware.ts",
+            "apps/api/src/middlewares/validate.middleware.ts"
+          ],
+          "contentHash": "e70dd4c7ea0b"
+        },
+        {
+          "path": "apps/api/src/modules/assets/services/asset.service.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for asset service test.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "services",
+            "asset",
+            "service",
+            "test"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/constants/roles.ts",
+            "apps/api/src/modules/assets/models/asset.model.ts",
+            "apps/api/src/modules/assets/services/asset.service.ts",
+            "apps/api/src/modules/assets/validators/asset.validators.ts"
+          ],
+          "contentHash": "a79d94b7a57b"
+        },
+        {
+          "path": "apps/api/src/modules/assets/services/asset.service.ts",
+          "kind": "service",
+          "responsibility": "Business logic for asset service.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "services",
+            "asset",
+            "service",
+            "Express"
+          ],
+          "symbols": [
+            "AssetActor",
+            "AssetListQuery",
+            "canReadAllAssets",
+            "canUpdateAllAssets",
+            "assetScopeFilter",
+            "assetSummaryScopeFilter",
+            "isPersonallyOwnedBy",
+            "canReadAsset"
+          ],
+          "related": [
+            "apps/api/src/config/env.ts",
+            "apps/api/src/constants/http.ts",
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/constants/roles.ts",
+            "apps/api/src/modules/assets/models/asset.model.ts"
+          ],
+          "contentHash": "bd40410324cb"
+        },
+        {
+          "path": "apps/api/src/modules/assets/services/assetIndex.service.ts",
+          "kind": "service",
+          "responsibility": "Business logic for asset Index service.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "services",
+            "asset",
+            "service",
+            "Express"
+          ],
+          "symbols": [
+            "ensureAssetIndexes"
+          ],
+          "related": [
+            "apps/api/src/constants/legacyCollections.ts"
+          ],
+          "contentHash": "87596392db15"
+        },
+        {
+          "path": "apps/api/src/modules/assets/validators/asset.validators.ts",
+          "kind": "validator",
+          "responsibility": "Request validation for asset validators.",
+          "keywords": [
+            "api",
+            "modules",
+            "assets",
+            "validators",
+            "asset",
+            "Express",
+            "backend"
+          ],
+          "symbols": [
+            "createAssetBodySchema",
+            "updateAssetBodySchema",
+            "assetListQuerySchema",
+            "createAssetSchema",
+            "updateAssetSchema",
+            "assetIdSchema",
+            "assetListSchema",
+            "assignAssetSchema"
+          ],
+          "related": [
+            "packages/contracts/src/index.ts"
+          ],
+          "contentHash": "6a57e273c3ad"
         },
         {
           "path": "apps/api/src/modules/personal-dashboard/controllers/personalDashboard.controller.ts",
@@ -8449,6 +8979,27 @@
           "contentHash": "63d1069efe78"
         },
         {
+          "path": "packages/contracts/src/asset.ts",
+          "kind": "type-contract",
+          "responsibility": "Shared types/contracts for asset.",
+          "keywords": [
+            "packages",
+            "contracts",
+            "asset"
+          ],
+          "symbols": [
+            "ASSET_TYPES",
+            "ASSET_OWNER_TYPES",
+            "ASSET_STATUSES",
+            "ASSET_DEPARTMENTS",
+            "ASSET_PLATFORMS",
+            "SOFTWARE_TYPES",
+            "LICENSE_STATUSES",
+            "AssetType"
+          ],
+          "contentHash": "d28955f94db6"
+        },
+        {
           "path": "packages/contracts/src/auth.ts",
           "kind": "type-contract",
           "responsibility": "Shared types/contracts for auth.",
@@ -8499,12 +9050,12 @@
           ],
           "related": [
             "packages/contracts/src/api.ts",
+            "packages/contracts/src/asset.ts",
             "packages/contracts/src/auth.ts",
             "packages/contracts/src/bugReview.ts",
-            "packages/contracts/src/notification.ts",
-            "packages/contracts/src/projectResponsibility.ts"
+            "packages/contracts/src/notification.ts"
           ],
-          "contentHash": "f01b711f8b28"
+          "contentHash": "c7dc46a7d665"
         },
         {
           "path": "packages/contracts/src/notification.ts",
@@ -8687,7 +9238,7 @@
             "LEGACY_COLLECTIONS",
             "LEGACY_COLLECTION_NAMES"
           ],
-          "contentHash": "0a12b62a5e52"
+          "contentHash": "d995933b8a22"
         },
         {
           "path": "apps/api/src/db/diagnoseLegacyCompatibility.ts",
@@ -8705,7 +9256,7 @@
             "apps/api/src/constants/legacyCollections.ts",
             "apps/api/src/db/legacyCompatibility.ts"
           ],
-          "contentHash": "b5e5be7369fd"
+          "contentHash": "3f351860579c"
         },
         {
           "path": "apps/api/src/db/legacyCompatibility.test.ts",
@@ -8722,10 +9273,10 @@
             "apps/api/src/constants/legacyCollections.ts",
             "apps/api/src/constants/roles.ts",
             "apps/api/src/db/legacyCompatibility.ts",
-            "apps/api/src/modules/pentest/models/vulnerability.model.ts",
-            "apps/api/src/modules/projects/models/project.model.ts"
+            "apps/api/src/modules/assets/models/asset.model.ts",
+            "apps/api/src/modules/pentest/models/vulnerability.model.ts"
           ],
-          "contentHash": "bf22ea386cc8"
+          "contentHash": "d663aa2c7b0a"
         },
         {
           "path": "apps/api/src/db/legacyCompatibility.ts",
@@ -8915,7 +9466,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "acb2f7cdd38c"
+          "contentHash": "389fa0daceda"
         },
         {
           "path": "apps/api/.env.production.example",
@@ -8929,7 +9480,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "12b02ba05f3d"
+          "contentHash": "421fc9e8f90c"
         },
         {
           "path": "apps/api/package.json",
@@ -9087,6 +9638,19 @@
             "deployment"
           ],
           "contentHash": "fc3c5cf17343"
+        },
+        {
+          "path": "docs/ASSET_INVENTORY.md",
+          "kind": "documentation",
+          "responsibility": "Repository documentation for ASSET INVENTORY.",
+          "keywords": [
+            "docs",
+            "asset",
+            "inventory",
+            "configuration",
+            "deployment"
+          ],
+          "contentHash": "24ac429a5952"
         },
         {
           "path": "docs/BACKEND_OWNED_RBAC.md",

@@ -14,6 +14,7 @@ import {
 import PageHeader from "@/shared/ui/layout/PageHeader";
 import { useAuth } from "@/features/auth/model/useAuth";
 import AdminAnalyticsDashboard from "@/widgets/admin-dashboard/ui/AdminAnalyticsDashboard";
+import AssetDashboardWidget from "@/widgets/inventory-dashboard/ui/AssetDashboardWidget";
 
 export default function Dashboard() {
   const { t, language } = useLanguage();
@@ -51,6 +52,8 @@ export default function Dashboard() {
           </Text>
         }
       />
+
+      <AssetDashboardWidget />
 
       {visibleWidgets.length === 0 ? (
         <EmptyDashboardState />

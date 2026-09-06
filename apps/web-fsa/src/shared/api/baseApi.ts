@@ -161,6 +161,7 @@ export const api = createApi({
     "AuditLogs",
     "AdminAnalytics",
     "PersonalDashboard",
+    "Assets",
   ],
   endpoints: () => ({}),
 });

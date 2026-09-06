@@ -96,6 +96,11 @@ if (!Number.isInteger(trustProxy) || trustProxy < 0) {
   throw new Error("TRUST_PROXY_HOPS must be a non-negative integer");
 }
 
+const assetAlertDays = Number(process.env.ASSET_ALERT_DAYS || 30);
+if (!Number.isInteger(assetAlertDays) || assetAlertDays < 1 || assetAlertDays > 365) {
+  throw new Error("ASSET_ALERT_DAYS must be an integer between 1 and 365");
+}
+
 const host = process.env.HOST || "0.0.0.0";
 if (
   isProductionEnvironment &&
@@ -141,6 +146,7 @@ export const env = {
   uploadDir,
   projectRoot,
   pocUploadDir,
+  assetAlertDays,
 };
 
 export const isProduction = env.nodeEnv === "production";

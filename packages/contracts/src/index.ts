@@ -59,6 +59,27 @@ export type {
   NotificationTypeContract,
 } from "./notification.js";
 export {
+  ASSET_TYPES,
+  ASSET_OWNER_TYPES,
+  ASSET_STATUSES,
+  ASSET_DEPARTMENTS,
+  ASSET_PLATFORMS,
+  SOFTWARE_TYPES,
+  LICENSE_STATUSES,
+  type AssetType,
+  type AssetOwnerType,
+  type AssetStatus,
+  type DepartmentScope,
+  type AssetPlatform,
+  type SoftwareType,
+  type LicenseStatus,
+  type AssetUserSummary,
+  type AssetContract,
+  type AssetInputContract,
+  type AssetListContract,
+  type AssetSummaryContract,
+} from "./asset.js";
+export {
   BUG_REVIEW_STATES,
   BUG_REVIEW_STATE_VALUES,
   BUG_REVIEW_TRANSITIONS,

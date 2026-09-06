@@ -6,6 +6,7 @@ export const PERMISSION_DOMAINS = [
   "qa",
   "devops",
   "representative",
+  "asset",
 ] as const;
 
 export const PERMISSION_ACTIONS = [
@@ -106,6 +107,17 @@ export const PERMISSIONS = {
   QA_TEST_CASES_CREATE: "qa.test-cases.create.assigned",
   QA_TEST_CASES_UPDATE: "qa.test-cases.update.assigned",
   QA_VULNERABILITIES_READ: "qa.vulnerabilities.read.assigned",
+
+  ASSETS_CREATE_OWN: "asset.assets.create.own",
+  ASSETS_READ_OWN: "asset.assets.read.own",
+  ASSETS_UPDATE_OWN: "asset.assets.update.own",
+  ASSETS_READ_ALL: "asset.assets.read.all",
+  ASSETS_UPDATE_ALL: "asset.assets.update.all",
+  ASSETS_ASSIGN_ALL: "asset.assets.assign.all",
+  ASSETS_MANAGE_ALL: "asset.assets.manage.all",
+  ASSETS_COST_READ_ALL: "asset.cost.read.all",
+  ASSETS_LICENSE_READ_ALL: "asset.license.read.all",
+  ASSETS_SENSITIVE_READ_ALL: "asset.sensitive.read.all",
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -182,6 +194,17 @@ export const PERMISSION_REGISTRY: PermissionDefinition[] = [
   ["QA_TEST_CASES_CREATE", "qa", "test-cases", "create", "assigned", "Create assigned test cases."],
   ["QA_TEST_CASES_UPDATE", "qa", "test-cases", "update", "assigned", "Update assigned test cases."],
   ["QA_VULNERABILITIES_READ", "qa", "vulnerabilities", "read", "assigned", "Read vulnerabilities related to assigned QA work."],
+
+  ["ASSETS_CREATE_OWN", "asset", "assets", "create", "own", "Create personal assets."],
+  ["ASSETS_READ_OWN", "asset", "assets", "read", "own", "Read personally owned and assigned assets."],
+  ["ASSETS_UPDATE_OWN", "asset", "assets", "update", "own", "Update personally owned assets."],
+  ["ASSETS_READ_ALL", "asset", "assets", "read", "all", "Read all organizational assets."],
+  ["ASSETS_UPDATE_ALL", "asset", "assets", "update", "all", "Update all organizational assets."],
+  ["ASSETS_ASSIGN_ALL", "asset", "assets", "assign", "all", "Assign organizational assets to users."],
+  ["ASSETS_MANAGE_ALL", "asset", "assets", "manage", "all", "Manage the complete asset lifecycle."],
+  ["ASSETS_COST_READ_ALL", "asset", "cost", "read", "all", "Read financial asset data."],
+  ["ASSETS_LICENSE_READ_ALL", "asset", "license", "read", "all", "Reveal software license keys."],
+  ["ASSETS_SENSITIVE_READ_ALL", "asset", "sensitive", "read", "all", "Read sensitive technical identifiers."],
 ].map(([code, domain, resource, action, scope, description]) => ({
   key: PERMISSIONS[code as keyof typeof PERMISSIONS],
   domain: domain as PermissionDomain,

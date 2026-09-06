@@ -39,6 +39,7 @@ const sectionOrder = [
 ];
 
 const iconPaths: Record<string, string[]> = {
+  asset: ["M4 7h16v13H4V7Z", "M8 7V4h8v3", "M4 12h16", "M10 12v3h4v-3"],
   bell: ["M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8", "M10 20h4"],
   briefcase: [
     "M10 6V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1",

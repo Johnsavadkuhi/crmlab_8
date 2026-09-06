@@ -88,7 +88,28 @@ async function run() {
     projectUserToUser: await referenceReport(LEGACY_COLLECTIONS.projectUsers, ["pentester", "userId", "manager", "managerId"], LEGACY_COLLECTIONS.users),
     foundedBugToProject: await referenceReport(LEGACY_COLLECTIONS.foundedBugs, ["project", "projectId"], LEGACY_COLLECTIONS.projects),
     foundedBugToUser: await referenceReport(LEGACY_COLLECTIONS.foundedBugs, ["user", "pentester", "creator", "reporter", "createdBy"], LEGACY_COLLECTIONS.users),
+    assetToUser: await referenceReport(LEGACY_COLLECTIONS.assets, ["owner", "assignedTo"], LEGACY_COLLECTIONS.users),
   };
+  const assetCollection = database.collection(LEGACY_COLLECTIONS.assets);
+  const assetExists = names.includes(LEGACY_COLLECTIONS.assets);
+  const duplicateGroups = async (field: string) => assetExists
+    ? (await assetCollection.aggregate([
+        { $match: { [field]: { $type: "string", $ne: "" } } },
+        { $group: { _id: `$${field}`, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } },
+        { $count: "count" },
+      ]).toArray())[0]?.count || 0
+    : 0;
+  const assetDataQuality = assetExists ? {
+    total: await assetCollection.countDocuments(),
+    missingName: await assetCollection.countDocuments({ $or: [{ name: { $exists: false } }, { name: null }, { name: "" }] }),
+    missingOwnership: await assetCollection.countDocuments({ $or: [{ ownerType: { $exists: false } }, { ownerType: null }] }),
+    bankLabMissingAssetCode: await assetCollection.countDocuments({ ownerType: { $in: ["bank", "lab"] }, $or: [{ assetCode: { $exists: false } }, { assetCode: null }, { assetCode: "" }] }),
+    duplicateAssetCodes: await duplicateGroups("assetCode"),
+    duplicateSerialNumbers: await duplicateGroups("serialNumber"),
+    duplicateMacAddresses: await duplicateGroups("macAddress"),
+    indexes: (await assetCollection.listIndexes().toArray()).map(({ name, key, unique, sparse, partialFilterExpression }) => ({ name, key, unique: Boolean(unique), sparse: Boolean(sparse), ...(partialFilterExpression ? { partialFilterExpression } : {}) })),
+  } : { exists: false };
   const compatibilityIssues = status.missing.map(
     (name) => `Expected legacy collection is missing: ${name}`
   );
@@ -116,6 +137,7 @@ async function run() {
     expectedCollections: status,
     collections,
     references,
+    assetDataQuality,
     compatibilityIssues,
   }, null, 2));
   await mongoose.disconnect();

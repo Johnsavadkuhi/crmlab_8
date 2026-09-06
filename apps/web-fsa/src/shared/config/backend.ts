@@ -10,12 +10,12 @@ function removeTrailingSlash(value: string) {
   return value.replace(/\/+$/, "");
 }
 
-export const API_BASE_URL = removeTrailingSlash(
-  import.meta.env.VITE_API_BASE_URL || "/api"
-);
+const runtimeEnv: Partial<ImportMetaEnv> = import.meta.env || {};
+
+export const API_BASE_URL = removeTrailingSlash(runtimeEnv.VITE_API_BASE_URL || "/api");
 
 export const SOCKET_URL = removeTrailingSlash(
-  import.meta.env.VITE_SOCKET_URL || getBrowserOrigin()
+  runtimeEnv.VITE_SOCKET_URL || getBrowserOrigin()
 );
 
-export const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH || "/socket.io";
+export const SOCKET_PATH = runtimeEnv.VITE_SOCKET_PATH || "/socket.io";

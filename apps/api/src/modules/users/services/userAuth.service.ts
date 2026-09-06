@@ -1,4 +1,4 @@
-import { normalizePermissionKey, type Permission } from "@/constants/permissions";
+import { normalizePermissionKey, PERMISSIONS, type Permission } from "@/constants/permissions";
 import type { Role } from "@/constants/roles";
 import { getPermissionsForRoles } from "./role.service";
 import { normalizeRoles, UserModel, type UserDocument } from "../models/user.model";
@@ -7,6 +7,18 @@ import { ProjectAssignmentModel } from "@/modules/projects/models/projectAssignm
 
 function uniquePermissions(permissions: Permission[] = []) {
   return Array.from(new Set(permissions));
+}
+
+function withInventoryBaseline(permissions: Permission[]) {
+  // Inventory is guaranteed for every authenticated account. Merge baseline
+  // grants into the effective session without rewriting legacy direct grants or
+  // undermining explicit permission-removal semantics elsewhere in the system.
+  return uniquePermissions([
+    ...permissions,
+    PERMISSIONS.ASSETS_CREATE_OWN,
+    PERMISSIONS.ASSETS_READ_OWN,
+    PERMISSIONS.ASSETS_UPDATE_OWN,
+  ]);
 }
 
 export async function getDefaultPermissionsForRoles(roles: Role[]) {
@@ -76,7 +88,7 @@ export async function getOrCreateUserPermissions(user: UserDocument, roles = nor
 
 export async function toAuthUserContext(user: UserDocument) {
   const roles = normalizeRoles(user);
-  const permissions = await getOrCreateUserPermissions(user, roles);
+  const permissions = withInventoryBaseline(await getOrCreateUserPermissions(user, roles));
   let projectIds = user.projectIds || [];
   if (!projectIds.length) {
     const assignmentIds = user.userProject || [];

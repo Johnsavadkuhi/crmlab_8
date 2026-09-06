@@ -70,6 +70,17 @@ export const ROUTES = {
     BASE: "/api/settings",
   },
 
+  ASSETS: {
+    BASE: "/api/assets",
+    SUMMARY: "/summary",
+    MY: "/my",
+    ASSIGNED_TO_ME: "/assigned-to-me",
+    DETAIL: "/:id",
+    ASSIGN: "/:id/assign",
+    UNASSIGN: "/:id/unassign",
+    LICENSE_KEY: "/:id/license-key",
+  },
+
   UPLOAD: {
     BASE: "/api/upload",
     AVATAR: "/avatar",

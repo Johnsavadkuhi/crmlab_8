@@ -71,6 +71,15 @@ export const sidebarItems: SidebarItem[] = [
     sectionKey: "sidebar.workspace",
   },
   {
+    icon: "asset",
+    title: "Asset Inventory",
+    titleKey: "sidebar.inventory",
+    path: ROUTE_ACCESS_POLICIES.inventory.path,
+    permissions: ROUTE_ACCESS_POLICIES.inventory.permissions,
+    section: "Workspace",
+    sectionKey: "sidebar.workspace",
+  },
+  {
     icon: "plus",
     title: "Create Project",
     titleKey: "sidebar.createProject",

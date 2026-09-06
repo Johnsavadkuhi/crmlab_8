@@ -21,6 +21,12 @@ export const AUDIT_ACTIONS = {
   UPLOAD_DELETE: "upload.delete",
   DEVOPS_INFO_VIEW: "devops.info_view",
   DEVOPS_INFO_UPDATE: "devops.info_update",
+  ASSET_CREATE: "asset.create",
+  ASSET_UPDATE: "asset.update",
+  ASSET_ASSIGN: "asset.assign",
+  ASSET_UNASSIGN: "asset.unassign",
+  ASSET_RETIRE: "asset.retire",
+  ASSET_LICENSE_REVEAL: "asset.license_reveal",
 } as const;
 
 export const AUDIT_ENTITY_TYPES = {
@@ -31,6 +37,7 @@ export const AUDIT_ENTITY_TYPES = {
   UPLOAD: "upload",
   SESSION: "session",
   DEVOPS_INFO: "devops_info",
+  ASSET: "asset",
 } as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

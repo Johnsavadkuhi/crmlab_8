@@ -106,6 +106,10 @@ export const ROUTE_ACCESS_POLICIES = {
     path: "/settings",
     permissions: [],
   },
+  inventory: {
+    path: "/inventory",
+    permissions: [PERMISSIONS.ASSETS_READ_OWN, PERMISSIONS.ASSETS_READ_ALL],
+  },
 } satisfies Record<string, AccessPolicy & { path: string }>;
 
 export const DASHBOARD_ACCESS_PRIORITY: DashboardAccessPolicy[] = [

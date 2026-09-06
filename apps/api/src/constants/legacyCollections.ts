@@ -3,7 +3,7 @@ export const LEGACY_COLLECTIONS = {
   foundedBugs: "foundedbugs",
   projects: "projects",
   projectUsers: "projectusers",
+  assets: "assets",
 } as const;
 
 export const LEGACY_COLLECTION_NAMES = Object.values(LEGACY_COLLECTIONS);
-

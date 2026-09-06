@@ -15,6 +15,7 @@ import RecentActivity from "./RecentActivity";
 import TesterAnalytics from "./TesterAnalytics";
 import ProjectAnalyticsTables from "./ProjectAnalyticsTables";
 import { formatDateTime, humanize } from "../lib/formatters";
+import AssetDashboardWidget from "@/widgets/inventory-dashboard/ui/AssetDashboardWidget";
 
 function isoDate(value: Date) {
   return value.toISOString().slice(0, 10);
@@ -106,6 +107,8 @@ export default function AdminAnalyticsDashboard() {
   return (
     <VStack align="stretch" gap={{ base: 4, md: 5 }} dir={dir}>
       <PageHeader eyebrow={text.eyebrow} title={text.title} description={text.description} meta={<HStack gap={2} flexWrap="wrap"><HStack gap={1.5} color="var(--apple-muted)"><ShieldCheck size={14} /><Text fontSize="xs" fontWeight="750">{text.updated}: <Box as="span" dir="ltr">{generatedAt}</Box></Text></HStack><Button size="sm" variant="secondary" onClick={() => refetch()} disabled={isFetching} aria-label={text.refresh}><HStack gap={1.5}><RefreshCw size={14} className={isFetching ? "analytics-spin" : undefined} /><Text>{text.refresh}</Text></HStack></Button></HStack>} />
+
+      <AssetDashboardWidget />
 
       <DashboardFilters query={query} preset={preset} options={data?.filters} language={language} copy={text} onQueryChange={onQueryChange} onPresetChange={onPresetChange} onReset={() => { setPreset("30d"); setQuery(initialQuery); }} />
 
