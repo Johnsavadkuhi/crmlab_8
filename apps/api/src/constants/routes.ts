@@ -29,6 +29,11 @@ export const ROUTES = {
     DETAIL: "/:id",
   },
 
+  ADMIN_ANALYTICS: {
+    BASE: "/api/admin/analytics",
+    OVERVIEW: "/overview",
+  },
+
   PROJECTS: {
     BASE: "/api/projects",
     ELIGIBLE_ASSIGNEES: "/:id/eligible-assignees",

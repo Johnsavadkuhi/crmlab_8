@@ -18,8 +18,7 @@ export function getAllowedProjectTableContexts(permissions: Permission[]) {
       if (context === "user-projects") return false;
       const requiredPermission = getProjectTableContextRequiredPermission(context);
       if (requiredPermission && !permissions.includes(requiredPermission)) return false;
-      return context !== "user-projects" ||
-        getProjectTableColumnDefinitions(context, permissions).length > 0;
+      return true;
     }
   );
 }

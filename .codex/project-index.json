@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatorVersion": 2,
   "generatedBy": "scripts/generate-project-index.mjs",
-  "sourceFingerprint": "7f606e084fbabc16",
+  "sourceFingerprint": "ec7d101cd3d087fa",
   "workflow": [
     "Read AGENTS.md, then this index or docs/PROJECT_INDEX.md.",
     "Search domains, keywords, symbols, endpoints, and relationships before broad search.",
@@ -59,9 +59,9 @@
     "vendored source"
   ],
   "stats": {
-    "indexedFiles": 357,
+    "indexedFiles": 381,
     "domains": 13,
-    "apiEndpoints": 79,
+    "apiEndpoints": 80,
     "frontendRoutes": 26
   },
   "majorRelationships": [
@@ -720,6 +720,14 @@
       ]
     },
     {
+      "method": "GET",
+      "path": "/overview",
+      "routeFile": "apps/api/src/modules/admin-analytics/routes/adminAnalytics.routes.ts",
+      "permissions": [
+        "ADMIN_DASHBOARD_READ"
+      ]
+    },
+    {
       "method": "POST",
       "path": "ROUTES.PENTEST.PROJECT_BUG_ADDITIONAL_INFORMATION",
       "routeFile": "apps/api/src/modules/pentest/routes/pentest.routes.ts",
@@ -963,7 +971,7 @@
             "apps/api/src/constants/permissions.ts",
             "apps/api/src/constants/projects.ts"
           ],
-          "contentHash": "9963e6528a85"
+          "contentHash": "07caa874e9e7"
         },
         {
           "path": "apps/api/src/modules/projects/controllers/projectProvisioning.controller.ts",
@@ -1598,7 +1606,7 @@
             "apps/api/src/modules/settings/models/projectTableColumnRegistry.model.ts",
             "apps/api/src/utils/AppError.ts"
           ],
-          "contentHash": "833fbebfe8cd"
+          "contentHash": "6c6e75ed754d"
         },
         {
           "path": "apps/web-fsa/src/entities/project/api/projectsApi.ts",
@@ -2099,6 +2107,138 @@
           "contentHash": "d87a677ac566"
         },
         {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/officialReportSourceData.ts",
+          "kind": "page",
+          "responsibility": "React route page for official Report Source Data.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "official"
+          ],
+          "symbols": [
+            "officialDocumentProfile",
+            "reportQualityControl",
+            "assessmentPersonnelHistoryCaptionFa",
+            "assessmentPersonnelHistory",
+            "publicationRights",
+            "assessmentBasisAndRiskDefinitions",
+            "severityDefinitionRows",
+            "documentAccessControl"
+          ],
+          "contentHash": "dfca2d116146"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/originalReport.css",
+          "kind": "page",
+          "responsibility": "React route page for original Report.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "css"
+          ],
+          "contentHash": "2b6d4a7f23c7"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/originalReportExtras.ts",
+          "kind": "page",
+          "responsibility": "React route page for original Report Extras.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "extras"
+          ],
+          "symbols": [
+            "reportMeta",
+            "documentControl",
+            "assessmentContext",
+            "objectives",
+            "assets",
+            "scope",
+            "rulesOfEngagement",
+            "stopConditions"
+          ],
+          "related": [
+            "apps/web-fsa/src/pages/project-security-report/original/originalWstgData.ts"
+          ],
+          "contentHash": "0b0327c9b316"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/originalReportFaTranslations.ts",
+          "kind": "page",
+          "responsibility": "React route page for original Report Fa Translations.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "translations"
+          ],
+          "symbols": [
+            "buildPersianTranslationMap"
+          ],
+          "related": [
+            "apps/web-fsa/src/pages/project-security-report/reportData.ts"
+          ],
+          "contentHash": "fbd68d97dd3e"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/OriginalSecurityReport.tsx",
+          "kind": "page",
+          "responsibility": "React route page for Original Security Report.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/pages/project-security-report/original/officialReportSourceData.ts",
+            "apps/web-fsa/src/pages/project-security-report/original/originalReportExtras.ts"
+          ],
+          "contentHash": "c92ee2c2655d"
+        },
+        {
+          "path": "apps/web-fsa/src/pages/project-security-report/original/originalWstgData.ts",
+          "kind": "page",
+          "responsibility": "React route page for original Wstg Data.",
+          "keywords": [
+            "web",
+            "pages",
+            "project",
+            "security",
+            "report",
+            "original",
+            "wstg"
+          ],
+          "symbols": [
+            "categories",
+            "reportMeta",
+            "wstgItems",
+            "findings"
+          ],
+          "contentHash": "62a9374424c2"
+        },
+        {
           "path": "apps/web-fsa/src/pages/project-security-report/ProjectSecurityReport.tsx",
           "kind": "page",
           "responsibility": "React route page for Project Security Report.",
@@ -2116,12 +2256,12 @@
           ],
           "related": [
             "apps/web-fsa/src/entities/project/api/projectsApi.ts",
-            "apps/web-fsa/src/pages/project-security-report/reportData.ts",
-            "apps/web-fsa/src/pages/project-security-report/securityReport.css",
+            "apps/web-fsa/src/pages/project-security-report/original/OriginalSecurityReport.tsx",
+            "apps/web-fsa/src/pages/project-security-report/original/originalReportFaTranslations.ts",
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/feedback/LoadingScreen.tsx"
           ],
-          "contentHash": "449a4468b49e"
+          "contentHash": "3ba066246c0e"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/reportData.ts",
@@ -2286,6 +2426,29 @@
           "contentHash": "ac4108646b2d"
         },
         {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/ProjectAnalyticsTables.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Project Analytics Tables.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "project",
+            "analytics",
+            "tables"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/shared/ui/feedback/EmptyState.tsx",
+            "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsPanel.tsx"
+          ],
+          "contentHash": "d09432f5f252"
+        },
+        {
           "path": "docs/PROJECT_EXPLAINED_FROM_ZERO.md",
           "kind": "documentation",
           "responsibility": "Repository documentation for PROJECT EXPLAINED FROM ZERO.",
@@ -2435,7 +2598,7 @@
             "apps/api/src/constants/vulnerabilities.ts",
             "apps/api/src/modules/pentest/services/cvssV4.constants.ts"
           ],
-          "contentHash": "cf30f2091b4a"
+          "contentHash": "39c5686416b8"
         },
         {
           "path": "apps/api/src/modules/pentest/routes/pentest.routes.ts",
@@ -6355,7 +6518,55 @@
             "React",
             "frontend"
           ],
-          "contentHash": "48542251d291"
+          "contentHash": "ba4d74c2360c"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/admin-analytics/api/adminAnalyticsApi.ts",
+          "kind": "api-client",
+          "responsibility": "Frontend API client for admin Analytics Api.",
+          "keywords": [
+            "web",
+            "entities",
+            "admin",
+            "analytics",
+            "api",
+            "React",
+            "frontend"
+          ],
+          "symbols": [
+            "adminAnalyticsApi"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/shared/api/baseApi.ts",
+            "apps/web-fsa/src/shared/api/unwrapApiData.ts"
+          ],
+          "contentHash": "292c7971a7e4"
+        },
+        {
+          "path": "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+          "kind": "type-contract",
+          "responsibility": "Shared types/contracts for types.",
+          "keywords": [
+            "web",
+            "entities",
+            "admin",
+            "analytics",
+            "model",
+            "types",
+            "React"
+          ],
+          "symbols": [
+            "AnalyticsGranularity",
+            "AnalyticsQuery",
+            "AnalyticsKpiId",
+            "AnalyticsKpi",
+            "TrendPoint",
+            "DistributionPoint",
+            "TesterMetric",
+            "ProjectRiskMetric"
+          ],
+          "contentHash": "9338c3f02b09"
         },
         {
           "path": "apps/web-fsa/src/features/language/model/index.tsx",
@@ -6440,11 +6651,11 @@
           "related": [
             "apps/web-fsa/src/entities/permission/model/permissionGrants.ts",
             "apps/web-fsa/src/features/access-control/model/usePermission.ts",
+            "apps/web-fsa/src/features/auth/model/useAuth.ts",
             "apps/web-fsa/src/features/language/model/index.tsx",
-            "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx",
-            "apps/web-fsa/src/widgets/dashboard/model/dashboardWidgetRegistry.ts"
+            "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx"
           ],
-          "contentHash": "fb164b5ddfa3"
+          "contentHash": "141b6f7436dc"
         },
         {
           "path": "apps/web-fsa/src/pages/dashboard/DashboardRedirect.tsx",
@@ -6645,7 +6856,7 @@
             "apps/web-fsa/src/features/auth/model/authSlice.ts",
             "apps/web-fsa/src/shared/config/backend.ts"
           ],
-          "contentHash": "d9131671498a"
+          "contentHash": "f2f0871700f0"
         },
         {
           "path": "apps/web-fsa/src/shared/api/unwrapApiData.ts",
@@ -7083,6 +7294,198 @@
           "contentHash": "197be549cf21"
         },
         {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/lib/formatters.ts",
+          "kind": "module",
+          "responsibility": "Implementation module for formatters.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "lib",
+            "formatters",
+            "React"
+          ],
+          "symbols": [
+            "formatMetric",
+            "formatPeriod",
+            "formatDateTime",
+            "humanize"
+          ],
+          "related": [
+            "apps/web-fsa/src/features/language/model/index.tsx"
+          ],
+          "contentHash": "39475879eb07"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/AdminAnalyticsDashboard.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Admin Analytics Dashboard.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "analytics",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/api/adminAnalyticsApi.ts",
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
+            "apps/web-fsa/src/shared/ui/layout/PageHeader.tsx"
+          ],
+          "contentHash": "0c94e4e0f7ee"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsCharts.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Analytics Charts.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "analytics",
+            "charts",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/feedback/EmptyState.tsx",
+            "apps/web-fsa/src/widgets/admin-dashboard/lib/formatters.ts",
+            "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsPanel.tsx"
+          ],
+          "contentHash": "a068778e9d49"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsPanel.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Analytics Panel.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "analytics",
+            "panel",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "contentHash": "b44bfc73fda5"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/DashboardFilters.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Dashboard Filters.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "filters",
+            "tsx",
+            "React"
+          ],
+          "symbols": [
+            "DatePreset",
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/primitives/Button.tsx",
+            "apps/web-fsa/src/shared/ui/primitives/Input.tsx",
+            "apps/web-fsa/src/widgets/admin-dashboard/lib/formatters.ts"
+          ],
+          "contentHash": "26f3668d03f9"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/KpiGrid.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Kpi Grid.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "kpi",
+            "grid",
+            "tsx"
+          ],
+          "symbols": [
+            "KpiGridSkeleton",
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/widgets/admin-dashboard/lib/formatters.ts"
+          ],
+          "contentHash": "82d21836bcdf"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/RecentActivity.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Recent Activity.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "recent",
+            "activity",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/feedback/EmptyState.tsx",
+            "apps/web-fsa/src/widgets/admin-dashboard/lib/formatters.ts",
+            "apps/web-fsa/src/widgets/admin-dashboard/ui/AnalyticsPanel.tsx"
+          ],
+          "contentHash": "de0486609ce2"
+        },
+        {
+          "path": "apps/web-fsa/src/widgets/admin-dashboard/ui/TesterAnalytics.tsx",
+          "kind": "component",
+          "responsibility": "React UI component for Tester Analytics.",
+          "keywords": [
+            "web",
+            "widgets",
+            "admin",
+            "dashboard",
+            "tester",
+            "analytics",
+            "tsx"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/web-fsa/src/entities/admin-analytics/model/types.ts",
+            "apps/web-fsa/src/features/language/model/index.tsx",
+            "apps/web-fsa/src/shared/ui/feedback/EmptyState.tsx",
+            "apps/web-fsa/src/shared/ui/primitives/Button.tsx",
+            "apps/web-fsa/src/shared/ui/primitives/Input.tsx"
+          ],
+          "contentHash": "5998f9ccd666"
+        },
+        {
           "path": "apps/web-fsa/src/widgets/dashboard-layout/DashboardLayout.tsx",
           "kind": "component",
           "responsibility": "React UI component for Dashboard Layout.",
@@ -7307,7 +7710,7 @@
             "apps/api/src/constants/routes.ts",
             "apps/api/src/middlewares/csrf.middleware.ts"
           ],
-          "contentHash": "b8c476578e84"
+          "contentHash": "92c372982371"
         },
         {
           "path": "apps/api/src/config/env.ts",
@@ -7380,7 +7783,7 @@
             "ROUTES",
             "API_ENDPOINTS"
           ],
-          "contentHash": "e6bfa1ae8845"
+          "contentHash": "687f57fde0f6"
         },
         {
           "path": "apps/api/src/constants/security.ts",
@@ -7528,6 +7931,121 @@
             "apps/api/src/constants/http.ts"
           ],
           "contentHash": "0d48616e649f"
+        },
+        {
+          "path": "apps/api/src/modules/admin-analytics/controllers/adminAnalytics.controller.ts",
+          "kind": "controller",
+          "responsibility": "HTTP request handlers for admin Analytics controller.",
+          "keywords": [
+            "api",
+            "modules",
+            "admin",
+            "analytics",
+            "controllers",
+            "controller",
+            "Express"
+          ],
+          "symbols": [
+            "getAdminAnalyticsOverview"
+          ],
+          "related": [
+            "apps/api/src/modules/admin-analytics/services/adminAnalytics.service.ts",
+            "apps/api/src/modules/admin-analytics/validators/adminAnalytics.validators.ts",
+            "apps/api/src/utils/response.ts"
+          ],
+          "contentHash": "71c4978b8405"
+        },
+        {
+          "path": "apps/api/src/modules/admin-analytics/routes/adminAnalytics.routes.ts",
+          "kind": "route",
+          "responsibility": "Express routes and access guards for admin Analytics routes.",
+          "keywords": [
+            "api",
+            "modules",
+            "admin",
+            "analytics",
+            "routes",
+            "Express",
+            "backend"
+          ],
+          "symbols": [
+            "default"
+          ],
+          "related": [
+            "apps/api/src/constants/permissions.ts",
+            "apps/api/src/constants/roles.ts",
+            "apps/api/src/constants/routes.ts",
+            "apps/api/src/middlewares/auth.middleware.ts",
+            "apps/api/src/middlewares/permission.middleware.ts"
+          ],
+          "contentHash": "737c539f9af6"
+        },
+        {
+          "path": "apps/api/src/modules/admin-analytics/services/adminAnalytics.service.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for admin Analytics service test.",
+          "keywords": [
+            "api",
+            "modules",
+            "admin",
+            "analytics",
+            "services",
+            "service",
+            "test"
+          ],
+          "related": [
+            "apps/api/src/constants/roles.ts",
+            "apps/api/src/middlewares/permission.middleware.ts",
+            "apps/api/src/modules/admin-analytics/services/adminAnalytics.service.ts",
+            "apps/api/src/modules/admin-analytics/validators/adminAnalytics.validators.ts"
+          ],
+          "contentHash": "8dfcad732477"
+        },
+        {
+          "path": "apps/api/src/modules/admin-analytics/services/adminAnalytics.service.ts",
+          "kind": "service",
+          "responsibility": "Business logic for admin Analytics service.",
+          "keywords": [
+            "api",
+            "modules",
+            "admin",
+            "analytics",
+            "services",
+            "service",
+            "Express"
+          ],
+          "symbols": [
+            "RISK_WEIGHTS",
+            "resolveAnalyticsWindow",
+            "getAdminAnalytics"
+          ],
+          "related": [
+            "apps/api/src/constants/http.ts",
+            "apps/api/src/constants/projects.ts",
+            "apps/api/src/constants/vulnerabilities.ts",
+            "apps/api/src/modules/admin-analytics/validators/adminAnalytics.validators.ts",
+            "apps/api/src/modules/audit/models/auditLog.model.ts"
+          ],
+          "contentHash": "4a9632d039a6"
+        },
+        {
+          "path": "apps/api/src/modules/admin-analytics/validators/adminAnalytics.validators.ts",
+          "kind": "validator",
+          "responsibility": "Request validation for admin Analytics validators.",
+          "keywords": [
+            "api",
+            "modules",
+            "admin",
+            "analytics",
+            "validators",
+            "Express",
+            "backend"
+          ],
+          "symbols": [
+            "adminAnalyticsQuerySchema",
+            "AdminAnalyticsQuery"
+          ],
+          "contentHash": "f34a79f67c90"
         },
         {
           "path": "apps/api/src/server.ts",
@@ -8229,7 +8747,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "5cc6a614c309"
+          "contentHash": "45965d22c187"
         },
         {
           "path": "apps/web-fsa/tsconfig.json",
@@ -8404,6 +8922,35 @@
           "contentHash": "c4fbd70b393b"
         },
         {
+          "path": "docs/ORIGINAL_SECURITY_REPORT_INTEGRATION.md",
+          "kind": "documentation",
+          "responsibility": "Repository documentation for ORIGINAL SECURITY REPORT INTEGRATION.",
+          "keywords": [
+            "docs",
+            "original",
+            "security",
+            "report",
+            "integration",
+            "configuration",
+            "deployment"
+          ],
+          "contentHash": "e0ac5c076a38"
+        },
+        {
+          "path": "docs/REPORT_STYLE_ISOLATION.md",
+          "kind": "documentation",
+          "responsibility": "Repository documentation for REPORT STYLE ISOLATION.",
+          "keywords": [
+            "docs",
+            "report",
+            "style",
+            "isolation",
+            "configuration",
+            "deployment"
+          ],
+          "contentHash": "f95a1c8d478d"
+        },
+        {
           "path": "ecosystem.config.cjs",
           "kind": "configuration",
           "responsibility": "Build, runtime, or deployment configuration for ecosystem config.",
@@ -8456,7 +9003,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "2e5ecd253452"
+          "contentHash": "0b52ef6bd2d1"
         },
         {
           "path": "package.json",

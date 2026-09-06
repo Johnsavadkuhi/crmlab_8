@@ -1,4 +1,4 @@
-const categoryDefinitions = [
+const categoryDefinitions: Array<[string, string, string[]]> = [
   ['INFO','Information Gathering', [
     'Conduct Search Engine Discovery Reconnaissance for Information Leakage','Fingerprint Web Server','Review Webserver Metafiles for Information Leakage','Enumerate Applications on Webserver','Review Webpage Content for Information Leakage','Identify Application Entry Points','Map Execution Paths Through Application','Fingerprint Web Application Framework','Fingerprint Web Application','Map Application Architecture']],
   ['CONF','Configuration and Deployment Management Testing', [

@@ -796,7 +796,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
         <section className="report-page" id="scope">
           <SectionHeading num="04" title="Scope & Rules of Engagement" subtitle="Exactly what was authorized, tested, excluded and bounded." icon={<Target/>}/>
           <h3>In-Scope Asset Register</h3><SimpleTable headers={['ID','Asset','Type','URL / Host','Environment','Version / Build','Criticality','Data']} rows={assets.map(a=>[a.id,a.name,a.type,a.url,a.environment,`${a.version} / ${a.build}`,a.criticality,a.data])}/>
-          <div className="two-col"><div><h3>Roles Exercised</h3><div className="chip-row">{scope.roles.map(x=><span className="chip" key={x}>{x}</span>)}</div><h3>Source Review Baseline</h3><KeyValue obj={scope.sourceReview}/></div><div><h3>Out of Scope</h3><ul>{scope.outOfScope.map(x=><li key={x}>{x}</li>)}</ul><h3>Stop Conditions</h3><ul>{stopConditions.map(x=><li key={x}>{x}</li>)}</ul></div></div>
+          <div className="two-col"><div><h3>Roles Exercised</h3><div className="chip-row">{scope.roles.map(x=><span className="chip" key={String(x)}>{String(x)}</span>)}</div><h3>Source Review Baseline</h3><KeyValue obj={scope.sourceReview}/></div><div><h3>Out of Scope</h3><ul>{scope.outOfScope.map(x=><li key={x}>{x}</li>)}</ul><h3>Stop Conditions</h3><ul>{stopConditions.map(x=><li key={x}>{x}</li>)}</ul></div></div>
           <h3>Rules of Engagement</h3><SimpleTable headers={['Activity','Decision','Condition / Boundary']} rows={rulesOfEngagement.map(r=>[r.activity,r.decision,r.condition])}/>
         </section>
       </>}
@@ -911,7 +911,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
 
 function Meta({label,value}){return <div className="meta"><span>{label}</span><strong>{value}</strong></div>}
 function SectionHeading({num,title,subtitle,icon}){return <div className="section-heading"><div className="section-icon">{icon}</div><div><span>{num}</span><h2>{title}</h2><p>{subtitle}</p></div></div>}
-function Metric({icon,label,value,sub,danger}){return <div className={`metric ${danger?'danger':''}`}><div className="metric-icon">{icon}</div><span>{label}</span><strong>{value}</strong><small>{sub}</small></div>}
+function Metric({icon=null,label,value,sub,danger=false}){return <div className={`metric ${danger?'danger':''}`}><div className="metric-icon">{icon}</div><span>{label}</span><strong>{value}</strong><small>{sub}</small></div>}
 function Callout({title,icon,children}){return <div className="callout"><div>{icon}</div><div><strong>{title}</strong><p>{children}</p></div></div>}
 function Bar({label,value,total}){const p=Math.max(5,(value/Math.max(total,1))*100);return <div className="bar"><div><span>{label}</span><b>{value}</b></div><div className="bar-track"><i style={{width:`${p}%`}}/></div></div>}
 function KeyValue({obj}){return <dl className="kv">{Object.entries(obj).map(([k,v])=><React.Fragment key={k}><dt>{k}</dt><dd>{String(v)}</dd></React.Fragment>)}</dl>}
@@ -960,4 +960,3 @@ function PocRecord({p,t}){return <div className="poc-record"><div className="poc
 function CodeBlock({title,value}){return <div className="code-card"><strong>{title}</strong><pre>{value}</pre></div>}
 
 function AnnexTest({t}){return <article className="annex-test"><div className="annex-test-head"><div><span>{t.versionedId}</span><strong>{t.title}</strong><small>{t.categoryName} · {t.asset}</small></div><span className={verdictClass(t.verdict)}>{t.verdict}</span></div>{t.pocs.length===0?<p><b>Applicability:</b> NO — {t.applicabilityReason}</p>:t.pocs.map(p=><PocRecord key={p.id} p={p} t={t}/>)}</article>}
-

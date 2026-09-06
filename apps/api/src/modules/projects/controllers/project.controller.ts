@@ -16,7 +16,10 @@ import {
 import { ROLES } from "@/constants/roles";
 import type { Role } from "@/constants/roles";
 import { ProjectModel, type ProjectDocument } from "../models/project.model";
-import { ProjectAssignmentModel } from "../models/projectAssignment.model";
+import {
+  ProjectAssignmentModel,
+  type ProjectAssignmentDocument,
+} from "../models/projectAssignment.model";
 import { UserModel } from "@/modules/users/models/user.model";
 import {
   getProjectFindingCounts,
@@ -1109,17 +1112,21 @@ async function deadlineRequestActor(project: {
   const expectedRole = projectType === PROJECT_TYPES.QUALITY
     ? PROJECT_ASSIGNMENT_ROLES.QA
     : PROJECT_ASSIGNMENT_ROLES.PENTESTER;
-  const testerAssignment = await ProjectAssignmentModel.findOne({
+  const projectObjectId = new mongoose.Types.ObjectId(String(project._id));
+  const assignmentFilter: QueryFilter<ProjectAssignmentDocument> = {
     status: { $ne: PROJECT_ASSIGNMENT_STATUS.REMOVED },
     $and: [
-      { $or: [{ projectId: project._id }, { project: project._id }] },
+      { $or: [{ projectId: projectObjectId }, { project: projectObjectId }] },
       { $or: [{ userId }, { pentester: userId }] },
       { $or: [
         { assignmentRole: expectedRole },
         { assignmentRole: { $exists: false } },
       ] },
     ],
-  }).select("_id").lean();
+  };
+  const testerAssignment = await ProjectAssignmentModel.findOne(assignmentFilter)
+    .select("_id")
+    .lean();
   return { isTechnicalManager, isTester: Boolean(testerAssignment) };
 }
 

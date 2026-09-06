@@ -8,10 +8,14 @@ import {
   EmptyDashboardState,
 } from "@/widgets/dashboard/ui/DashboardWidgets";
 import PageHeader from "@/shared/ui/layout/PageHeader";
+import { useAuth } from "@/features/auth/model/useAuth";
+import AdminAnalyticsDashboard from "@/widgets/admin-dashboard/ui/AdminAnalyticsDashboard";
 
 export default function Dashboard() {
   const { t } = useLanguage();
   const { permissions } = usePermission();
+  const { roles } = useAuth();
+  if (roles.includes("admin")) return <AdminAnalyticsDashboard />;
   const visibleWidgets = dashboardWidgetRegistry
     .filter((widget) => hasAnyExplicitPermissionGrant(permissions, widget.permissions))
     .sort((left, right) => left.order - right.order);
