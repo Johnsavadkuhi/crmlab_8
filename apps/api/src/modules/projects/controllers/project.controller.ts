@@ -37,6 +37,7 @@ import {
 } from "../services/project.mapper";
 import {
   NON_ADMIN_PROJECT_VIEWS,
+  applyClosedProjectRowActionPolicy,
   assertProjectAssignmentActionAllowed,
   requireProjectListView,
   resolveProjectListQueryCapabilities,
@@ -71,6 +72,7 @@ import {
   closeExpiredProjects,
   getApprovedIndividualDeadline,
   getProjectDeadline,
+  isAssignedSecurityProjectManager,
   notifyInitialDevopsAssignment,
 } from "../services/projectProvisioning.service";
 import {
@@ -499,13 +501,10 @@ function provisioningAwareRowActions(
   const individualDeadline = getApprovedIndividualDeadline(project, userId);
   const isClosed = manuallyClosed ||
     (deadlineEnabled && deadline !== undefined && deadline <= Date.now() && !individualDeadline);
-  return isClosed
-      ? provisionedActions.filter((action) =>
-        action !== "open-pentest-workspace" &&
-        action !== "assign-pentesters" &&
-        action !== "assign-project-members"
-      )
-    : provisionedActions;
+  return applyClosedProjectRowActionPolicy(provisionedActions, {
+    isClosed,
+    isAssignedSecurityManager: isAssignedSecurityProjectManager(project, userId),
+  });
 }
 
 function assertProjectReadyForTeamAssignment(project: {
@@ -1194,19 +1193,23 @@ export const createDeadlineExtensionRequest: RequestHandler = async (req, res, n
     const project = await ProjectModel.findById(String(req.params.id));
     if (!project) throw new AppError("Project not found", HTTP_STATUS.NOT_FOUND);
     const deadline = getProjectDeadline(project);
-    if (!deadline || Date.now() >= deadline.getTime()) {
+    const actor = await deadlineRequestActor(project, req.user!.id);
+    const securityManagerAfterDeadline =
+      actor.isTechnicalManager &&
+      isAssignedSecurityProjectManager(project.toObject(), req.user!.id) &&
+      project.closureReason === "deadline";
+    if (!deadline || (Date.now() >= deadline.getTime() && !securityManagerAfterDeadline)) {
       throw new AppError("Deadline extension requests must be created before the project expires", HTTP_STATUS.CONFLICT);
     }
-    if (project.status === PROJECT_STATUS.CLOSED ||
+    if ((project.status === PROJECT_STATUS.CLOSED && !securityManagerAfterDeadline) ||
       project.status === PROJECT_STATUS.FINISHED ||
       project.status === PROJECT_STATUS.REMOVED) {
       throw new AppError("A closed project cannot accept extension requests", HTTP_STATUS.CONFLICT);
     }
     const requestedDeadline = new Date(req.body.requestedDeadline);
-    if (requestedDeadline.getTime() <= deadline.getTime()) {
+    if (requestedDeadline.getTime() <= Math.max(deadline.getTime(), Date.now())) {
       throw new AppError("The requested deadline must be later than the current project deadline", HTTP_STATUS.BAD_REQUEST);
     }
-    const actor = await deadlineRequestActor(project, req.user!.id);
     if (!actor.isTester && !actor.isTechnicalManager) {
       throw new AppError("Only assigned testers or technical managers can request an extension", HTTP_STATUS.FORBIDDEN);
     }
@@ -1694,7 +1697,7 @@ export const getEligibleProjectAssignees: RequestHandler = async (req, res, next
 export const assignUsersToProject: RequestHandler = async (req, res, next) => {
   try {
     const projectId = String(req.params.id);
-    await assertProjectOpenForWork(projectId);
+    await assertProjectOpenForWork(projectId, req.user!.id);
     if (!mongoose.isValidObjectId(projectId)) {
       throw new AppError("Invalid project id", HTTP_STATUS.BAD_REQUEST);
     }

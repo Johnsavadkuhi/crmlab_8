@@ -268,7 +268,10 @@ function DeadlineManagement({ project, isAdmin }: { project: Project; isAdmin: b
     ["pending", "pending_technical_review", "pending_admin_review"].includes(request.status)
   );
   const canCreateRequest = canRequestExtension &&
-    !project.deadlinePassed && project.status !== "completed";
+    ((!project.deadlinePassed && project.status !== "completed") ||
+      (isTechnicalManager &&
+        project.status === "completed" &&
+        project.closureReason === "deadline"));
 
   const toggleDeadline = async () => {
     try {
@@ -485,7 +488,7 @@ export default function ProjectDetails() {
   const canOpenPentestWorkspace =
     Boolean(project) &&
     project.discipline === "security" &&
-    project.status !== "completed" &&
+    project.allowedActions?.includes("open-pentest-workspace") &&
     hasPermission(PERMISSIONS.PENTEST_PROJECTS_READ);
   const isAdmin = hasPermission(PERMISSIONS.ADMIN_SYSTEM_MANAGE);
 

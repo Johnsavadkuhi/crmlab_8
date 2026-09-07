@@ -21,7 +21,6 @@ export const officialDocumentProfile = {
   operator: 'اداره کل مهندسی املاک',
   incomingLetterNumber: '۱۴۰۵.۳۳۳۲',
   assessmentRound: 'مرتبه اول',
-  sourceCaptionFa: 'جدول ۱ : شناسنامه مستند',
   labelsFa: {
     documentIdentifier: 'شناسه مستند',
     documentCode: 'کد مدرک',
@@ -42,7 +41,6 @@ export const officialDocumentProfile = {
 export const reportQualityControl = {
   controller: 'حسین نوروزی',
   approvalDate: '۱۴۰۵/۰۵/۱۴',
-  sourceCaptionFa: 'جدول ۲ : کنترل کیفیت گزارش',
   checksHeadingFa: 'موارد بررسی شده',
   approvalHeadingFa: 'تایید',
   checks: [
@@ -79,7 +77,6 @@ export const reportQualityControl = {
   ],
 };
 
-export const assessmentPersonnelHistoryCaptionFa = 'جدول ۳ : تاریخچه آزمونگران';
 
 export const assessmentPersonnelHistory = [
   { row: '۱', tester: 'محمدرضا پایدار', assessmentStart: '۱۴۰۵/۰۳/۳۱', assessmentEnd: '۱۴۰۵/۰۴/۲۰', documentationApproval: '—', reportPreparation: '—' },
@@ -120,7 +117,6 @@ export const assessmentBasisAndRiskDefinitions = {
   },
   riskIntroFa: 'این فیلد حاصل ضرب شدت و احتمال سوء استفاده از مخاطره ای است که برنامه ی کاربردی در صورت رعایت نکردن مورد آزمون با آن مواجه می شود و به صورت زیر طبقه بندی می گردد:',
   standards: ['ISO 15408', '۲۵۰۰۰', 'OWASP', 'ASVS'],
-  sourceCaptionFa: 'جدول ۴ : میزان مخاطرات',
 };
 
 export const severityDefinitionRows = [
@@ -156,7 +152,6 @@ export const documentAccessControl = {
   privilegesHeadingFa: 'اختیارات (در رابطه با مفاد این مدرک)',
   classificationHeadingFa: 'طبقه بندی (محرمانه / انتشار محدود / عادی)',
   classification: { fa: 'محرمانه', en: 'Confidential' },
-  sourceCaptionFa: 'جدول ۵ : کنترل دسترسی',
   permissions: [
     {
       entityFa: 'آزمایشگاه', entityEn: 'Laboratory',
@@ -239,9 +234,7 @@ export const cvss31Reference = {
     fa: 'CVSS یک استاندارد امتیازدهی به آسیب پذیری بوده که آزمایشگاه امنیت در راستای بررسی میزان خطر هر آسیب پذیری از آخرین نسخه آن (نسخه ۳.۱) استفاده می کند. در این نسخه از این سازوکار، ۸ پارامتر بررسی شده تا امتیاز نهایی که عددی بین صفر تا ده می باشد، محاسبه گردد. طبیعی است هر چه عدد به سمت ده نزدیک شود به معنی بالاتر بودن شدت آسیب پذیری می باشد. پارامتر های مرتبط به همراه توضیحات مختصر در جدول زیر آمده است :',
     en: 'CVSS is a vulnerability scoring standard. This source page describes CVSS version 3.1 and eight parameters used to calculate a final score from zero to ten.',
   },
-  sourceCaptionFa: 'جدول ۶ : پارامتر های CVSS 3.1',
   possibleValuesIntroFa: 'همچنین مقادیر ممکن برای هر یک از پارامترها در جدول زیر آمده است :',
-  possibleValuesCaptionFa: 'جدول ۷ : مقادیر ممکن برای هر یک از پارامتر های CVSS 3.1',
   parameters: [
     {
       classSource: 'Exploitability Metrics',
@@ -376,7 +369,6 @@ export const testOutcomeAndHardeningSource = {
     { owaspFa: 'کم‌خطر', cvssRange: '0.1 – 3.9' },
     { owaspFa: 'قبول', cvssRange: '0.0' },
   ],
-  sourceCaptionFa: 'جدول ۸ : راهنمای رتبه بندی CVSS3.1',
 };
 
 /**
@@ -409,7 +401,6 @@ export const penetrationTestApproachSource = {
     { labelFa: 'تست جعبه خاکستری', approved: true },
     { labelFa: 'تست جعبه سفید', approved: false },
   ],
-  sourceCaptionFa: 'جدول ۱۱ : انواع تست نفوذ',
   locationTitleFa: '۲.۲-مکان گروه ارزیاب',
   locationIntroFa: 'جایگاه تیم ارزیاب به دو شکل کلی بوده است:',
   locationItemsFa: [
@@ -626,7 +617,6 @@ export const owaspWstgIso15408Crosswalk2026 = {
   topLevelTestCount: 97,
   legacyFinalEvaluation: '42%',
   legacyFinalEvaluationLabelFa: 'نتیجه نهایی ارزیابی (درصد انطباق بیان شود) : 42%',
-  sourceCaptionFa: 'جدول ۱۲ : خلاصه آزمون های انجام گرفته',
   executionDeclarationFa: 'در این ارزیابی، آزمون‌های امنیتی وب بر روی پروژه در چارچوب دوازده دسته آزمون OWASP WSTG انجام شده‌اند. نتیجه هر آزمون باید در رجیستر اجرای آزمون و شواهد مرتبط قابل ردیابی باشد.',
   executionDeclarationEn: 'The project was assessed across all twelve OWASP WSTG web-security testing categories. Each test result is expected to remain traceable to the execution register and supporting evidence.',
   mappingRuleFa: 'نگاشت زیر یک «ماتریس ردیابی فنی» در سطح خانواده‌های الزامات کارکردی امنیتی (SFR) است. OWASP WSTG یک راهنمای آزمون است و ISO/IEC 15408 یک چارچوب الزامات و ارزیابی؛ بنابراین این جدول ادعای هم‌ارزی هنجاری یا انطباق خودکار نمی‌کند. قابلیت اعمال نهایی هر خانواده ISO/IEC 15408 باید با توجه به TOE، سند Security Target و در صورت وجود Protection Profile یا Package پروژه تعیین شود.',
@@ -844,7 +834,7 @@ export const wstgCategoryDescriptionTranscriptionAudit = {
   categoryCount: 12,
   sourceLocked: true,
   transcriptionMethod: 'Manual visual transcription followed by a second visual comparison against the supplied screenshots.',
-  noteFa: 'عنوان و متن توضیحی هر ۱۲ دسته آزمون عیناً از تصاویر مستند مبنا رونویسی و Source-Locked شده است؛ متن توضیحی منبع از توضیح مهندسی نگاشت ISO/IEC 15408 جدا نگهداری می‌شود.',
+  noteFa: 'عنوان و متن توضیحی هر ۱۲ دسته آزمون از تصاویر مستند مبنا رونویسی و کنترل شده است؛ متن توضیحی هر دسته از توضیح مهندسی نگاشت ISO/IEC 15408 جدا نگهداری می‌شود.',
 };
 
 export const owaspWstgIso15408CrosswalkAudit = {

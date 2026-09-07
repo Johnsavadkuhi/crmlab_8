@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PERMISSIONS, type Permission } from "@/constants/permissions";
 import {
+  applyClosedProjectRowActionPolicy,
   assertProjectAssignmentActionAllowed,
   requireProjectListView,
   resolveProjectListQueryCapabilities,
@@ -43,7 +44,6 @@ test("single-workflow users receive only columns granted by effective permission
   assert.ok(qa.includes("testCoverage"));
   assert.ok(!qa.includes("repository"));
 });
-
 test("multiple and overlapping permissions produce a de-duplicated union", () => {
   const permissions = [
     PERMISSIONS.DEVOPS_PROJECTS_READ,
@@ -239,6 +239,41 @@ test("bug review row action requires the project-specific Security Manager respo
   assert.equal(
     resolveProjectRowActions(removedManager, "security").includes("review-security-bugs"),
     false
+  );
+});
+
+test("closed projects retain every previously granted security manager action", () => {
+  const actions = [
+    "view-project",
+    "open-pentest-workspace",
+    "assign-pentesters",
+    "assign-project-members",
+    "review-security-bugs",
+  ] as const;
+
+  assert.deepEqual(
+    applyClosedProjectRowActionPolicy(actions, {
+      isClosed: true,
+      isAssignedSecurityManager: true,
+    }),
+    actions
+  );
+});
+
+test("closed pentesters retain workspace entry while management actions stay blocked", () => {
+  const actions = [
+    "view-project",
+    "open-pentest-workspace",
+    "assign-pentesters",
+    "assign-project-members",
+  ] as const;
+
+  assert.deepEqual(
+    applyClosedProjectRowActionPolicy(actions, {
+      isClosed: true,
+      isAssignedSecurityManager: false,
+    }),
+    ["view-project", "open-pentest-workspace"]
   );
 });
 

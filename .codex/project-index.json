@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatorVersion": 2,
   "generatedBy": "scripts/generate-project-index.mjs",
-  "sourceFingerprint": "b8db3917848f4fb8",
+  "sourceFingerprint": "04c39eea9d9141ab",
   "workflow": [
     "Read AGENTS.md, then this index or docs/PROJECT_INDEX.md.",
     "Search domains, keywords, symbols, endpoints, and relationships before broad search.",
@@ -1079,7 +1079,7 @@
             "apps/api/src/constants/permissions.ts",
             "apps/api/src/constants/projects.ts"
           ],
-          "contentHash": "07caa874e9e7"
+          "contentHash": "f8ff28b544aa"
         },
         {
           "path": "apps/api/src/modules/projects/controllers/projectProvisioning.controller.ts",
@@ -1377,7 +1377,7 @@
             "apps/api/src/constants/projects.ts",
             "apps/api/src/modules/projects/services/projectProvisioning.service.ts"
           ],
-          "contentHash": "046aa65e7959"
+          "contentHash": "205ec7acdc82"
         },
         {
           "path": "apps/api/src/modules/projects/services/projectProvisioning.service.ts",
@@ -1396,11 +1396,11 @@
             "LEGACY_PROJECT_PROVISIONING_STATUS",
             "getProjectDeadline",
             "getApprovedIndividualDeadline",
+            "isAssignedSecurityProjectManager",
             "closeExpiredProjects",
             "assertProjectOpenForWork",
             "getEffectiveProvisioningStatus",
-            "assertProvisioningTransitionAllowed",
-            "assertAssignedRepresentative"
+            "assertProvisioningTransitionAllowed"
           ],
           "related": [
             "apps/api/src/constants/http.ts",
@@ -1409,7 +1409,7 @@
             "apps/api/src/constants/projects.ts",
             "apps/api/src/constants/roles.ts"
           ],
-          "contentHash": "f59096bfef51"
+          "contentHash": "1bd25edeeb83"
         },
         {
           "path": "apps/api/src/modules/projects/services/projectResponsibility.service.test.ts",
@@ -1428,7 +1428,7 @@
             "apps/api/src/constants/permissions.ts",
             "apps/api/src/modules/projects/services/projectResponsibility.service.ts"
           ],
-          "contentHash": "ecbdddc3845e"
+          "contentHash": "2e8dfcdb52da"
         },
         {
           "path": "apps/api/src/modules/projects/services/projectResponsibility.service.ts",
@@ -1511,7 +1511,7 @@
             "apps/api/src/modules/projects/services/projectResponsibility.service.ts",
             "apps/api/src/modules/projects/services/projectTableCapability.service.ts"
           ],
-          "contentHash": "85e00c7d7c59"
+          "contentHash": "c4e3463d1bc0"
         },
         {
           "path": "apps/api/src/modules/projects/services/projectTableCapability.service.ts",
@@ -1534,7 +1534,7 @@
             "PROJECT_VIEW_PERMISSIONS",
             "requireProjectListView",
             "resolveProjectRowActions",
-            "assertProjectAssignmentActionAllowed"
+            "applyClosedProjectRowActionPolicy"
           ],
           "related": [
             "apps/api/src/constants/http.ts",
@@ -1543,7 +1543,7 @@
             "apps/api/src/modules/settings/models/projectTableColumnRegistry.model.ts",
             "apps/api/src/utils/AppError.ts"
           ],
-          "contentHash": "db33aa583e05"
+          "contentHash": "9a48a40e630a"
         },
         {
           "path": "apps/api/src/modules/projects/validators/project.validators.test.ts",
@@ -2212,7 +2212,7 @@
             "apps/web-fsa/src/entities/project/ui/assignment/QaAssignmentPanel.tsx",
             "apps/web-fsa/src/entities/project/ui/table/formatters.ts"
           ],
-          "contentHash": "d87a677ac566"
+          "contentHash": "4201de054902"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/officialReportSourceData.ts",
@@ -2230,14 +2230,14 @@
           "symbols": [
             "officialDocumentProfile",
             "reportQualityControl",
-            "assessmentPersonnelHistoryCaptionFa",
             "assessmentPersonnelHistory",
             "publicationRights",
             "assessmentBasisAndRiskDefinitions",
             "severityDefinitionRows",
-            "documentAccessControl"
+            "documentAccessControl",
+            "vulnerabilityIdentification"
           ],
-          "contentHash": "dfca2d116146"
+          "contentHash": "cdfd7ea675b3"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/originalReport.css",
@@ -2301,7 +2301,7 @@
           "related": [
             "apps/web-fsa/src/pages/project-security-report/reportData.ts"
           ],
-          "contentHash": "fbd68d97dd3e"
+          "contentHash": "661f544475e4"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/OriginalSecurityReport.tsx",
@@ -2321,9 +2321,10 @@
           ],
           "related": [
             "apps/web-fsa/src/pages/project-security-report/original/officialReportSourceData.ts",
-            "apps/web-fsa/src/pages/project-security-report/original/originalReportExtras.ts"
+            "apps/web-fsa/src/pages/project-security-report/original/originalReportExtras.ts",
+            "apps/web-fsa/src/pages/project-security-report/original/originalReportFaTranslations.ts"
           ],
-          "contentHash": "c92ee2c2655d"
+          "contentHash": "de29e6ec32ff"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/originalWstgData.ts",
@@ -2369,7 +2370,7 @@
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/feedback/LoadingScreen.tsx"
           ],
-          "contentHash": "3ba066246c0e"
+          "contentHash": "06b0554ce86d"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/reportData.ts",
@@ -2794,7 +2795,7 @@
             "apps/api/src/modules/pentest/services/bugReview.service.ts",
             "packages/contracts/src/index.ts"
           ],
-          "contentHash": "7100d3aae899"
+          "contentHash": "ae09cc7d8bc6"
         },
         {
           "path": "apps/api/src/modules/pentest/services/bugReview.service.ts",
@@ -2826,7 +2827,7 @@
             "apps/api/src/constants/routes.ts",
             "apps/api/src/modules/notifications/services/notification.service.ts"
           ],
-          "contentHash": "fea1a88aba94"
+          "contentHash": "9e240254a5d2"
         },
         {
           "path": "apps/api/src/modules/pentest/services/cvssV4.constants.ts",
@@ -3366,7 +3367,7 @@
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/primitives/Button.tsx"
           ],
-          "contentHash": "2ceb31aca56f"
+          "contentHash": "09dbe9b45fce"
         },
         {
           "path": "apps/web-fsa/src/entities/pentest/ui/modules/AttachmentUploader.tsx",
@@ -3460,7 +3461,7 @@
             "apps/web-fsa/src/entities/pentest/model/workspace.ts",
             "apps/web-fsa/src/entities/pentest/ui/modules/FindingDetailsModal.tsx"
           ],
-          "contentHash": "09a0b704e550"
+          "contentHash": "def9e55311bd"
         },
         {
           "path": "apps/web-fsa/src/entities/pentest/ui/modules/FindingDetailsModal.tsx",
@@ -3485,7 +3486,7 @@
             "apps/web-fsa/src/entities/pentest/model/workspace.ts",
             "apps/web-fsa/src/entities/pentest/ui/modules/AttachmentUploader.tsx"
           ],
-          "contentHash": "d624006a1107"
+          "contentHash": "179a6422394e"
         },
         {
           "path": "apps/web-fsa/src/entities/pentest/ui/modules/FindingReportModal.tsx",
@@ -3610,7 +3611,7 @@
             "apps/web-fsa/src/features/language/model/index.tsx",
             "apps/web-fsa/src/shared/types/index.ts"
           ],
-          "contentHash": "9b03eae4118e"
+          "contentHash": "6d66342bee46"
         },
         {
           "path": "apps/web-fsa/src/entities/pentest/ui/modules/TextAreaField.tsx",
@@ -3676,7 +3677,7 @@
             "apps/web-fsa/src/entities/pentest/ui/modules/ModuleFallback.tsx",
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
-          "contentHash": "51ea4504960b"
+          "contentHash": "b51635693d47"
         },
         {
           "path": "apps/web-fsa/src/pages/pentest-workspace/PentestWorkspacePage.tsx",
@@ -6967,7 +6968,7 @@
             "LanguageProvider",
             "useLanguage"
           ],
-          "contentHash": "f7057dfafc58"
+          "contentHash": "ad5181ea5981"
         },
         {
           "path": "apps/web-fsa/src/features/language/ui/LanguageSwitcher.tsx",

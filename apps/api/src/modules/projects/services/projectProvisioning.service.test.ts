@@ -6,6 +6,7 @@ import {
   assertAssignedRepresentative,
   buildInitialDevopsAssignmentNotification,
   getEffectiveProvisioningStatus,
+  isAssignedSecurityProjectManager,
 } from "./projectProvisioning.service";
 
 function actor(id: string, roles: Express.UserContext["roles"] = ["representative"]) {
@@ -33,6 +34,20 @@ test("new projects retain their explicit awaiting status", () => {
       provisioningStatus: PROJECT_PROVISIONING_STATUS.AWAITING_DEVOPS_SETUP,
     }),
     PROJECT_PROVISIONING_STATUS.AWAITING_DEVOPS_SETUP
+  );
+});
+
+test("the assigned security manager remains exempt from project lifecycle closure", () => {
+  const project = {
+    type: "security",
+    projectManager: "manager-1",
+    status: "closed",
+  };
+  assert.equal(isAssignedSecurityProjectManager(project, "manager-1"), true);
+  assert.equal(isAssignedSecurityProjectManager(project, "other-user"), false);
+  assert.equal(
+    isAssignedSecurityProjectManager({ ...project, status: "removed" }, "manager-1"),
+    false
   );
 });
 

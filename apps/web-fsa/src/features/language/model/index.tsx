@@ -538,6 +538,9 @@ const en = {
   "pentestWorkspace.status.paused": "Paused",
   "pentestWorkspace.status.timer": "Timer",
   "pentestWorkspace.status.closed": "Closed",
+  "pentestWorkspace.readOnly.title": "This project is closed",
+  "pentestWorkspace.readOnly.description":
+    "You can review the workspace and previous findings, but you can no longer start work, change assessments, or submit, edit, and delete bugs.",
   "pentestWorkspace.owasp.title": "OWASP matrix",
   "pentestWorkspace.owasp.covered": "{covered}/10 covered",
   "pentestWorkspace.owasp.findings": "{count} findings",
@@ -1427,6 +1430,9 @@ const fa: Record<TranslationKey, string> = {
   "pentestWorkspace.status.paused": "متوقف",
   "pentestWorkspace.status.timer": "تایمر",
   "pentestWorkspace.status.closed": "بسته",
+  "pentestWorkspace.readOnly.title": "این پروژه بسته شده است",
+  "pentestWorkspace.readOnly.description":
+    "می‌توانید فضای کاری و یافته‌های قبلی را مشاهده کنید، اما دیگر امکان شروع کار، تغییر ارزیابی‌ها یا ثبت، ویرایش و حذف باگ را ندارید.",
   "pentestWorkspace.owasp.title": "ماتریس OWASP",
   "pentestWorkspace.owasp.covered": "{covered} از ۱۰ پوشش داده شده",
   "pentestWorkspace.owasp.findings": "{count} یافته",
@@ -1782,8 +1788,7 @@ const fa: Record<TranslationKey, string> = {
   "devopsAccess.noDetails": "هنوز جزئیات اتصالی موجود نیست.",
   "project.deadlineExtension.expiredError":
     "درخواست تمدید مهلت باید پیش از پایان مهلت پروژه ثبت شود.",
-  "project.deadlineExtension.requestError":
-    "ارسال درخواست تمدید مهلت امکان‌پذیر نبود.",
+  "project.deadlineExtension.requestError": "ارسال درخواست تمدید مهلت امکان‌پذیر نبود.",
   "project.deadlineExtension.unavailableError":
     "پس از پایان مهلت یا بسته‌شدن پروژه، امکان ثبت درخواست جدید وجود ندارد. درخواست‌های قبلی همچنان قابل بررسی هستند.",
 };

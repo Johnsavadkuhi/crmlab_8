@@ -6,6 +6,7 @@ import {
   PROJECT_ASSIGNMENT_STATUS,
   PROJECT_PROVISIONING_STATUS,
   PROJECT_STATUS,
+  PROJECT_TYPES,
   type ProjectProvisioningStatus,
 } from "@/constants/projects";
 import { ROLES } from "@/constants/roles";
@@ -19,6 +20,7 @@ import { AppError } from "@/utils/AppError";
 import { ProjectModel } from "../models/project.model";
 import { ProjectAssignmentModel } from "../models/projectAssignment.model";
 import { closeProjectAssignmentWorkTimers } from "./projectAssignmentWorkTimer.service";
+import { getEffectiveProjectType } from "./project.mapper";
 
 export const LEGACY_PROJECT_PROVISIONING_STATUS =
   PROJECT_PROVISIONING_STATUS.DEVOPS_READY;
@@ -80,6 +82,23 @@ export function getApprovedIndividualDeadline(
   return deadlines.sort((left, right) => right.getTime() - left.getTime())[0];
 }
 
+export function isAssignedSecurityProjectManager(
+  project: {
+    type?: unknown;
+    projectType?: unknown;
+    projectManager?: unknown;
+    status?: unknown;
+  },
+  userId?: string
+) {
+  return Boolean(
+    userId &&
+    project.status !== PROJECT_STATUS.REMOVED &&
+    getEffectiveProjectType(project) === PROJECT_TYPES.SECURITY &&
+    String(project.projectManager || "") === userId
+  );
+}
+
 export async function closeExpiredProjects(now = new Date()) {
   const filter = {
     status: { $nin: [PROJECT_STATUS.CLOSED, PROJECT_STATUS.FINISHED, PROJECT_STATUS.REMOVED] },
@@ -110,7 +129,7 @@ export async function assertProjectOpenForWork(projectId: string, userId?: strin
   const now = new Date();
   await closeExpiredProjects(now);
   const project = await ProjectModel.findById(projectId)
-    .select("status deadlineEnabled closureReason testExpiresAt expireDay expireDayQuality version deadlineExtensionRequests")
+    .select("type projectType projectManager status deadlineEnabled closureReason testExpiresAt expireDay expireDayQuality version deadlineExtensionRequests")
     .lean();
   if (!project) throw new AppError("Project not found", HTTP_STATUS.NOT_FOUND);
   const deadline = getProjectDeadline(project);
@@ -120,7 +139,10 @@ export async function assertProjectOpenForWork(projectId: string, userId?: strin
   const manuallyClosed = project.status === PROJECT_STATUS.FINISHED ||
     project.status === PROJECT_STATUS.REMOVED ||
     (project.status === PROJECT_STATUS.CLOSED && project.closureReason !== "deadline");
-  if (manuallyClosed || deadlineBlocked) {
+  if (
+    !isAssignedSecurityProjectManager(project, userId) &&
+    (manuallyClosed || deadlineBlocked)
+  ) {
     throw new AppError("This project is closed and no longer accepts work", HTTP_STATUS.CONFLICT);
   }
   return project;

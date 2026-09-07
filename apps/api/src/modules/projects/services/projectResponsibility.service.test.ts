@@ -30,7 +30,6 @@ test("security manager permission overlap does not manufacture a pentester respo
   assert.equal(context.assignments.pentester, false);
   assert.equal(context.capabilities["open-pentest-workspace"], false);
 });
-
 test("explicit security manager and pentester assignments preserve both responsibilities", () => {
   const context = resolveProjectResponsibilityContext({
     user: user([
@@ -70,6 +69,22 @@ test("Pentest Workspace requires permission and a real pentester assignment", ()
 
   assert.equal(withoutAssignment.capabilities["open-pentest-workspace"], false);
   assert.equal(withoutPermission.capabilities["open-pentest-workspace"], false);
+});
+
+test("a closed pentester assignment retains read-only workspace access", () => {
+  const context = resolveProjectResponsibilityContext({
+    user: user([PERMISSIONS.PENTEST_PROJECTS_READ]),
+    project: { type: "security", status: "closed" },
+    assignments: [{
+      projectId: "project-1",
+      userId,
+      assignmentRole: "pentester",
+      status: "closed",
+    }],
+  });
+
+  assert.equal(context.assignments.pentester, true);
+  assert.equal(context.capabilities["open-pentest-workspace"], true);
 });
 
 test("legacy ProjectUser remains supported without trusting assignedUserIds as a role", () => {

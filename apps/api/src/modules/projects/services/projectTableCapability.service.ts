@@ -65,7 +65,6 @@ export function requireProjectListView(
   }
   return typedView;
 }
-
 export function resolveProjectRowActions(
   context: ProjectResponsibilityContextContract,
   view?: NonAdminProjectView
@@ -88,6 +87,17 @@ export function resolveProjectRowActions(
         (view === "security" || view === "quality")) ||
       (action === "review-security-bugs" && view === "security"))
     );
+}
+
+export function applyClosedProjectRowActionPolicy(
+  actions: readonly ProjectRowAction[],
+  input: { isClosed: boolean; isAssignedSecurityManager: boolean }
+): ProjectRowAction[] {
+  if (!input.isClosed || input.isAssignedSecurityManager) return [...actions];
+  return actions.filter((action) =>
+    action !== "assign-pentesters" &&
+    action !== "assign-project-members"
+  );
 }
 
 export function assertProjectAssignmentActionAllowed(

@@ -44,7 +44,7 @@ function OriginalReportFrame({ children, locale }: { children: ReactNode; locale
     doc.documentElement.lang = locale === "fa" ? "fa" : "en";
     doc.documentElement.dir = locale === "fa" ? "rtl" : "ltr";
     doc.body.dir = locale === "fa" ? "rtl" : "ltr";
-    doc.title = locale === "fa" ? "گزارش مهندسی امنیت" : "Security Engineering Report";
+    doc.title = locale === "fa" ? "گزارش ارزیابی مهندسی امنیت" : "Security Engineering Report";
 
     const oldOverride = doc.getElementById("original-report-fa-overrides");
     oldOverride?.remove();
