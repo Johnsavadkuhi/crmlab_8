@@ -98,6 +98,15 @@ const ANNEX_TOC = [
   ['F1','Official Document Profile','official-document-profile'],
   ['A','Evidence Annex','evidence']
 ];
+const MANAGEMENT_TOC = [
+  ['F1','Official Document Profile','official-document-profile'],
+  ['M1','Management Security Posture','management-posture'],
+  ['M2','Priority Risks & Business Impact','management-risks'],
+  ['M3','Assessment Coverage & Assurance','management-coverage'],
+  ['M4','Management Action Plan','management-actions'],
+  ['M5','Management Decisions & Risk Governance','management-decisions'],
+  ['M6','Management Limitations & Assurance','management-assurance']
+];
 
 const ISO15408_LEGACY_PASS = new Set(iso15408LegacyBaseFamilyResults.pass);
 const ISO15408_LEGACY_FAIL = new Set(iso15408LegacyBaseFamilyResults.fail);
@@ -147,6 +156,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
   },[query,category,verdict]);
 
   const isAnnexReport = view==='annex';
+  const isManagementReport = view==='management';
   const showCore = view==='full'||view==='executive'||view==='technical';
   const showPrimaryTechnical = view==='full'||view==='technical';
   const showSupplementaryTechnical = view==='technical';
@@ -154,11 +164,13 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
   const showAnnex = isAnnexReport;
   const visibleToc = isAnnexReport
     ? ANNEX_TOC
-    : view==='full'
-      ? TOC.filter(([, , id])=>MAIN_REPORT_TOC_IDS.has(id))
-      : view==='executive'
-        ? TOC.filter(([, , id])=>EXECUTIVE_REPORT_TOC_IDS.has(id))
-        : TOC.filter(([, , id])=>id!=='evidence');
+    : isManagementReport
+      ? MANAGEMENT_TOC
+      : view==='full'
+        ? TOC.filter(([, , id])=>MAIN_REPORT_TOC_IDS.has(id))
+        : view==='executive'
+          ? TOC.filter(([, , id])=>EXECUTIVE_REPORT_TOC_IDS.has(id))
+          : TOC.filter(([, , id])=>id!=='evidence');
 
   function toggleSet(setter,id){ setter(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;}); }
   function exportJson(){downloadBlob(`${liveReportMeta.reportId}.json`,JSON.stringify({ ...exportBundle, reportMeta: liveReportMeta },null,2),'application/json');}
@@ -191,7 +203,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
         <div className="top-actions">
           <button onClick={onBack}><ArrowLeft size={16}/> Back to CRM</button>
           <button onClick={onToggleLocale}>{locale === "en" ? "فارسی" : "English"}</button>
-          <select value={view} onChange={e=>setView(e.target.value)}><option value="full">Full Report</option><option value="executive">Executive View</option><option value="technical">Technical Report</option><option value="annex">Evidence Annex</option></select>
+          <select value={view} onChange={e=>setView(e.target.value)}><option value="full">Full Report</option><option value="management">Management Report</option><option value="executive">Executive View</option><option value="technical">Technical Report</option><option value="annex">Evidence Annex</option></select>
           <button onClick={(e)=>e.currentTarget.ownerDocument.defaultView?.print()}><Printer size={16}/> Print / PDF</button>
           <div className="export-menu"><button className="primary"><Download size={16}/> Export <ChevronDown size={14}/></button><div className="export-popover">
             <button onClick={exportJson}><FileJson size={16}/> Complete JSON</button><button onClick={exportFindingsCsv}><FileText size={16}/> Findings CSV</button><button onClick={exportTestsCsv}><ListChecks size={16}/> WSTG CSV</button><button onClick={exportPocsCsv}><TestTube2 size={16}/> PoC CSV</button><button onClick={exportEvidenceCsv}><Archive size={16}/> Evidence Manifest</button><button onClick={exportHtml}><FileCheck2 size={16}/> Standalone HTML</button><button onClick={exportMarkdown}><FileText size={16}/> Markdown Summary</button>
@@ -201,11 +213,15 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
 
       <section className="report-page cover" id="cover" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
         <div className="cover-mark"><ShieldCheck size={54}/></div>
-        <h1>{isAnnexReport ? (locale === 'fa' ? 'گزارش پیوست فنی شواهد' : 'Technical Evidence Annex Report') : (locale === 'fa' ? 'گزارش ارزیابی مهندسی امنیت' : liveReportMeta.title)}</h1>
+        <h1>{isAnnexReport
+          ? (locale === 'fa' ? 'گزارش پیوست فنی شواهد' : 'Technical Evidence Annex Report')
+          : isManagementReport
+            ? (locale === 'fa' ? 'گزارش مدیریتی ارزیابی امنیت' : 'Security Assessment Management Report')
+            : (locale === 'fa' ? 'گزارش ارزیابی مهندسی امنیت' : liveReportMeta.title)}</h1>
         <div className="cover-signoff">
-          <div><span>{locale === 'fa' ? 'تهیه‌کننده' : 'Prepared by'}</span><strong>{liveReportMeta.preparedBy}</strong></div>
-          <div><span>{locale === 'fa' ? 'بازبینی‌کننده' : 'Reviewed by'}</span><strong>{liveReportMeta.reviewedBy}</strong></div>
-          <div><span>{locale === 'fa' ? 'تأییدکننده' : 'Approved by'}</span><strong>{liveReportMeta.approvedBy}</strong></div>
+          <div><span>{locale === 'fa' ? 'تهیه‌کننده' : 'Prepared by'}</span><strong>{localize(locale, liveReportMeta.preparedBy)}</strong></div>
+          <div><span>{locale === 'fa' ? 'بازبینی‌کننده' : 'Reviewed by'}</span><strong>{localize(locale, liveReportMeta.reviewedBy)}</strong></div>
+          <div><span>{locale === 'fa' ? 'تأییدکننده' : 'Approved by'}</span><strong>{localize(locale, liveReportMeta.approvedBy)}</strong></div>
           <div><span>{locale === 'fa' ? 'ریسک کلی سازمانی' : 'Overall organizational risk'}</span><strong className="risk-high-text">{locale === 'fa' ? 'بالا' : 'HIGH'}</strong></div>
         </div>
       </section>
@@ -216,6 +232,10 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
       </section>
 
       {isAnnexReport && <OfficialDocumentProfileSection locale={locale}/>} 
+      {isManagementReport && <>
+        <OfficialDocumentProfileSection locale={locale}/>
+        <ManagementReportSections locale={locale} metrics={metrics} liveReportMeta={liveReportMeta}/>
+      </>}
 
       {showCore && <>
         <section className="report-page" id="official-document-profile">
@@ -1031,9 +1051,152 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
         }, field) || definition) : definition])}/>
       </section>}
 
-      <footer className="report-footer"><span>{liveReportMeta.reportId} · v{liveReportMeta.version}</span><span>{liveReportMeta.classification}</span><span>{liveReportMeta.organization}</span></footer>
+      <footer className="report-footer"><span>{liveReportMeta.reportId} · v{liveReportMeta.version}</span><span>{locale === 'fa' ? faClassification(liveReportMeta.classification) : liveReportMeta.classification}</span><span>{locale === 'fa' ? 'آزمایشگاه امنیت و مهندسی کیفیت نرم‌افزار' : liveReportMeta.organization}</span></footer>
     </main>
   </div>;
+}
+
+function ManagementReportSections({locale,metrics,liveReportMeta}:{locale:'en'|'fa';metrics:any;liveReportMeta:any}){
+  const priorityFindings = findings.filter(f=>f.severity==='Critical'||f.severity==='High');
+  const faRoadmap = (r:any) => [
+    fromMap({'P0 — Emergency':'P0 — فوری','P1 — High':'P1 — بالا','P2 — Platform':'P2 — پلتفرم','Strategic':'راهبردی'}, r.phase),
+    fromMap({'24–72 hours':'24 تا 72 ساعت','7 days':'7 روز','30 days':'30 روز','30–90 days':'30 تا 90 روز'}, r.window),
+    fromMap({
+      'Critical exploit paths / exposure reduction':'مهار مسیرهای بهره‌برداری بحرانی و کاهش مواجهه',
+      'High-severity findings and attack-chain breakers':'رفع یافته‌های سطح بالا و شکستن زنجیره‌های حمله',
+      'Medium findings and centralized policy gaps':'رفع یافته‌های متوسط و شکاف‌های سیاست متمرکز',
+      'Systemic root causes and SDLC controls':'رفع علل ریشه‌ای سیستمی و تقویت کنترل‌های چرخه توسعه'
+    }, r.focus),
+    r.items.join('، '),
+    fromMap({
+      'Application & API Engineering':'تیم مهندسی برنامه و API',
+      'Product Security + Service Owners':'امنیت محصول و مالکان سرویس',
+      'Platform / IAM / Web Engineering':'مهندسی پلتفرم / IAM / وب',
+      'Architecture + Security Engineering':'معماری و مهندسی امنیت'
+    }, r.owner),
+    fromMap({
+      'Immediate mitigation deployed and permanent fix in controlled validation.':'کنترل فوری اعمال شده و اصلاح دائمی وارد مرحله اعتبارسنجی کنترل‌شده شده باشد.',
+      'Fix merged, security regression tests passing, ready for independent retest.':'اصلاح ادغام شده، آزمون‌های رگرسیون امنیتی موفق باشند و مورد برای آزمون مجدد مستقل آماده باشد.',
+      'Baseline policy centrally enforced and verified across all assets.':'خط مبنای سیاست امنیتی به‌صورت متمرکز اعمال و در همه دارایی‌های مرتبط راستی‌آزمایی شده باشد.',
+      'Control owners, automated verification, telemetry and governance integrated into delivery lifecycle.':'مالک کنترل، راستی‌آزمایی خودکار، تله‌متری و حاکمیت در چرخه تحویل یکپارچه شده باشند.'
+    }, r.exit)
+  ];
+
+  return <>
+    <section className="report-page" id="management-posture" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M1" title={locale === 'fa' ? 'وضعیت کلان امنیت و جمع‌بندی مدیریتی' : 'Management Security Posture'} subtitle={locale === 'fa' ? 'خلاصه تصمیم‌محور از وضعیت امنیت، سطح ریسک و مهم‌ترین پیام‌های مدیریتی.' : 'Decision-oriented summary of security posture, risk and management priorities.'} icon={<Gauge/>}/>
+      <div className="metric-grid">
+        <Metric icon={<ShieldAlert/>} label={locale === 'fa' ? 'ریسک کلی سازمانی' : 'Overall Organizational Risk'} value={locale === 'fa' ? 'بالا' : 'HIGH'} sub={locale === 'fa' ? 'نیازمند اقدام اصلاحی اولویت‌دار' : 'Prioritized remediation required'} danger/>
+        <Metric icon={<AlertTriangle/>} label={locale === 'fa' ? 'یافته‌های بحرانی' : 'Critical Findings'} value={metrics.critical} sub={locale === 'fa' ? 'بالاترین اولویت اصلاح' : 'Highest remediation priority'} danger/>
+        <Metric icon={<ShieldAlert/>} label={locale === 'fa' ? 'یافته‌های سطح بالا' : 'High Findings'} value={metrics.high} sub={locale === 'fa' ? 'نیازمند رسیدگی سریع' : 'Rapid treatment required'} danger/>
+        <Metric icon={<ClipboardCheck/>} label={locale === 'fa' ? 'پوشش آزمون‌های قابل اعمال' : 'Applicable Test Coverage'} value={`${metrics.coverage}%`} sub={locale === 'fa' ? `${metrics.executed} آزمون اجراشده از ${metrics.applicable} مورد قابل اعمال` : `${metrics.executed} of ${metrics.applicable} applicable tests executed`}/>
+      </div>
+      <div className="two-col">
+        <div className="card">
+          <h3>{locale === 'fa' ? 'جمع‌بندی برای تصمیم‌گیری' : 'Decision Summary'}</h3>
+          <p>{locale === 'fa'
+            ? `در ارزیابی انجام‌شده ${findings.length} یافته امنیتی تأییدشده ثبت شده است که شامل ${metrics.critical} یافته بحرانی، ${metrics.high} یافته سطح بالا و ${metrics.medium} یافته متوسط است. وجود ضعف‌های بحرانی در مرزهای مجوزدهی و اعتبارسنجی ورودی، همراه با قابلیت ترکیب برخی ضعف‌ها در زنجیره‌های حمله، باعث شده است ریسک کلی سازمانی سامانه در سطح «بالا» ارزیابی شود.`
+            : `The assessment records ${findings.length} confirmed security findings, including ${metrics.critical} Critical, ${metrics.high} High and ${metrics.medium} Medium findings. Critical weaknesses at authorization and input-validation boundaries, together with compound attack-chain potential, support an overall organizational risk rating of HIGH.`}</p>
+          <p>{locale === 'fa'
+            ? 'از دید مدیریتی، بستن یافته‌های بحرانی و سطح بالا باید بر مبنای اصلاح فنی، آزمون مجدد مستقل و شواهد قابل ردیابی انجام شود. هر ریسک باقی‌مانده که قرار است پذیرفته شود باید مالک مشخص، دلیل مستند، کنترل جبرانی و تاریخ بازبینی داشته باشد.'
+            : 'From a management perspective, Critical and High findings should close only after technical remediation, independent retest and traceable evidence. Any accepted residual risk should have an accountable owner, documented rationale, compensating controls and a review date.'}</p>
+        </div>
+        <div className="card">
+          <h3>{locale === 'fa' ? 'پیام‌های اصلی برای مدیریت' : 'Management Messages'}</h3>
+          <ul>{(locale === 'fa' ? [
+            'اقدام فوری روی دو یافته بحرانی و کاهش سطح مواجهه تا زمان اصلاح دائمی.',
+            'رفع یافته‌های سطح بالا با تمرکز بر مجوزدهی، کنترل هویت، ورودی‌های ناامن و مسیرهای جایگزین دسترسی.',
+            'تبدیل علل ریشه‌ای مشترک به اقدامات مهندسی سیستمی، نه صرفاً بستن تیکت‌های منفرد.',
+            'الزام آزمون مجدد مستقل و ثبت شواهد برای بستن یافته‌های بحرانی و سطح بالا.',
+            'ثبت رسمی مالک و تصمیم پذیرش برای هر ریسک باقی‌مانده پس از اصلاح.'
+          ] : [
+            'Act immediately on the two Critical findings and reduce exposure until permanent remediation is validated.',
+            'Prioritize High findings across authorization, identity abuse resistance, unsafe input boundaries and alternate access paths.',
+            'Treat shared root causes as systemic engineering initiatives rather than isolated tickets.',
+            'Require independent retest and evidence before closing Critical and High findings.',
+            'Record an accountable owner and formal acceptance decision for any residual risk.'
+          ]).map(x=><li key={x}>{x}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+
+    <section className="report-page" id="management-risks" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M2" title={locale === 'fa' ? 'ریسک‌های اولویت‌دار و اثر کسب‌وکار' : 'Priority Risks & Business Impact'} subtitle={locale === 'fa' ? 'تمرکز مدیریتی بر یافته‌هایی که می‌توانند بیشترین اثر را بر داده، دسترسی و عملیات ایجاد کنند.' : 'Management focus on findings with the greatest potential impact to data, access and operations.'} icon={<ShieldAlert/>}/>
+      <div className="two-col">
+        <div className="card"><h3>{locale === 'fa' ? 'توزیع شدت فنی' : 'Technical Severity Distribution'}</h3><div className="severity-bars"><Bar label={locale === 'fa' ? 'بحرانی' : 'Critical'} value={metrics.critical} total={findings.length}/><Bar label={locale === 'fa' ? 'بالا' : 'High'} value={metrics.high} total={findings.length}/><Bar label={locale === 'fa' ? 'متوسط' : 'Medium'} value={metrics.medium} total={findings.length}/></div></div>
+        <div className="card"><h3>{locale === 'fa' ? 'ریسک ترکیبی' : 'Compound Risk'}</h3><p>{locale === 'fa' ? `تحلیل گزارش ${attackChains.length} زنجیره حمله بالقوه را ثبت کرده است. مهم‌ترین نگرانی مدیریتی این است که ضعف‌های هویت، مجوزدهی، ورودی و مرزهای اعتماد در صورت ترکیب، اثری فراتر از شدت هر یافته به‌تنهایی ایجاد کنند.` : `The report records ${attackChains.length} potential attack chains. The principal management concern is that identity, authorization, input and trust-boundary weaknesses can combine to create impact greater than any isolated finding.`}</p></div>
+      </div>
+      <h3>{locale === 'fa' ? 'یافته‌های بحرانی و سطح بالا' : 'Critical and High Findings'}</h3>
+      <SimpleTable headers={locale === 'fa' ? ['شناسه','یافته','دارایی','شدت','CVSS','اثر کسب‌وکار'] : ['ID','Finding','Asset','Severity','CVSS','Business Impact']} rows={priorityFindings.map(f=>[f.id,localize(locale,f.title),f.asset,<span className={severityClass(f.severity)}>{locale === 'fa' ? faSeverity(f.severity) : f.severity}</span>,f.cvssScore,localize(locale,f.businessImpact)])}/>
+      <Callout title={locale === 'fa' ? 'اصل تصمیم‌گیری' : 'Decision Principle'} icon={<Scale/>}>{locale === 'fa' ? 'اولویت اصلاح فقط از امتیاز CVSS استخراج نمی‌شود. ریسک سازمانی باید اثر کسب‌وکار، بحرانی‌بودن دارایی، میزان مواجهه، قابلیت بهره‌برداری، کنترل‌های موجود و امکان تشکیل زنجیره حمله را نیز در نظر بگیرد.' : 'Remediation priority is not derived from CVSS alone. Organizational risk also considers business impact, asset criticality, exposure, exploitability, existing controls and attack-chain potential.'}</Callout>
+    </section>
+
+    <section className="report-page" id="management-coverage" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M3" title={locale === 'fa' ? 'پوشش ارزیابی و قابلیت اتکای نتایج' : 'Assessment Coverage & Assurance'} subtitle={locale === 'fa' ? 'نمای مدیریتی از دامنه آزمون، شواهد و استانداردهای مرجع.' : 'Management view of test scope, evidence and reference standards.'} icon={<ClipboardCheck/>}/>
+      <div className="metric-grid compact">
+        <Metric label={locale === 'fa' ? 'دسته‌های OWASP WSTG' : 'OWASP WSTG Categories'} value="12" sub={locale === 'fa' ? 'هر 12 دسته در ساختار ارزیابی پوشش داده شده‌اند' : 'all 12 categories represented'}/>
+        <Metric label={locale === 'fa' ? 'آزمون‌های قابل اعمال' : 'Applicable Tests'} value={metrics.applicable} sub={locale === 'fa' ? `${metrics.executed} مورد اجراشده` : `${metrics.executed} executed`}/>
+        <Metric label={locale === 'fa' ? 'اثبات‌های مفهوم' : 'PoC Executions'} value={metrics.pocs} sub={locale === 'fa' ? 'دارای رکورد اجرای قابل ردیابی' : 'traceable execution records'}/>
+        <Metric label={locale === 'fa' ? 'اقلام شواهد' : 'Evidence Artifacts'} value={metrics.evidence} sub={locale === 'fa' ? 'دارای شناسه و فراداده شواهد' : 'identified evidence metadata'}/>
+      </div>
+      <h3>{locale === 'fa' ? 'خط مبنای استانداردها و روش‌ها' : 'Standards and Method Baseline'}</h3>
+      <SimpleTable headers={locale === 'fa' ? ['مرجع','نسخه / خط مبنا','کاربرد مدیریتی'] : ['Reference','Version / Baseline','Management Use']} rows={locale === 'fa' ? [
+        ['OWASP WSTG','v4.2 Stable','طبقه‌بندی و پوشش آزمون‌های امنیت وب در 12 دسته'],
+        ['ISO/IEC 15408','نسخه‌های جاری 2026','ردیابی الزامات کارکردی امنیت و ساختار ارزیابی'],
+        ['OWASP ASVS','5.0.0','مرجع الزامات راستی‌آزمایی امنیت برنامه'],
+        ['CVSS','v4.0','ثبت شدت فنی مستقل از ریسک سازمانی']
+      ] : [
+        ['OWASP WSTG','v4.2 Stable','Web-security testing taxonomy and coverage across 12 categories'],
+        ['ISO/IEC 15408','2026 current baseline','Security functional requirement traceability and evaluation structure'],
+        ['OWASP ASVS','5.0.0','Application-security verification requirement reference'],
+        ['CVSS','v4.0','Technical severity recorded separately from organizational risk']
+      ]}/>
+      <Callout title={locale === 'fa' ? 'معنای پوشش و نتیجه موفق' : 'Meaning of Coverage and PASS'} icon={<CheckCircle2/>}>{locale === 'fa' ? 'پوشش آزمون نشان می‌دهد چه مواردی در دامنه تعریف‌شده بررسی شده‌اند؛ نتیجه موفق به معنای نبود مطلق آسیب‌پذیری نیست. نتیجه‌های گزارش فقط در محدوده نسخه، محیط، نقش‌ها، پیکربندی و بازه زمانی ثبت‌شده معتبر هستند.' : 'Coverage shows what was examined within the defined scope; PASS does not establish the absolute absence of vulnerabilities. Conclusions apply only to the recorded version, environment, roles, configuration and test window.'}</Callout>
+    </section>
+
+    <section className="report-page" id="management-actions" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M4" title={locale === 'fa' ? 'برنامه اقدام مدیریتی' : 'Management Action Plan'} subtitle={locale === 'fa' ? 'برنامه زمان‌بندی‌شده برای کاهش ریسک، اصلاح فنی و کنترل علل ریشه‌ای.' : 'Time-bounded plan for risk reduction, technical remediation and systemic control improvements.'} icon={<Wrench/>}/>
+      <SimpleTable headers={locale === 'fa' ? ['مرحله','بازه هدف','تمرکز','موارد','مالک اقدام','معیار خروج'] : ['Phase','Target Window','Focus','Items','Owner','Exit Criteria']} rows={remediationRoadmap.map(r=>locale === 'fa' ? faRoadmap(r) : [r.phase,r.window,r.focus,r.items.join(', '),r.owner,r.exit])}/>
+      <Callout title={locale === 'fa' ? 'شرط بستن یافته' : 'Finding Closure Gate'} icon={<RefreshCw/>}>{locale === 'fa' ? 'صرف تغییر کد برای بستن یافته کافی نیست. بسته‌شدن باید با موفقیت معیارهای راستی‌آزمایی، ثبت شواهد آزمون مجدد و تعیین وضعیت ریسک باقی‌مانده همراه باشد.' : 'A code change alone is not sufficient for closure. Verification criteria must pass, retest evidence must be attached, and residual risk must be recorded.'}</Callout>
+    </section>
+
+    <section className="report-page" id="management-decisions" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M5" title={locale === 'fa' ? 'تصمیم‌های موردنیاز مدیریت و حاکمیت ریسک' : 'Management Decisions & Risk Governance'} subtitle={locale === 'fa' ? 'تصمیم‌هایی که برای تبدیل یافته‌های فنی به اقدام سازمانی قابل پیگیری لازم هستند.' : 'Decisions required to turn technical findings into accountable organizational action.'} icon={<Target/>}/>
+      <SimpleTable headers={locale === 'fa' ? ['تصمیم مدیریتی','دلیل','مالک پیشنهادی','خروجی مورد انتظار'] : ['Management Decision','Rationale','Suggested Owner','Expected Outcome']} rows={locale === 'fa' ? [
+        ['تأیید اقدام فوری برای SEC-001 و SEC-002','وجود دو یافته بحرانی و اثر بالقوه مستقیم بر محرمانگی و یکپارچگی داده','مالک محصول + تیم مهندسی برنامه و API','کاهش فوری مواجهه و ورود اصلاح دائمی به اعتبارسنجی'],
+        ['الزام آزمون مجدد مستقل برای یافته‌های بحرانی و سطح بالا','جلوگیری از بسته‌شدن صوری بر مبنای صرف تغییر کد','مدیر فنی امنیت / آزمایشگاه','شواهد معتبر بسته‌شدن و تعیین ریسک باقی‌مانده'],
+        ['تعیین مالک رسمی برای علل ریشه‌ای سیستمی','چند یافته از شکاف‌های مشترک معماری و سیاست ناشی می‌شوند','معماری + مهندسی امنیت + مالکان پلتفرم','کاهش احتمال تکرار همان کلاس ضعف در مولفه‌های دیگر'],
+        ['اعمال حاکمیت رسمی پذیرش ریسک','پذیرش بدون مالک، دلیل و تاریخ بازبینی ریسک را پنهان می‌کند','مالک ریسک سازمانی','رکورد قابل ممیزی شامل دلیل، کنترل جبرانی، تأیید و تاریخ انقضا'],
+        ['پایش پیشرفت اصلاح در سطح مدیریتی','تعداد و شدت یافته‌ها نیازمند پیگیری تا بسته‌شدن مبتنی بر شواهد است','مدیر پروژه / امنیت محصول','داشبورد وضعیت اصلاح، آزمون مجدد و ریسک باقی‌مانده']
+      ] : [
+        ['Authorize immediate action for SEC-001 and SEC-002','Two Critical findings present direct confidentiality/integrity risk','Product Owner + Application/API Engineering','Immediate exposure reduction and permanent fix under validation'],
+        ['Require independent retest for Critical/High findings','Prevent administrative closure based on code change alone','Security Technical Manager / Laboratory','Evidence-backed closure and residual-risk determination'],
+        ['Assign accountable owners to systemic root causes','Multiple findings originate from shared architectural/policy gaps','Architecture + Security Engineering + Platform Owners','Reduce recurrence of the same weakness class across components'],
+        ['Enforce formal risk-acceptance governance','Unowned or indefinite acceptance obscures organizational risk','Enterprise Risk Owner','Auditable rationale, compensating controls, approval and expiry'],
+        ['Track remediation progress at management level','Finding volume and severity require oversight through verified closure','Project Manager / Product Security','Management status of remediation, retest and residual risk']
+      ]}/>
+      <Callout title={locale === 'fa' ? 'قاعده پذیرش ریسک' : 'Risk Acceptance Rule'} icon={<Scale/>}>{locale === 'fa' ? 'پذیرش ریسک باید استثنا و تصمیم آگاهانه باشد؛ مالک پاسخگو، دلیل مستند، کنترل‌های جبرانی، سطح ریسک باقی‌مانده، تأیید و تاریخ انقضا یا بازبینی باید ثبت شوند.' : riskMethodology.acceptanceRule}</Callout>
+    </section>
+
+    <section className="report-page" id="management-assurance" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+      <SectionHeading num="M6" title={locale === 'fa' ? 'محدودیت‌ها و بیانیه اطمینان مدیریتی' : 'Management Limitations & Assurance'} subtitle={locale === 'fa' ? 'حدود اتکای تصمیم مدیریتی به نتایج ارزیابی و شواهد موجود.' : 'Boundaries on management reliance on the assessment results and evidence.'} icon={<Eye/>}/>
+      <h3>{locale === 'fa' ? 'محدودیت‌های کلیدی' : 'Key Limitations'}</h3>
+      <ul>{(locale === 'fa' ? [
+        'نتایج فقط به نسخه، محیط، نقش‌ها، پیکربندی، محدوده و بازه زمانی ثبت‌شده مربوط هستند.',
+        'آزمون محدود به زمان نمی‌تواند نبود همه آسیب‌پذیری‌ها را اثبات کند.',
+        'آزمون منع سرویس، آزمون مخرب، دسترسی به داده واقعی مشتری و سامانه‌های شخص ثالث خارج از محدوده انجام نشده است.',
+        'ابزارهای خودکار نقش کمکی داشته‌اند و نتیجه‌های تأییدشده بر اعتبارسنجی تحلیلگر متکی هستند.',
+        'اثر کسب‌وکار و ریسک سازمانی قضاوت مهندسی زمینه‌محور هستند و باید با فرایند رسمی ریسک سازمان تطبیق داده شوند.'
+      ] : limitations.slice(0,5)).map(x=><li key={x}>{x}</li>)}</ul>
+      <div className="assurance"><ShieldCheck size={28}/><div><strong>{locale === 'fa' ? 'بیانیه اطمینان برای مدیریت' : 'Management Assurance Statement'}</strong><p>{locale === 'fa' ? 'در محدوده تعریف‌شده، قواعد اجرا، محیط، بازه آزمون و محدودیت‌های مستند، فعالیت‌های راستی‌آزمایی ثبت‌شده انجام شده و شواهد قابل ردیابی برای نتیجه‌های ارائه‌شده نگهداری شده است. مشاهده‌نشدن یک ضعف، اثبات‌کننده نبود آسیب‌پذیری در خارج از شرایط آزمون‌شده نیست و این گزارش جایگزین فرایند رسمی پذیرش ریسک سازمانی نمی‌شود.' : assuranceStatement}</p></div></div>
+      <div className="data-grid cols-4">
+        <Meta label={locale === 'fa' ? 'شناسه گزارش' : 'Report ID'} value={liveReportMeta.reportId}/>
+        <Meta label={locale === 'fa' ? 'نسخه' : 'Version'} value={liveReportMeta.version}/>
+        <Meta label={locale === 'fa' ? 'تاریخ گزارش' : 'Report Date'} value={liveReportMeta.reportDate}/>
+        <Meta label={locale === 'fa' ? 'مالک ریسک' : 'Risk Owner'} value={locale === 'fa' ? 'مالک ریسک سازمانی پروژه' : liveReportMeta.riskOwner}/>
+      </div>
+    </section>
+  </>;
 }
 
 function Meta({label,value}){return <div className="meta"><span>{label}</span><strong>{value}</strong></div>}
@@ -1257,8 +1420,70 @@ function WstgRecord({t,expanded,onToggle}){
   </article>
 }
 
-function PocRecord({p,t,locale='en'}:{p:any;t:any;locale?:'en'|'fa'}){return <div className="poc-record" dir={locale === 'fa' ? 'rtl' : 'ltr'}><div className="poc-head"><div><TestTube2 size={18}/><strong>{p.id}</strong><span>{t.id}</span></div><span className={verdictClass(p.verdict)}>{locale === 'fa' ? fromMap({PASS:'موفق',FAIL:'ناموفق',INCONCLUSIVE:'نامشخص'}, p.verdict) : p.verdict}</span></div><div className="data-grid cols-4"><Meta label={locale === 'fa' ? 'سطح اطمینان' : 'Confidence'} value={p.confidence}/><Meta label={locale === 'fa' ? 'بازتولید' : 'Reproduction'} value={p.reproduction}/><Meta label={locale === 'fa' ? 'دارایی' : 'Asset'} value={t.asset}/><Meta label={locale === 'fa' ? 'یافته' : 'Finding'} value={t.findingId||'—'}/></div><Sub title={locale === 'fa' ? 'فرضیه' : 'Hypothesis'}><p className="requirement">{localize(locale,p.hypothesis)}</p></Sub><div className="two-col"><Sub title={locale === 'fa' ? 'پیش‌شرط‌ها' : 'Preconditions'}><p>{locale === 'fa' ? 'شرایط و زمینه موردنیاز برای اجرای PoC مطابق رکورد آزمون.' : p.preconditions}</p></Sub><Sub title={locale === 'fa' ? 'روش اجرا' : 'Procedure'}><ol>{p.procedure.map((x:string,i:number)=><li key={i}>{localize(locale,x)}</li>)}</ol></Sub></div><div className="two-col"><Sub title={locale === 'fa' ? 'نتیجه مورد انتظار' : 'Expected Result'}><p>{localize(locale,p.expected)}</p></Sub><Sub title={locale === 'fa' ? 'نتیجه واقعی' : 'Actual Result'}><p>{localize(locale,p.actual)}</p></Sub></div><div className="two-col"><CodeBlock title={locale === 'fa' ? 'شواهد درخواست' : 'Request Evidence'} value={p.request}/><CodeBlock title={locale === 'fa' ? 'شواهد پاسخ' : 'Response Evidence'} value={p.response}/></div><Sub title={locale === 'fa' ? 'رکوردهای شواهد' : 'Evidence Records'}><SimpleTable headers={locale === 'fa' ? ['شناسه شاهد','نوع','زمان','گردآورنده','منبع','SHA-256','محل نگهداری','ماسک‌سازی'] : ['Evidence ID','Type','Timestamp','Collector','Source','SHA-256','Storage','Redaction']} rows={p.evidence.map((e:any)=>[e.id,e.type,e.timestamp,e.collector,e.source,e.sha256.slice(0,18)+'…',e.storage,e.redaction])}/></Sub></div>}
-function CodeBlock({title,value}){return <div className="code-card"><strong>{title}</strong><pre>{value}</pre></div>}
+function PocRecord({p,t,locale='en'}:{p:any;t:any;locale?:'en'|'fa'}){
+  const faValue = (value: unknown) => {
+    const raw = String(value ?? '');
+    return fromMap({
+      CONFIRMED:'تأییدشده',HIGH:'بالا',MODERATE:'متوسط',LOW:'پایین',
+      YES:'بله',NO:'خیر',REDACTED:'ماسک‌شده','NOT REDACTED':'بدون ماسک',
+      'HTTP Transaction':'تراکنش HTTP','Screenshot':'تصویر','Screenshot / Observation':'تصویر / مشاهده',
+      'Intercept Proxy':'پراکسی رهگیری','Browser / Test Client':'مرورگر / کلاینت آزمون'
+    }, raw);
+  };
+  const faHypothesis = (()=>{
+    const translated = localize('fa',p.hypothesis);
+    if (translated !== p.hypothesis) return translated;
+    if (String(p.hypothesis).startsWith('The security control represented by')) return `کنترل امنیتی متناظر با ${t.id} باید با تغییر زمینه درخواست، متد، نقش یا گونه ورودی در محدوده مجاز آزمون همچنان به‌درستی اعمال شود.`;
+    return 'کنترل امنیتی مورد آزمون باید در مسیر و شرایط ثبت‌شده، رفتار مورد انتظار امنیتی را به‌صورت قابل تکرار اعمال کند.';
+  })();
+  const faPreconditions = String(p.preconditions || '').includes('secondary test identity')
+    ? 'هویت آزمون ثانویه یا زمینه جایگزین مجاز، همان دارایی داخل محدوده و اجرای کنترل‌شده و غیرمخرب در دسترس باشد.'
+    : 'هویت آزمون تأییدشده، شرایط اولیه مشخص و دسترسی مجاز به دارایی داخل محدوده برای اجرای کنترل‌شده آزمون فراهم باشد.';
+  const faProcedure = (text:string) => {
+    const x=String(text || '');
+    const direct = fromMap({
+      'Prepare the approved test identity and establish a known-good baseline.':'هویت آزمون تأییدشده آماده و یک خط مبنای سالم و شناخته‌شده ایجاد شود.',
+      'Modify only the security-relevant request/input dimension under test.':'فقط مولفه امنیتی درخواست یا ورودی که موضوع آزمون است تغییر داده شود.',
+      'Submit the request using the authorized assessment channel.':'درخواست از طریق کانال مجاز ارزیابی ارسال شود.',
+      'Capture response and observable application behavior.':'پاسخ و رفتار قابل مشاهده برنامه ثبت شود.',
+      'Compare actual behavior with the expected security property and record verdict.':'رفتار واقعی با ویژگی امنیتی مورد انتظار مقایسه و نتیجه آزمون ثبت شود.',
+      'Establish the baseline behavior using the approved test identity.':'رفتار خط مبنا با استفاده از هویت آزمون تأییدشده ثبت شود.',
+      'Change one security-relevant dimension (role, object, method, input encoding, browser context, or request path).':'یک مولفه امنیتی مرتبط مانند نقش، شیء، متد، کدگذاری ورودی، زمینه مرورگر یا مسیر درخواست تغییر داده شود.',
+      'Submit the alternate request while preserving all unrelated conditions.':'درخواست جایگزین در حالی ارسال شود که سایر شرایط نامرتبط بدون تغییر باقی بمانند.',
+      'Capture response, application behavior, and any relevant logs.':'پاسخ، رفتار برنامه و لاگ‌های مرتبط ثبت شوند.',
+      'Compare the observation to the stated security requirement.':'مشاهده ثبت‌شده با الزام امنیتی تعریف‌شده مقایسه شود.'
+    }, x);
+    if (direct !== x) return direct;
+    if (x.startsWith('Execute the WSTG test objective against ')) return `هدف آزمون WSTG روی دارایی ${t.asset} اجرا شود.`;
+    const translated=localize('fa',x);
+    return translated !== x ? translated : x;
+  };
+  const faExpected = (()=>{
+    const translated=localize('fa',p.expected);
+    if (translated !== p.expected) return translated;
+    if (String(p.expected).startsWith('The security control should remain consistent')) return 'کنترل امنیتی باید در مسیرها و زمینه‌های جایگزین معادل نیز به‌صورت یکنواخت و بدون امکان دور زدن اعمال شود.';
+    return 'ویژگی امنیتی تعریف‌شده باید در شرایط آزمون اعمال شود و رفتار خارج از سیاست مجاز مشاهده نشود.';
+  })();
+  const faActual = (()=>{
+    const translated=localize('fa',p.actual);
+    if (translated !== p.actual) return translated;
+    return fromMap({
+      'The alternate scenario reproduced behavior consistent with the confirmed finding.':'سناریوی جایگزین نیز رفتاری سازگار با یافته تأییدشده را بازتولید کرد.',
+      'The alternate scenario produced inconsistent evidence and requires bounded follow-up verification.':'سناریوی جایگزین شواهد ناسازگار ایجاد کرد و به راستی‌آزمایی تکمیلی محدود نیاز دارد.',
+      'No bypass or security-relevant deviation was observed in the alternate scenario.':'در سناریوی جایگزین، دور زدن کنترل یا انحراف امنیتی قابل مشاهده‌ای ثبت نشد.'
+    }, p.actual);
+  })();
+  return <div className="poc-record" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
+    <div className="poc-head"><div><TestTube2 size={18}/><strong>{p.id}</strong><span>{t.id}</span></div><span className={verdictClass(p.verdict)}>{locale === 'fa' ? fromMap({PASS:'موفق',FAIL:'ناموفق',INCONCLUSIVE:'نامشخص',PARTIAL:'ناقص','N/A':'نامرتبط'}, p.verdict) : p.verdict}</span></div>
+    <div className="data-grid cols-4"><Meta label={locale === 'fa' ? 'سطح اطمینان' : 'Confidence'} value={locale === 'fa' ? faValue(p.confidence) : p.confidence}/><Meta label={locale === 'fa' ? 'بازتولید' : 'Reproduction'} value={p.reproduction}/><Meta label={locale === 'fa' ? 'دارایی' : 'Asset'} value={t.asset}/><Meta label={locale === 'fa' ? 'یافته مرتبط' : 'Finding'} value={t.findingId||'—'}/></div>
+    <Sub title={locale === 'fa' ? 'فرضیه آزمون' : 'Hypothesis'}><p className="requirement">{locale === 'fa' ? faHypothesis : p.hypothesis}</p></Sub>
+    <div className="two-col"><Sub title={locale === 'fa' ? 'پیش‌شرط‌ها' : 'Preconditions'}><p>{locale === 'fa' ? faPreconditions : p.preconditions}</p></Sub><Sub title={locale === 'fa' ? 'روش اجرا' : 'Procedure'}><ol>{p.procedure.map((x:string,i:number)=><li key={i}>{locale === 'fa' ? faProcedure(x) : x}</li>)}</ol></Sub></div>
+    <div className="two-col"><Sub title={locale === 'fa' ? 'نتیجه مورد انتظار' : 'Expected Result'}><p>{locale === 'fa' ? faExpected : p.expected}</p></Sub><Sub title={locale === 'fa' ? 'نتیجه واقعی' : 'Actual Result'}><p>{locale === 'fa' ? faActual : p.actual}</p></Sub></div>
+    <div className="two-col"><CodeBlock title={locale === 'fa' ? 'درخواست ثبت‌شده' : 'Request Evidence'} value={p.request}/><CodeBlock title={locale === 'fa' ? 'پاسخ ثبت‌شده' : 'Response Evidence'} value={p.response}/></div>
+    <Sub title={locale === 'fa' ? 'رکوردهای شواهد' : 'Evidence Records'}><SimpleTable headers={locale === 'fa' ? ['شناسه شاهد','نوع','زمان','گردآورنده','منبع','SHA-256','محل نگهداری','وضعیت ماسک‌سازی'] : ['Evidence ID','Type','Timestamp','Collector','Source','SHA-256','Storage','Redaction']} rows={p.evidence.map((e:any)=>[e.id,locale === 'fa' ? faValue(e.type) : e.type,e.timestamp,e.collector,locale === 'fa' ? faValue(e.source) : e.source,e.sha256.slice(0,18)+'…',e.storage,locale === 'fa' ? faValue(e.redaction) : e.redaction])}/></Sub>
+  </div>;
+}
+function CodeBlock({title,value}){return <div className="code-card"><strong>{title}</strong><pre dir="ltr" data-source-literal="true">{value}</pre></div>}
 
-function AnnexTest({t,locale}:{t:any;locale:'en'|'fa'}){return <article className="annex-test" dir={locale === 'fa' ? 'rtl' : 'ltr'}><div className="annex-test-head"><div><span>{t.versionedId}</span><strong>{localize(locale,t.title)}</strong><small>{localize(locale,t.categoryName)} · {t.asset}</small></div><span className={verdictClass(t.verdict)}>{locale === 'fa' ? fromMap({PASS:'موفق',FAIL:'ناموفق',PARTIAL:'ناقص','N/A':'نامرتبط'}, t.verdict) : t.verdict}</span></div>{t.pocs.length===0?<p><b>{locale === 'fa' ? 'قابلیت اعمال:' : 'Applicability:'}</b> {locale === 'fa' ? 'خیر' : 'NO'} — {localize(locale,t.applicabilityReason)}</p>:t.pocs.map((p:any)=><PocRecord key={p.id} p={p} t={t} locale={locale}/>)}</article>}
+function AnnexTest({t,locale}:{t:any;locale:'en'|'fa'}){return <article className="annex-test" dir={locale === 'fa' ? 'rtl' : 'ltr'}><div className="annex-test-head"><div><span>{t.versionedId}</span><strong>{localize(locale,t.title)}</strong><small>{localize(locale,t.categoryName)} · {t.asset}</small></div><span className={verdictClass(t.verdict)}>{locale === 'fa' ? fromMap({PASS:'موفق',FAIL:'ناموفق',PARTIAL:'ناقص','N/A':'نامرتبط'}, t.verdict) : t.verdict}</span></div>{t.pocs.length===0?<p><b>{locale === 'fa' ? 'قابلیت اعمال:' : 'Applicability:'}</b> {locale === 'fa' ? 'خیر' : 'NO'} — {locale === 'fa' ? 'در محدوده ارزیابی تأییدشده، قابلیت یا فناوری متناظر با هدف این آزمون وجود ندارد.' : t.applicabilityReason}</p>:t.pocs.map((p:any)=><PocRecord key={p.id} p={p} t={t} locale={locale}/>)}</article>}
 

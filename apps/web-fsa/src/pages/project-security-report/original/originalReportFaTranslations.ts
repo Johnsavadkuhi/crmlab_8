@@ -2,6 +2,17 @@ import { attackChains, categorySummary, executiveText, findings, rootCauses, wst
 
 const staticPairs: [string, string][] = [
   ["Security Engineering Assessment Report", "گزارش ارزیابی مهندسی امنیت"],
+  ["Security Assessment Management Report", "گزارش مدیریتی ارزیابی امنیت"],
+  ["Management Report", "گزارش مدیریتی"],
+  ["Management Security Posture", "وضعیت کلان امنیت و جمع‌بندی مدیریتی"],
+  ["Priority Risks & Business Impact", "ریسک‌های اولویت‌دار و اثر کسب‌وکار"],
+  ["Assessment Coverage & Assurance", "پوشش ارزیابی و قابلیت اتکای نتایج"],
+  ["Management Action Plan", "برنامه اقدام مدیریتی"],
+  ["Management Decisions & Risk Governance", "تصمیم‌های موردنیاز مدیریت و حاکمیت ریسک"],
+  ["Management Limitations & Assurance", "محدودیت‌ها و بیانیه اطمینان مدیریتی"],
+  ["Application Security Laboratory", "آزمایشگاه امنیت برنامه‌های کاربردی"],
+  ["Security Technical Manager", "مدیر فنی امنیت"],
+  ["Head of Security & Quality Laboratory", "رئیس آزمایشگاه امنیت و کیفیت"],
   ["Technical Evidence Annex Report", "گزارش پیوست فنی شواهد"],
   ["Standalone Technical Evidence Annex", "گزارش مستقل پیوست فنی شواهد"],
   ["Detailed Findings", "یافته‌های امنیتی تفصیلی"],

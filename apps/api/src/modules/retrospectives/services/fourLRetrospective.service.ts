@@ -1,0 +1,289 @@
+import mongoose from "mongoose";
+import {
+  FOUR_L_STATUSES,
+  type FourLActorCapabilitiesContract,
+  type FourLDraftInputContract,
+  type FourLStatus,
+  type FourLWorkGateContract,
+} from "@role-dashboard/contracts";
+import { HTTP_STATUS } from "@/constants/http";
+import { NOTIFICATION_PRIORITIES, NOTIFICATION_TYPES } from "@/constants/notifications";
+import { PERMISSIONS } from "@/constants/permissions";
+import {
+  PROJECT_ASSIGNMENT_ROLES,
+  PROJECT_ASSIGNMENT_STATUS,
+  PROJECT_STATUS,
+  PROJECT_TYPES,
+} from "@/constants/projects";
+import { ROUTES } from "@/constants/routes";
+import { createNotifications } from "@/modules/notifications/services/notification.service";
+import { ProjectModel } from "@/modules/projects/models/project.model";
+import { ProjectAssignmentModel } from "@/modules/projects/models/projectAssignment.model";
+import { AppError } from "@/utils/AppError";
+import { FourLRetrospectiveModel } from "../models/fourLRetrospective.model";
+import { fourLSubmissionSchema } from "../validators/fourLRetrospective.validators";
+
+const BLOCKING_STATUSES: readonly FourLStatus[] = [
+  FOUR_L_STATUSES.DRAFT,
+  FOUR_L_STATUSES.CHANGES_REQUESTED,
+];
+
+const CLOSED_PROJECT_STATUSES = [PROJECT_STATUS.CLOSED, PROJECT_STATUS.FINISHED];
+
+export function isFourLStatusBlockingWork(status: FourLStatus) {
+  return BLOCKING_STATUSES.includes(status);
+}
+
+export function canLabAdminViewFourL(status: FourLStatus) {
+  return status === FOUR_L_STATUSES.SENT_TO_ADMIN;
+}
+
+export function sanitizeFourLDraftInput(
+  input: FourLDraftInputContract
+): FourLDraftInputContract {
+  return {
+    rating: input.rating,
+    wouldChange: input.wouldChange,
+    liked: { text: input.liked.text, notApplicable: input.liked.notApplicable },
+    lacked: { text: input.lacked.text, notApplicable: input.lacked.notApplicable },
+    learned: { text: input.learned.text, notApplicable: input.learned.notApplicable },
+    longedFor: {
+      text: input.longedFor.text,
+      notApplicable: input.longedFor.notApplicable,
+    },
+    needsFollowUp: input.needsFollowUp,
+    categories: [...input.categories],
+    biggestObstacle: input.biggestObstacle,
+    actionItems: input.actionItems.map((item) => ({
+      id: item.id,
+      description: item.description,
+      ownerId: item.ownerId,
+      priority: item.priority,
+      dueDate: item.dueDate,
+      status: item.status,
+    })),
+    acknowledged: input.acknowledged,
+  };
+}
+
+export function retrospectiveSubmissionIssues(input: FourLDraftInputContract) {
+  const result = fourLSubmissionSchema.safeParse(sanitizeFourLDraftInput(input));
+  return result.success
+    ? []
+    : result.error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      }));
+}
+
+export function resolveFourLActorCapabilities(input: {
+  status: FourLStatus;
+  isOwner: boolean;
+  isRepresentative: boolean;
+  isAdmin: boolean;
+}): FourLActorCapabilitiesContract {
+  const editable = [FOUR_L_STATUSES.DRAFT, FOUR_L_STATUSES.CHANGES_REQUESTED].includes(
+    input.status as typeof FOUR_L_STATUSES.DRAFT
+  );
+  const submitted = input.status === FOUR_L_STATUSES.SUBMITTED;
+  const approved = input.status === FOUR_L_STATUSES.APPROVED;
+  const sent = input.status === FOUR_L_STATUSES.SENT_TO_ADMIN;
+  return {
+    canEdit: input.isOwner && editable,
+    canSubmit: input.isOwner && editable,
+    canRequestChanges: input.isRepresentative && (submitted || approved),
+    canApprove: input.isRepresentative && submitted,
+    canSendToAdmin: input.isRepresentative && approved,
+    canReopen: input.isRepresentative && sent,
+  };
+}
+
+function projectClosedAt(project: Record<string, unknown>, fallback: Date) {
+  const value =
+    project.manuallyClosedAt ||
+    project.deadlineExpiredAt ||
+    project.testExpiresAt ||
+    project.expireDay ||
+    project.expireDayQuality;
+  const date = value ? new Date(String(value)) : fallback;
+  return Number.isNaN(date.getTime()) ? fallback : date;
+}
+
+export async function ensureFourLRetrospectivesForClosedProjects(
+  projectIds: readonly string[],
+  now = new Date()
+) {
+  const validIds = [...new Set(projectIds)].filter((id) => mongoose.isValidObjectId(id));
+  if (!validIds.length) return [];
+
+  const projects = await ProjectModel.find({
+    _id: { $in: validIds },
+    status: { $in: CLOSED_PROJECT_STATUSES },
+    $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
+  })
+    .select(
+      "projectName letterNumber representative status manuallyClosedAt deadlineExpiredAt testExpiresAt expireDay expireDayQuality"
+    )
+    .lean();
+  if (!projects.length) return [];
+
+  const projectById = new Map(projects.map((project) => [String(project._id), project]));
+  const assignments = await ProjectAssignmentModel.find({
+    status: { $ne: PROJECT_ASSIGNMENT_STATUS.REMOVED },
+    $and: [
+      {
+        $or: [
+          { projectId: { $in: [...projectById.keys()] } },
+          { project: { $in: [...projectById.keys()] } },
+        ],
+      },
+      {
+        $or: [
+          { assignmentRole: PROJECT_ASSIGNMENT_ROLES.PENTESTER },
+          { assignmentRole: { $exists: false }, pentester: { $exists: true } },
+        ],
+      },
+    ],
+  })
+    .select("projectId project userId pentester assignmentRole status")
+    .lean();
+
+  const records = await Promise.all(
+    assignments.flatMap((assignment) => {
+      const projectId = String(assignment.projectId || assignment.project || "");
+      const pentesterId = String(assignment.userId || assignment.pentester || "");
+      const project = projectById.get(projectId);
+      if (!project || !mongoose.isValidObjectId(pentesterId)) return [];
+      return [
+        FourLRetrospectiveModel.findOneAndUpdate(
+          { projectId, pentesterId },
+          {
+            $setOnInsert: {
+              projectId,
+              pentesterId,
+              projectName: project.projectName || "Security project",
+              projectLetterNumber: project.letterNumber,
+              projectClosedAt: projectClosedAt(project as Record<string, unknown>, now),
+              status: FOUR_L_STATUSES.DRAFT,
+            },
+            ...(project.representative
+              ? { $set: { representativeId: project.representative } }
+              : {}),
+          },
+          { upsert: true, new: true, setDefaultsOnInsert: true }
+        ),
+      ];
+    })
+  );
+
+  await createNotifications(
+    records.map((record) => ({
+      userId: String(record.pentesterId),
+      projectId: String(record.projectId),
+      type: NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED,
+      title: "4L retrospective required",
+      message: `Complete the 4L retrospective for ${record.projectName} before starting work on another project.`,
+      priority: NOTIFICATION_PRIORITIES.HIGH,
+      actionUrl: ROUTES.FRONTEND.FOUR_L_RETROSPECTIVE(String(record._id)),
+      entityId: String(record._id),
+      dedupeKey: `${NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED}:${record._id}`,
+      data: { retrospectiveId: String(record._id), projectId: String(record.projectId) },
+    }))
+  );
+
+  return records;
+}
+
+async function closedProjectIdsForPentester(userId: string) {
+  const assignments = await ProjectAssignmentModel.find({
+    status: { $ne: PROJECT_ASSIGNMENT_STATUS.REMOVED },
+    $and: [
+      { $or: [{ userId }, { pentester: userId }] },
+      {
+        $or: [
+          { assignmentRole: PROJECT_ASSIGNMENT_ROLES.PENTESTER },
+          { assignmentRole: { $exists: false }, pentester: { $exists: true } },
+        ],
+      },
+    ],
+  })
+    .select("projectId project")
+    .lean();
+  const assignedIds = assignments.map((assignment) =>
+    String(assignment.projectId || assignment.project || "")
+  );
+  if (!assignedIds.length) return [];
+  const projects = await ProjectModel.find({
+    _id: { $in: assignedIds },
+    status: { $in: CLOSED_PROJECT_STATUSES },
+    $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
+  })
+    .select("_id")
+    .lean();
+  return projects.map((project) => String(project._id));
+}
+
+export async function ensureFourLRetrospectivesForActor(actor: Express.UserContext) {
+  const projectIds = new Set<string>();
+  if (actor.permissions.includes(PERMISSIONS.PENTEST_PROJECTS_READ)) {
+    (await closedProjectIdsForPentester(actor.id)).forEach((id) => projectIds.add(id));
+  }
+  if (actor.permissions.includes(PERMISSIONS.REPRESENTATIVE_PROJECTS_READ)) {
+    const projects = await ProjectModel.find({
+      representative: actor.id,
+      status: { $in: CLOSED_PROJECT_STATUSES },
+      $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
+    })
+      .select("_id")
+      .lean();
+    projects.forEach((project) => projectIds.add(String(project._id)));
+  }
+  return ensureFourLRetrospectivesForClosedProjects([...projectIds]);
+}
+
+export async function getFourLWorkGate(userId: string): Promise<FourLWorkGateContract> {
+  const projectIds = await closedProjectIdsForPentester(userId);
+  await ensureFourLRetrospectivesForClosedProjects(projectIds);
+  const records = await FourLRetrospectiveModel.find({
+    pentesterId: userId,
+    projectId: { $in: projectIds },
+    status: { $in: BLOCKING_STATUSES },
+  })
+    .select("_id projectId projectName status projectClosedAt")
+    .sort({ projectClosedAt: 1, _id: 1 })
+    .lean();
+  const blockers = records.map((record) => ({
+    retrospectiveId: String(record._id),
+    projectId: String(record.projectId),
+    projectName: record.projectName,
+    status: record.status as FourLStatus,
+    actionUrl: ROUTES.FRONTEND.FOUR_L_RETROSPECTIVE(String(record._id)),
+  }));
+  return { blocked: blockers.length > 0, blockers };
+}
+
+export async function assertFourLWorkGateOpen(userId: string, projectId: string) {
+  const isAssignedPentester = await ProjectAssignmentModel.exists({
+    status: { $ne: PROJECT_ASSIGNMENT_STATUS.REMOVED },
+    $and: [
+      { $or: [{ projectId }, { project: projectId }] },
+      { $or: [{ userId }, { pentester: userId }] },
+      {
+        $or: [
+          { assignmentRole: PROJECT_ASSIGNMENT_ROLES.PENTESTER },
+          { assignmentRole: { $exists: false }, pentester: { $exists: true } },
+        ],
+      },
+    ],
+  });
+  if (!isAssignedPentester) return;
+  const gate = await getFourLWorkGate(userId);
+  if (!gate.blocked) return;
+  const blocker = gate.blockers[0];
+  const error = new AppError(
+    `Complete the required 4L retrospective for ${blocker.projectName} before starting new project work`,
+    HTTP_STATUS.CONFLICT
+  ) as AppError & { code: string };
+  error.code = "FOUR_L_RETROSPECTIVE_REQUIRED";
+  throw error;
+}
