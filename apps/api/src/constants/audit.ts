@@ -1,4 +1,10 @@
 export const AUDIT_ACTIONS = {
+  FOUR_L_DRAFT_UPDATE: "retrospective.draft_update",
+  FOUR_L_SUBMIT: "retrospective.submit",
+  FOUR_L_REQUEST_CHANGES: "retrospective.request_changes",
+  FOUR_L_APPROVE: "retrospective.approve",
+  FOUR_L_SEND_TO_ADMIN: "retrospective.send_to_admin",
+  FOUR_L_REOPEN: "retrospective.reopen",
   AUTH_REGISTER: "auth.register",
   AUTH_LOGIN: "auth.login",
   AUTH_REFRESH: "auth.refresh",
@@ -30,6 +36,7 @@ export const AUDIT_ACTIONS = {
 } as const;
 
 export const AUDIT_ENTITY_TYPES = {
+  RETROSPECTIVE: "retrospective",
   USER: "user",
   PROJECT: "project",
   VULNERABILITY: "vulnerability",

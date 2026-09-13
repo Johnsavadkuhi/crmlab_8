@@ -24,7 +24,7 @@ const actionItemSchema = new Schema(
     description: { type: String, trim: true, maxlength: 500, default: "" },
     ownerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     priority: { type: String, enum: FOUR_L_ACTION_PRIORITIES, required: true },
-    dueDate: { type: Date, required: true },
+    dueDate: { type: Date, default: null },
     status: { type: String, enum: FOUR_L_ACTION_STATUSES, required: true },
   },
   { _id: false }
@@ -74,10 +74,33 @@ const fourLRetrospectiveSchema = new Schema(
     sentToAdminBy: { type: Schema.Types.ObjectId, ref: "User" },
     reopenedAt: { type: Date },
     reopenedBy: { type: Schema.Types.ObjectId, ref: "User" },
+    // Persist delivery intent with the workflow change so a notification outage
+    // cannot lose the event or turn a successful submission into an error.
+    pendingNotifications: {
+      type: [
+        new Schema(
+          {
+            userId: { type: String, required: true },
+            projectId: String,
+            type: { type: String, required: true },
+            title: { type: String, required: true },
+            message: { type: String, required: true },
+            priority: String,
+            actionUrl: String,
+            entityId: String,
+            dedupeKey: { type: String, required: true },
+            data: Schema.Types.Mixed,
+          },
+          { _id: false }
+        ),
+      ],
+      default: [],
+    },
   },
   {
     collection: "project4lretrospectives",
     timestamps: true,
+    optimisticConcurrency: true,
     autoCreate: false,
     autoIndex: false,
   }

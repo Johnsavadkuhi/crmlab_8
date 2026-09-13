@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Badge,
@@ -62,7 +62,7 @@ const copy = {
     registrationDate: "تاریخ ثبت فرم",
     saved: "اطلاعات به‌صورت خودکار ذخیره می‌شود.",
     saving: "در حال ذخیره خودکار…",
-    saveError: "ذخیره خودکار ناموفق بود؛ دوباره تلاش می‌شود.",
+    saveError: "ذخیره خودکار ناموفق بود؛ با تغییر بعدی یا ثبت نهایی دوباره تلاش می‌شود.",
     liked: "دوست داشتیم (Liked)",
     likedHint: "چه چیزهایی عالی پیش رفت؟",
     lacked: "کمبود داشتیم (Lacked)",
@@ -379,6 +379,9 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
   const labels = copy[language];
   const [draft, setDraft] = useState(() => initialDraft(item));
   const [dirty, setDirty] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
+  const saveQueue = useRef<Promise<unknown>>(Promise.resolve());
   const [saveState, setSaveState] = useState<"saved" | "saving" | "error">("saved");
   const [reviewNote, setReviewNote] = useState(item.reviewNote || "");
   const [saveDraft, saveResult] = useSaveFourLDraftMutation();
@@ -387,7 +390,17 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
   const [approve, approveResult] = useApproveFourLMutation();
   const [sendAdmin, sendAdminResult] = useSendFourLToAdminMutation();
   const [reopen, reopenResult] = useReopenFourLMutation();
-  const disabled = !item.capabilities.canEdit;
+  const disabled = !item.capabilities.canEdit || submitting;
+  const persistDraft = useCallback(
+    (value: FourLDraftInputContract) => {
+      const pending = saveQueue.current
+        .catch(() => undefined)
+        .then(() => saveDraft({ id: item.id, draft: value }).unwrap());
+      saveQueue.current = pending;
+      return pending;
+    },
+    [item.id, saveDraft]
+  );
   const transitionLoading =
     submitResult.isLoading ||
     requestChangesResult.isLoading ||
@@ -405,18 +418,25 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
 
   useEffect(() => {
     if (!dirty || disabled) return undefined;
+    let cancelled = false;
     const timer = globalThis.setTimeout(async () => {
+      if (submittingRef.current) return;
       setSaveState("saving");
       try {
-        await saveDraft({ id: item.id, draft }).unwrap();
-        setDirty(false);
-        setSaveState("saved");
+        await persistDraft(draft);
+        if (!cancelled) {
+          setDirty(false);
+          setSaveState("saved");
+        }
       } catch {
-        setSaveState("error");
+        if (!cancelled) setSaveState("error");
       }
     }, 900);
-    return () => globalThis.clearTimeout(timer);
-  }, [dirty, disabled, draft, item.id, saveDraft]);
+    return () => {
+      cancelled = true;
+      globalThis.clearTimeout(timer);
+    };
+  }, [dirty, disabled, draft, persistDraft]);
 
   const ratingOptions: Array<{
     value: FourLRating;
@@ -478,7 +498,8 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
     }
     if (
       draft.actionItems.some(
-        (action) => !action.description.trim() || !action.ownerId || !action.dueDate
+        (action) =>
+          action.description.trim().length < 2 || !action.ownerId || !action.dueDate
       )
     ) {
       toast.error(
@@ -492,13 +513,20 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
   };
 
   const submitForm = async () => {
-    if (!validateBeforeSubmit()) return;
+    if (submittingRef.current || !validateBeforeSubmit()) return;
+    submittingRef.current = true;
+    setSubmitting(true);
     try {
-      await saveDraft({ id: item.id, draft }).unwrap();
+      await persistDraft(draft);
+      setDirty(false);
+      setSaveState("saved");
       await submit(item.id).unwrap();
       toast.success(labels.submitSuccess);
     } catch (error) {
       toast.error(getApiErrorMessage(error));
+    } finally {
+      submittingRef.current = false;
+      setSubmitting(false);
     }
   };
 
@@ -963,6 +991,7 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
                   <Button
                     type="button"
                     variant="ghost"
+                    disabled={draft.actionItems.length >= 20}
                     onClick={() =>
                       update("actionItems", [
                         ...draft.actionItems,
@@ -995,6 +1024,7 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
             <Button
               type="button"
               variant="secondary"
+              disabled={draft.actionItems.length >= 20}
               onClick={() =>
                 update("actionItems", [
                   ...draft.actionItems,
@@ -1057,7 +1087,7 @@ export default function FourLForm({ item }: { item: FourLRetrospectiveContract }
                 type="button"
                 bg="white"
                 color="#0d3f8f"
-                isLoading={saveResult.isLoading || submitResult.isLoading}
+                isLoading={submitting || saveResult.isLoading || submitResult.isLoading}
                 onClick={() => void submitForm()}
               >
                 {labels.submit}

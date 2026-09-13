@@ -24,7 +24,7 @@ const draftActionItem = z
     description: z.string().trim().max(500),
     ownerId: objectId,
     priority: z.enum(FOUR_L_ACTION_PRIORITIES),
-    dueDate: dateString,
+    dueDate: z.union([z.literal(""), dateString]),
     status: z.enum(FOUR_L_ACTION_STATUSES),
   })
   .strict();
@@ -52,6 +52,7 @@ const completeSection = section.refine(
 
 const completeActionItem = draftActionItem.extend({
   description: z.string().trim().min(2).max(500),
+  dueDate: dateString,
 });
 
 export const fourLSubmissionSchema = fourLDraftRequestSchema

@@ -1,4 +1,9 @@
 export type NotificationTypeContract =
+  | "retrospective.required"
+  | "retrospective.submitted"
+  | "retrospective.changes_requested"
+  | "retrospective.approved"
+  | "retrospective.sent_to_admin"
   | "project.created"
   | "project.assigned"
   | "project.completed"
@@ -33,6 +38,7 @@ export type NotificationReadFilterContract = "all" | "read" | "unread";
 export type NotificationEntityContract = {
   id: string;
   type:
+    | "retrospective"
     | "project"
     | "task"
     | "vulnerability"

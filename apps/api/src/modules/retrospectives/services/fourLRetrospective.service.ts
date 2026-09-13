@@ -16,11 +16,18 @@ import {
   PROJECT_TYPES,
 } from "@/constants/projects";
 import { ROUTES } from "@/constants/routes";
-import { createNotifications } from "@/modules/notifications/services/notification.service";
+import {
+  createNotifications,
+  type CreateNotificationInput,
+} from "@/modules/notifications/services/notification.service";
 import { ProjectModel } from "@/modules/projects/models/project.model";
 import { ProjectAssignmentModel } from "@/modules/projects/models/projectAssignment.model";
+import { getEffectiveProjectType } from "@/modules/projects/services/project.mapper";
 import { AppError } from "@/utils/AppError";
-import { FourLRetrospectiveModel } from "../models/fourLRetrospective.model";
+import {
+  FourLRetrospectiveModel,
+  type FourLRetrospectiveDocument,
+} from "../models/fourLRetrospective.model";
 import { fourLSubmissionSchema } from "../validators/fourLRetrospective.validators";
 
 const BLOCKING_STATUSES: readonly FourLStatus[] = [
@@ -29,6 +36,38 @@ const BLOCKING_STATUSES: readonly FourLStatus[] = [
 ];
 
 const CLOSED_PROJECT_STATUSES = [PROJECT_STATUS.CLOSED, PROJECT_STATUS.FINISHED];
+
+export async function deliverPendingFourLNotifications(
+  record: FourLRetrospectiveDocument
+) {
+  const pending = [...(record.pendingNotifications || [])];
+  if (!pending.length) return;
+  try {
+    await createNotifications(
+      pending.map((item) => item.toObject()) as CreateNotificationInput[]
+    );
+    await FourLRetrospectiveModel.updateOne(
+      { _id: record._id },
+      {
+        $pull: {
+          pendingNotifications: {
+            dedupeKey: { $in: pending.map((item) => item.dedupeKey) },
+          },
+        },
+      },
+      { timestamps: false }
+    );
+    const deliveredKeys = new Set(pending.map((item) => item.dedupeKey));
+    record.set(
+      "pendingNotifications",
+      record.pendingNotifications.filter((item) => !deliveredKeys.has(item.dedupeKey))
+    );
+  } catch (error) {
+    // The persisted outbox is retried on later reads. Deduplication makes retries
+    // safe even if delivery succeeded but clearing the outbox failed.
+    console.error("4L notification delivery will be retried", String(record._id), error);
+  }
+}
 
 export function isFourLStatusBlockingWork(status: FourLStatus) {
   return BLOCKING_STATUSES.includes(status);
@@ -116,15 +155,17 @@ export async function ensureFourLRetrospectivesForClosedProjects(
   const validIds = [...new Set(projectIds)].filter((id) => mongoose.isValidObjectId(id));
   if (!validIds.length) return [];
 
-  const projects = await ProjectModel.find({
+  const candidates = await ProjectModel.find({
     _id: { $in: validIds },
     status: { $in: CLOSED_PROJECT_STATUSES },
-    $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
   })
     .select(
-      "projectName letterNumber representative status manuallyClosedAt deadlineExpiredAt testExpiresAt expireDay expireDayQuality"
+      "type projectType projectName letterNumber representative status manuallyClosedAt deadlineExpiredAt testExpiresAt expireDay expireDayQuality"
     )
     .lean();
+  const projects = candidates.filter(
+    (project) => getEffectiveProjectType(project) === PROJECT_TYPES.SECURITY
+  );
   if (!projects.length) return [];
 
   const projectById = new Map(projects.map((project) => [String(project._id), project]));
@@ -165,31 +206,44 @@ export async function ensureFourLRetrospectivesForClosedProjects(
               projectLetterNumber: project.letterNumber,
               projectClosedAt: projectClosedAt(project as Record<string, unknown>, now),
               status: FOUR_L_STATUSES.DRAFT,
+              createdAt: now,
+              updatedAt: now,
             },
             ...(project.representative
               ? { $set: { representativeId: project.representative } }
               : {}),
           },
-          { upsert: true, new: true, setDefaultsOnInsert: true }
+          { upsert: true, new: true, setDefaultsOnInsert: true, timestamps: false }
         ),
       ];
     })
   );
 
-  await createNotifications(
-    records.map((record) => ({
-      userId: String(record.pentesterId),
-      projectId: String(record.projectId),
-      type: NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED,
-      title: "4L retrospective required",
-      message: `Complete the 4L retrospective for ${record.projectName} before starting work on another project.`,
-      priority: NOTIFICATION_PRIORITIES.HIGH,
-      actionUrl: ROUTES.FRONTEND.FOUR_L_RETROSPECTIVE(String(record._id)),
-      entityId: String(record._id),
-      dedupeKey: `${NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED}:${record._id}`,
-      data: { retrospectiveId: String(record._id), projectId: String(record.projectId) },
-    }))
-  );
+  await Promise.all(records.map(deliverPendingFourLNotifications));
+  try {
+    await createNotifications(
+      records
+        .filter((record) => record.status === FOUR_L_STATUSES.DRAFT)
+        .map((record) => ({
+          userId: String(record.pentesterId),
+          projectId: String(record.projectId),
+          type: NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED,
+          title: "4L retrospective required",
+          message: `Complete the 4L retrospective for ${record.projectName} before starting work on another project.`,
+          priority: NOTIFICATION_PRIORITIES.HIGH,
+          actionUrl: ROUTES.FRONTEND.FOUR_L_RETROSPECTIVE(String(record._id)),
+          entityId: String(record._id),
+          dedupeKey: `${NOTIFICATION_TYPES.RETROSPECTIVE_REQUIRED}:${record._id}`,
+          data: {
+            retrospectiveId: String(record._id),
+            projectId: String(record.projectId),
+          },
+        }))
+    );
+  } catch (error) {
+    // Required-form notifications are idempotently recreated on the next check.
+    console.error("4L required notifications will be retried", error);
+  }
 
   return records;
 }
@@ -209,18 +263,19 @@ async function closedProjectIdsForPentester(userId: string) {
   })
     .select("projectId project")
     .lean();
-  const assignedIds = assignments.map((assignment) =>
-    String(assignment.projectId || assignment.project || "")
-  );
+  const assignedIds = assignments
+    .map((assignment) => String(assignment.projectId || assignment.project || ""))
+    .filter((id) => mongoose.isValidObjectId(id));
   if (!assignedIds.length) return [];
   const projects = await ProjectModel.find({
     _id: { $in: assignedIds },
     status: { $in: CLOSED_PROJECT_STATUSES },
-    $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
   })
-    .select("_id")
+    .select("_id type projectType")
     .lean();
-  return projects.map((project) => String(project._id));
+  return projects
+    .filter((project) => getEffectiveProjectType(project) === PROJECT_TYPES.SECURITY)
+    .map((project) => String(project._id));
 }
 
 export async function ensureFourLRetrospectivesForActor(actor: Express.UserContext) {
@@ -232,11 +287,12 @@ export async function ensureFourLRetrospectivesForActor(actor: Express.UserConte
     const projects = await ProjectModel.find({
       representative: actor.id,
       status: { $in: CLOSED_PROJECT_STATUSES },
-      $or: [{ type: PROJECT_TYPES.SECURITY }, { projectType: PROJECT_TYPES.SECURITY }],
     })
-      .select("_id")
+      .select("_id type projectType")
       .lean();
-    projects.forEach((project) => projectIds.add(String(project._id)));
+    projects
+      .filter((project) => getEffectiveProjectType(project) === PROJECT_TYPES.SECURITY)
+      .forEach((project) => projectIds.add(String(project._id)));
   }
   return ensureFourLRetrospectivesForClosedProjects([...projectIds]);
 }
@@ -278,8 +334,10 @@ export async function assertFourLWorkGateOpen(userId: string, projectId: string)
   });
   if (!isAssignedPentester) return;
   const gate = await getFourLWorkGate(userId);
-  if (!gate.blocked) return;
-  const blocker = gate.blockers[0];
+  // An individual deadline extension can allow work on this same project.
+  // The retrospective gate applies to work on other projects.
+  const blocker = gate.blockers.find((item) => item.projectId !== projectId);
+  if (!blocker) return;
   const error = new AppError(
     `Complete the required 4L retrospective for ${blocker.projectName} before starting new project work`,
     HTTP_STATUS.CONFLICT

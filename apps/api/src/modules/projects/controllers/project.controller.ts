@@ -58,6 +58,7 @@ import {
   saveProjectSecurityScope,
 } from "../services/projectSecurityScope.service";
 import { notifyProjectAssignments } from "../services/projectAssignmentNotification.service";
+import { ensureFourLRetrospectivesForClosedProjects } from "@/modules/retrospectives/services/fourLRetrospective.service";
 import { createNotifications } from "@/modules/notifications/services/notification.service";
 import {
   closeProjectAssignmentWorkTimers,
@@ -1046,6 +1047,7 @@ export const closeProject: RequestHandler = async (req, res, next) => {
     );
     if (!project) throw new AppError("Project not found", HTTP_STATUS.NOT_FOUND);
     await closeProjectAssignmentWorkTimers([project._id.toString()]);
+    await ensureFourLRetrospectivesForClosedProjects([project._id.toString()]);
     await writeAuditLog({
       req,
       action: AUDIT_ACTIONS.PROJECT_CLOSE,

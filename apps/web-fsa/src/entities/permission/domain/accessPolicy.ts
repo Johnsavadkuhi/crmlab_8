@@ -62,10 +62,7 @@ export const ROUTE_ACCESS_POLICIES = {
   },
   devopsProjects: {
     path: "/devops",
-    permissions: [
-      PERMISSIONS.DEVOPS_DASHBOARD_READ,
-      PERMISSIONS.DEVOPS_PROJECTS_READ,
-    ],
+    permissions: [PERMISSIONS.DEVOPS_DASHBOARD_READ, PERMISSIONS.DEVOPS_PROJECTS_READ],
     roles: ["devops"],
   },
   projectDetails: {
@@ -79,6 +76,22 @@ export const ROUTE_ACCESS_POLICIES = {
   pentestWorkspace: {
     path: "/projects/pentest/:projectId",
     permissions: [PERMISSIONS.PENTEST_PROJECTS_READ],
+  },
+  fourLRetrospectives: {
+    path: "/retrospectives/4l",
+    permissions: [
+      PERMISSIONS.PENTEST_PROJECTS_READ,
+      PERMISSIONS.REPRESENTATIVE_PROJECTS_READ,
+      PERMISSIONS.ADMIN_SYSTEM_MANAGE,
+    ],
+  },
+  fourLRetrospectiveDetail: {
+    path: "/retrospectives/4l/:retrospectiveId",
+    permissions: [
+      PERMISSIONS.PENTEST_PROJECTS_READ,
+      PERMISSIONS.REPRESENTATIVE_PROJECTS_READ,
+      PERMISSIONS.ADMIN_SYSTEM_MANAGE,
+    ],
   },
   securityProjectBugs: {
     path: "/projects/:projectId/bugs",

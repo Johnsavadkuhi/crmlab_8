@@ -10,6 +10,9 @@ const Profile = lazy(() => import("@/pages/profile/Profile"));
 const Settings = lazy(() => import("@/pages/settings/Settings"));
 const Projects = lazy(() => import("@/pages/projects/Projects"));
 const Tasks = lazy(() => import("@/pages/tasks/Tasks"));
+const FourLRetrospectives = lazy(
+  () => import("@/pages/four-l-retrospectives/FourLRetrospectives")
+);
 const Notifications = lazy(() => import("@/pages/notifications/Notifications"));
 const ProjectDetails = lazy(() => import("@/pages/project-details/ProjectDetails"));
 const ProjectSecurityReport = lazy(
@@ -29,6 +32,16 @@ const DevopsProjects = lazy(() => import("@/pages/devops-projects/DevopsProjects
 const Inventory = lazy(() => import("@/pages/inventory/Inventory"));
 
 export const protectedRouteConfig = [
+  {
+    path: ROUTE_ACCESS_POLICIES.fourLRetrospectives.path,
+    element: FourLRetrospectives,
+    permissions: ROUTE_ACCESS_POLICIES.fourLRetrospectives.permissions,
+  },
+  {
+    path: ROUTE_ACCESS_POLICIES.fourLRetrospectiveDetail.path,
+    element: FourLRetrospectives,
+    permissions: ROUTE_ACCESS_POLICIES.fourLRetrospectiveDetail.permissions,
+  },
   {
     path: ROUTE_ACCESS_POLICIES.dashboard.path,
     element: Dashboard,

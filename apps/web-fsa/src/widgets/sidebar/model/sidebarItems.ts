@@ -15,6 +15,15 @@ export type SidebarItem = {
 
 export const sidebarItems: SidebarItem[] = [
   {
+    icon: "clipboard",
+    title: "4L Retrospectives",
+    titleKey: "sidebar.fourLRetrospectives",
+    path: ROUTE_ACCESS_POLICIES.fourLRetrospectives.path,
+    permissions: ROUTE_ACCESS_POLICIES.fourLRetrospectives.permissions,
+    section: "Workspace",
+    sectionKey: "sidebar.workspace",
+  },
+  {
     icon: "users",
     title: "User Management",
     titleKey: "sidebar.userManagement",

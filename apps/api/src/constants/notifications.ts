@@ -4,6 +4,11 @@ import type {
 } from "@role-dashboard/contracts";
 
 export const NOTIFICATION_TYPES = {
+  RETROSPECTIVE_REQUIRED: "retrospective.required",
+  RETROSPECTIVE_SUBMITTED: "retrospective.submitted",
+  RETROSPECTIVE_CHANGES_REQUESTED: "retrospective.changes_requested",
+  RETROSPECTIVE_APPROVED: "retrospective.approved",
+  RETROSPECTIVE_SENT_TO_ADMIN: "retrospective.sent_to_admin",
   PROJECT_CREATED: "project.created",
   PROJECT_ASSIGNED: "project.assigned",
   PROJECT_COMPLETED: "project.completed",

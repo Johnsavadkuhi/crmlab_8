@@ -4,6 +4,7 @@ import { validateLegacyCollections } from "./legacyCompatibility";
 import { ensureProjectPersistenceIndexes } from "@/modules/projects/services/projectIndex.service";
 import { ensureNotificationIndexes } from "@/modules/notifications/services/notificationIndex.service";
 import { ensureAssetIndexes } from "@/modules/assets/services/assetIndex.service";
+import { ensureFourLRetrospectiveIndexes } from "@/modules/retrospectives/services/fourLRetrospectiveIndex.service";
 
 export async function connectDB() {
   mongoose.set("strictQuery", true);
@@ -23,5 +24,6 @@ export async function connectDB() {
   await ensureProjectPersistenceIndexes();
   await ensureNotificationIndexes();
   await ensureAssetIndexes();
+  await ensureFourLRetrospectiveIndexes();
   console.log(`MongoDB connected to database=${connectedDatabase}`);
 }

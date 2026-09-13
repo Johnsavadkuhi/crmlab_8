@@ -13,9 +13,10 @@ import { PROJECT_ASSIGNMENT_STATUS, PROJECT_STATUS } from "@/constants/projects"
 import { ROLES } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import { writeAuditLog } from "@/modules/audit/services/audit.service";
-import { createNotifications } from "@/modules/notifications/services/notification.service";
+import type { CreateNotificationInput } from "@/modules/notifications/services/notification.service";
 import { ProjectModel } from "@/modules/projects/models/project.model";
 import { ProjectAssignmentModel } from "@/modules/projects/models/projectAssignment.model";
+import { closeExpiredProjects } from "@/modules/projects/services/projectProvisioning.service";
 import { UserModel } from "@/modules/users/models/user.model";
 import { AppError } from "@/utils/AppError";
 import { sendSuccess } from "@/utils/response";
@@ -25,6 +26,7 @@ import {
 } from "../models/fourLRetrospective.model";
 import {
   canLabAdminViewFourL,
+  deliverPendingFourLNotifications,
   ensureFourLRetrospectivesForActor,
   getFourLWorkGate,
   resolveFourLActorCapabilities,
@@ -85,7 +87,7 @@ function actorAccess(
     String(record.pentesterId) === actor.id;
   const representative =
     actor.permissions.includes(PERMISSIONS.REPRESENTATIVE_PROJECTS_READ) &&
-    String(project.representative || record.representativeId || "") === actor.id;
+    String(project.representative || "") === actor.id;
   const admin = isAdmin(actor) && canLabAdminViewFourL(record.status as FourLStatus);
   return { owner, representative, admin };
 }
@@ -219,6 +221,7 @@ async function loadContext(id: string, actor: Express.UserContext) {
   if (!access.owner && !access.representative && !access.admin) {
     throw new AppError("Forbidden 4L retrospective access", HTTP_STATUS.FORBIDDEN);
   }
+  await deliverPendingFourLNotifications(record);
   return { record, project, access };
 }
 
@@ -240,6 +243,7 @@ async function serializeContext(
 
 export const listFourLRetrospectives: RequestHandler = async (req, res, next) => {
   try {
+    await closeExpiredProjects();
     await ensureFourLRetrospectivesForActor(req.user!);
     const actor = req.user!;
     const filters: Record<string, unknown>[] = [];
@@ -257,6 +261,7 @@ export const listFourLRetrospectives: RequestHandler = async (req, res, next) =>
     )
       .sort({ projectClosedAt: -1, _id: -1 })
       .limit(200);
+    await Promise.all(records.map(deliverPendingFourLNotifications));
     const projects = await ProjectModel.find({
       _id: { $in: records.map((record) => record.projectId) },
     })
@@ -280,7 +285,11 @@ export const listFourLRetrospectives: RequestHandler = async (req, res, next) =>
       res,
       records.flatMap((record) => {
         const project = projectsById.get(String(record.projectId));
-        return project ? [serialize(record, project, users, actor)] : [];
+        if (!project) return [];
+        const access = actorAccess(record, project, actor);
+        return access.owner || access.representative || access.admin
+          ? [serialize(record, project, users, actor)]
+          : [];
       })
     );
   } catch (error) {
@@ -290,6 +299,7 @@ export const listFourLRetrospectives: RequestHandler = async (req, res, next) =>
 
 export const getMyFourLWorkGate: RequestHandler = async (req, res, next) => {
   try {
+    await closeExpiredProjects();
     sendSuccess(res, await getFourLWorkGate(req.user!.id));
   } catch (error) {
     next(error);
@@ -310,9 +320,28 @@ function toPersistenceDraft(input: FourLDraftRequest) {
     ...input,
     actionItems: input.actionItems.map((item) => ({
       ...item,
-      dueDate: new Date(item.dueDate),
+      dueDate: item.dueDate ? new Date(item.dueDate) : null,
     })),
   };
+}
+
+async function saveRecord(
+  record: FourLRetrospectiveDocument,
+  notifications: CreateNotificationInput[] = []
+) {
+  record.pendingNotifications.push(...notifications);
+  try {
+    await record.save();
+  } catch (error) {
+    if (error instanceof mongoose.Error.VersionError) {
+      throw new AppError(
+        "This form changed in another request. Reload and try again",
+        HTTP_STATUS.CONFLICT
+      );
+    }
+    throw error;
+  }
+  await deliverPendingFourLNotifications(record);
 }
 
 export const saveFourLDraft: RequestHandler = async (req, res, next) => {
@@ -343,7 +372,7 @@ export const saveFourLDraft: RequestHandler = async (req, res, next) => {
       );
     }
     record.set(toPersistenceDraft(input));
-    await record.save();
+    await saveRecord(record);
     await writeAuditLog({
       req,
       action: AUDIT_ACTIONS.FOUR_L_DRAFT_UPDATE,
@@ -403,8 +432,7 @@ export const submitFourLRetrospective: RequestHandler = async (req, res, next) =
     record.representativeId = new mongoose.Types.ObjectId(representativeId);
     record.submittedAt = now;
     record.reviewNote = undefined;
-    await record.save();
-    await createNotifications([
+    await saveRecord(record, [
       {
         userId: representativeId,
         projectId: String(record.projectId),
@@ -443,7 +471,7 @@ async function notifyPentester(
   message: string,
   now: Date
 ) {
-  await createNotifications([
+  await saveRecord(record, [
     {
       userId: String(record.pentesterId),
       projectId: String(record.projectId),
@@ -479,7 +507,6 @@ export const requestFourLChanges: RequestHandler = async (req, res, next) => {
     record.reviewedAt = now;
     record.reviewedBy = new mongoose.Types.ObjectId(req.user!.id);
     record.approvedAt = undefined;
-    await record.save();
     await notifyPentester(
       record,
       NOTIFICATION_TYPES.RETROSPECTIVE_CHANGES_REQUESTED,
@@ -515,7 +542,6 @@ export const approveFourLRetrospective: RequestHandler = async (req, res, next) 
     record.reviewedAt = now;
     record.reviewedBy = new mongoose.Types.ObjectId(req.user!.id);
     record.approvedAt = now;
-    await record.save();
     await notifyPentester(
       record,
       NOTIFICATION_TYPES.RETROSPECTIVE_APPROVED,
@@ -560,8 +586,8 @@ export const sendFourLToAdmin: RequestHandler = async (req, res, next) => {
     record.status = FOUR_L_STATUSES.SENT_TO_ADMIN;
     record.sentToAdminAt = now;
     record.sentToAdminBy = new mongoose.Types.ObjectId(req.user!.id);
-    await record.save();
-    await createNotifications(
+    await saveRecord(
+      record,
       admins.map((admin) => ({
         userId: String(admin._id),
         projectId: String(record.projectId),
@@ -607,7 +633,6 @@ export const reopenFourLRetrospective: RequestHandler = async (req, res, next) =
     record.reopenedBy = new mongoose.Types.ObjectId(req.user!.id);
     record.approvedAt = undefined;
     record.sentToAdminAt = undefined;
-    await record.save();
     await notifyPentester(
       record,
       NOTIFICATION_TYPES.RETROSPECTIVE_CHANGES_REQUESTED,

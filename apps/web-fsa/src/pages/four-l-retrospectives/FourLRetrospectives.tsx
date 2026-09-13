@@ -91,7 +91,7 @@ export default function FourLRetrospectives() {
   });
 
   if (retrospectiveId) {
-    if (itemQuery.isLoading) {
+    if (itemQuery.isLoading || (itemQuery.isFetching && !itemQuery.currentData)) {
       return (
         <LoadingScreen
           text={
@@ -100,15 +100,15 @@ export default function FourLRetrospectives() {
         />
       );
     }
-    if (itemQuery.error || !itemQuery.data) {
+    if (itemQuery.error || !itemQuery.currentData) {
       return (
         <ErrorState error={itemQuery.error || new Error("4L retrospective not found")} />
       );
     }
     return (
       <FourLForm
-        key={`${itemQuery.data.id}:${itemQuery.data.status}`}
-        item={itemQuery.data}
+        key={`${itemQuery.currentData.id}:${itemQuery.currentData.status}`}
+        item={itemQuery.currentData}
       />
     );
   }

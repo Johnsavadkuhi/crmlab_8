@@ -87,6 +87,7 @@ export function isNotificationRead(notification: Pick<NotificationLike, "isRead"
 function inferEntity(type: NotificationType, data: Record<string, unknown>, projectId?: string, entityId?: string) {
   const prefix = type.split(".")[0];
   const entityTypes: Record<string, EntityType> = {
+    retrospective: "retrospective",
     project: "project",
     task: "task",
     vulnerability: "vulnerability",

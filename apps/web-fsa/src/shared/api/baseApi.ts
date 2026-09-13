@@ -147,6 +147,7 @@ export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   tagTypes: [
+    "FourLRetrospectives",
     "Auth",
     "Users",
     "Pentest",

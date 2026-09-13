@@ -21,6 +21,10 @@ import { ProjectModel } from "../models/project.model";
 import { ProjectAssignmentModel } from "../models/projectAssignment.model";
 import { closeProjectAssignmentWorkTimers } from "./projectAssignmentWorkTimer.service";
 import { getEffectiveProjectType } from "./project.mapper";
+import {
+  assertFourLWorkGateOpen,
+  ensureFourLRetrospectivesForClosedProjects,
+} from "@/modules/retrospectives/services/fourLRetrospective.service";
 
 export const LEGACY_PROJECT_PROVISIONING_STATUS =
   PROJECT_PROVISIONING_STATUS.DEVOPS_READY;
@@ -123,6 +127,7 @@ export async function closeExpiredProjects(now = new Date()) {
   );
   if (!projectIds.length) return;
   await closeProjectAssignmentWorkTimers(projectIds, now);
+  await ensureFourLRetrospectivesForClosedProjects(projectIds, now);
 }
 
 export async function assertProjectOpenForWork(projectId: string, userId?: string) {
@@ -144,6 +149,9 @@ export async function assertProjectOpenForWork(projectId: string, userId?: strin
     (manuallyClosed || deadlineBlocked)
   ) {
     throw new AppError("This project is closed and no longer accepts work", HTTP_STATUS.CONFLICT);
+  }
+  if (userId && !isAssignedSecurityProjectManager(project, userId)) {
+    await assertFourLWorkGateOpen(userId, projectId);
   }
   return project;
 }

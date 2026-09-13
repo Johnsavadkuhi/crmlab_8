@@ -1,5 +1,16 @@
 export const ROUTES = {
   ROOT: "/",
+  FOUR_L_RETROSPECTIVES: {
+    BASE: "/api/retrospectives/4l",
+    WORK_GATE: "/work-gate",
+    DETAIL: "/:id",
+    DRAFT: "/:id/draft",
+    SUBMIT: "/:id/submit",
+    REQUEST_CHANGES: "/:id/request-changes",
+    APPROVE: "/:id/approve",
+    SEND_TO_ADMIN: "/:id/send-to-admin",
+    REOPEN: "/:id/reopen",
+  },
   PARAM_ID: "/:id",
   HEALTH: "/api/health",
   UPLOADS_STATIC: "/uploads",
@@ -122,6 +133,7 @@ export const ROUTES = {
   },
 
   FRONTEND: {
+    FOUR_L_RETROSPECTIVE: (id: string) => `/retrospectives/4l/${id}`,
     PROJECT_DETAILS: (projectId: string) => `/projects/${projectId}`,
     SECURITY_PROJECT_BUGS: (projectId: string) => `/projects/${projectId}/bugs`,
     SECURITY_BUG_DETAILS: (projectId: string, bugId: string) =>

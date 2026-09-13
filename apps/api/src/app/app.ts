@@ -28,6 +28,7 @@ import securityStandardRoutes from "@/modules/security-standards/routes/security
 import adminAnalyticsRoutes from "@/modules/admin-analytics/routes/adminAnalytics.routes";
 import personalDashboardRoutes from "@/modules/personal-dashboard/routes/personalDashboard.routes";
 import assetRoutes from "@/modules/assets/routes/asset.routes";
+import fourLRoutes from "@/modules/retrospectives/routes/fourLRetrospective.routes";
 
 export function createApp() {
   const app = express();
@@ -85,6 +86,7 @@ export function createApp() {
   app.use(ROUTES.USERS.BASE, userRoutes);
   app.use(ROUTES.ASSETS.BASE, assetRoutes);
   app.use(ROUTES.PROJECTS.BASE, projectRoutes);
+  app.use(ROUTES.FOUR_L_RETROSPECTIVES.BASE, fourLRoutes);
   app.use(ROUTES.TASKS.BASE, taskRoutes);
   app.use(ROUTES.SECURITY_STANDARDS.BASE, securityStandardRoutes);
   app.use(ROUTES.NOTIFICATIONS.BASE, notificationRoutes);
