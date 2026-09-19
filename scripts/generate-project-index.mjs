@@ -283,9 +283,9 @@ function routeConstants() {
   const values = new Map();
   let section;
   for (const line of readFileSync(resolve(root, "apps/api/src/constants/routes.ts"), "utf8").split("\n")) {
-    const open = line.match(/^  ([A-Z_]+): \{$/);
+    const open = line.match(/^ {2}([A-Z_]+): \{$/);
     if (open) { section = open[1]; continue; }
-    if (/^  },/.test(line)) { section = undefined; continue; }
+    if (/^ {2}},/.test(line)) { section = undefined; continue; }
     const item = line.match(/^(\s+)([A-Z_]+): "([^"]*)",/);
     if (item) values.set(section && item[1].length >= 4 ? `ROUTES.${section}.${item[2]}` : `ROUTES.${item[2]}`, item[3]);
   }

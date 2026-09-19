@@ -12,7 +12,7 @@ type AuthRequestContext = {
   userAgent?: string;
 };
 
-export async function registerUser(
+async function createRegisteredUser(
   input: {
     firstName?: string;
     lastName?: string;
@@ -23,14 +23,15 @@ export async function registerUser(
   },
   context?: AuthRequestContext
 ) {
-  const exists = await UserModel.exists({ username: input.username });
+  const username = input.username.trim().toLowerCase();
+  const exists = await UserModel.exists({ username });
   if (exists) throw new AppError("User already exists", HTTP_STATUS.CONFLICT);
 
   const password = await bcrypt.hash(input.password, 12);
   const user = await UserModel.create({
     firstName: input.firstName,
     lastName: input.lastName,
-    username: input.username,
+    username,
     password,
     avatarUrl: input.avatarUrl,
     roles: input.roles,
@@ -45,6 +46,14 @@ export async function registerUser(
   };
 }
 
+export async function registerUser(
+  input: Parameters<typeof createRegisteredUser>[0],
+  context?: AuthRequestContext
+) {
+  // Public registration must never trust client-supplied roles.
+  return createRegisteredUser({ ...input, roles: [ROLES.PENTESTER] }, context);
+}
+
 export async function registerAdminUser(
   input: {
     firstName?: string;
@@ -55,7 +64,7 @@ export async function registerAdminUser(
   },
   context?: AuthRequestContext
 ) {
-  return registerUser(
+  return createRegisteredUser(
     {
       ...input,
       roles: [ROLES.ADMIN],

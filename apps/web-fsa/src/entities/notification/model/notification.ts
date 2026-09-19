@@ -56,11 +56,21 @@ export type NotificationReadFilter = NotificationReadFilterContract;
 
 export type NotificationPage = Omit<NotificationPageContract, "items"> & { items: AppNotification[] };
 
+export function safeNotificationActionUrl(value: unknown): string | undefined {
+  // Notification actions are application routes, never executable or external URLs.
+  if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//") || value.includes("\\")) return undefined;
+  for (const character of value) {
+    if (character.charCodeAt(0) <= 32 || character.charCodeAt(0) === 127) return undefined;
+  }
+  return value;
+}
+
 export function normalizeNotification(notification: AppNotification): AppNotification {
   const createdAtValue = notification.createdAt as unknown;
   const updatedAtValue = notification.updatedAt as unknown;
   return {
     ...notification,
+    actionUrl: safeNotificationActionUrl(notification.actionUrl),
     id: String(notification.id),
     createdAt: createdAtValue instanceof Date ? createdAtValue.toISOString() : String(createdAtValue),
     updatedAt: updatedAtValue instanceof Date ? updatedAtValue.toISOString() : updatedAtValue ? String(updatedAtValue) : undefined,

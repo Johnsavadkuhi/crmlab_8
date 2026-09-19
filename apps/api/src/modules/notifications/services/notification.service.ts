@@ -213,7 +213,11 @@ export async function createNotifications(
   ];
   const payloads = createdDocuments.map(serializeNotification);
   const byUser = new Map<string, NotificationPayload[]>();
-  payloads.forEach((payload) => byUser.set(payload.userId, [...(byUser.get(payload.userId) || []), payload]));
+  for (const payload of payloads) {
+    const userPayloads = byUser.get(payload.userId);
+    if (userPayloads) userPayloads.push(payload);
+    else byUser.set(payload.userId, [payload]);
+  }
   const deliveryResults = await Promise.allSettled(
     Array.from(byUser, ([userId, userPayloads]) =>
       emitCreatedNotifications(userId, userPayloads)

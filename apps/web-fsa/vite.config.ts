@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+            if (id.includes("node_modules/react/") || id.includes("node_modules/react-dom/")) {
               return "vendor-react";
             }
 
@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
               return "vendor-state";
             }
 
-            if (id.includes("node_modules/react-router-dom")) {
+            if (id.includes("node_modules/react-router-dom/") || id.includes("node_modules/react-router/")) {
               return "vendor-router";
             }
 
@@ -75,9 +75,8 @@ export default defineConfig(({ mode }) => {
               return "role-packages";
             }
 
-            if (id.includes("node_modules")) {
-              return "vendor-misc";
-            }
+            // Let route-only dependencies remain lazy instead of pulling all
+            // miscellaneous packages into the initial login-page bundle.
           },
         },
       },

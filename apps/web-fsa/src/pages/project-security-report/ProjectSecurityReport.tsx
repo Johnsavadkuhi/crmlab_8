@@ -37,14 +37,15 @@ function OriginalReportFrame({ children, locale }: { children: ReactNode; locale
   }, []);
 
   useEffect(() => {
-    const frame = iframeRef.current;
-    const doc = frame?.contentDocument;
+    const doc = mountNode?.ownerDocument;
     if (!doc || !mountNode) return;
 
-    doc.documentElement.lang = locale === "fa" ? "fa" : "en";
-    doc.documentElement.dir = locale === "fa" ? "rtl" : "ltr";
-    doc.body.dir = locale === "fa" ? "rtl" : "ltr";
-    doc.title = locale === "fa" ? "گزارش ارزیابی مهندسی امنیت" : "Security Engineering Report";
+    doc.documentElement.setAttribute("lang", locale === "fa" ? "fa" : "en");
+    doc.documentElement.setAttribute("dir", locale === "fa" ? "rtl" : "ltr");
+    doc.body.setAttribute("dir", locale === "fa" ? "rtl" : "ltr");
+    doc.querySelector("title")?.replaceChildren(doc.createTextNode(
+      locale === "fa" ? "گزارش ارزیابی مهندسی امنیت" : "Security Engineering Report"
+    ));
 
     const oldOverride = doc.getElementById("original-report-fa-overrides");
     oldOverride?.remove();

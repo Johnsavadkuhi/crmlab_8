@@ -1,5 +1,5 @@
 import { Badge, Box, Heading, HStack, NativeSelect, SimpleGrid, Text, Textarea, VStack } from "@chakra-ui/react";
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { PERMISSIONS } from "@/entities/permission/model/permissions";
@@ -131,14 +131,15 @@ function AdminBugVisibilitySettings({ projectId }: { projectId: string }) {
   const [requiredHours, setRequiredHours] = useState("30");
   const [overrides, setOverrides] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    if (!data) return;
+  const [loadedSettings, setLoadedSettings] = useState<typeof data>();
+  if (data && data !== loadedSettings) {
+    setLoadedSettings(data);
     setEnabled(data.timeRequirementEnabled);
     setRequiredHours(String(data.requiredHours));
     setOverrides(Object.fromEntries(
       data.userOverrides.map((override) => [override.userId, String(override.requiredHours)])
     ));
-  }, [data]);
+  }
 
   const save = async () => {
     const hours = Number(requiredHours);

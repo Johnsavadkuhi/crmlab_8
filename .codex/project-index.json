@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "generatorVersion": 2,
   "generatedBy": "scripts/generate-project-index.mjs",
-  "sourceFingerprint": "e9ff2f78ed4c0706",
+  "sourceFingerprint": "cefa91373998b5fb",
   "workflow": [
     "Read AGENTS.md, then this index or docs/PROJECT_INDEX.md.",
     "Search domains, keywords, symbols, endpoints, and relationships before broad search.",
@@ -59,7 +59,7 @@
     "vendored source"
   ],
   "stats": {
-    "indexedFiles": 424,
+    "indexedFiles": 432,
     "domains": 13,
     "apiEndpoints": 107,
     "frontendRoutes": 29
@@ -1163,7 +1163,7 @@
             "apps/api/src/constants/permissions.ts",
             "apps/api/src/constants/projects.ts"
           ],
-          "contentHash": "e8f34fa15de2"
+          "contentHash": "202d847a1988"
         },
         {
           "path": "apps/api/src/modules/projects/controllers/projectProvisioning.controller.ts",
@@ -1595,7 +1595,7 @@
             "apps/api/src/modules/projects/services/projectResponsibility.service.ts",
             "apps/api/src/modules/projects/services/projectTableCapability.service.ts"
           ],
-          "contentHash": "c4e3463d1bc0"
+          "contentHash": "274f53da9e24"
         },
         {
           "path": "apps/api/src/modules/projects/services/projectTableCapability.service.ts",
@@ -1894,7 +1894,7 @@
             "apps/web-fsa/src/shared/types/index.ts",
             "apps/web-fsa/src/shared/ui/feedback/EmptyState.tsx"
           ],
-          "contentHash": "cb9f5e0fc5c4"
+          "contentHash": "51790addf91e"
         },
         {
           "path": "apps/web-fsa/src/entities/project/ui/assignment/QaAssignmentPanel.tsx",
@@ -1987,7 +1987,7 @@
             "apps/web-fsa/src/entities/project/ui/table/types.ts",
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
-          "contentHash": "0598984de28f"
+          "contentHash": "3ea63838a281"
         },
         {
           "path": "apps/web-fsa/src/entities/project/ui/table/formatters.ts",
@@ -2296,7 +2296,7 @@
             "apps/web-fsa/src/entities/project/ui/assignment/QaAssignmentPanel.tsx",
             "apps/web-fsa/src/entities/project/ui/table/formatters.ts"
           ],
-          "contentHash": "4201de054902"
+          "contentHash": "5f82d175405f"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/officialReportSourceData.ts",
@@ -2408,7 +2408,7 @@
             "apps/web-fsa/src/pages/project-security-report/original/originalReportExtras.ts",
             "apps/web-fsa/src/pages/project-security-report/original/originalReportFaTranslations.ts"
           ],
-          "contentHash": "d8b26543df80"
+          "contentHash": "733e4d44251d"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/original/originalWstgData.ts",
@@ -2454,7 +2454,7 @@
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/feedback/LoadingScreen.tsx"
           ],
-          "contentHash": "06b0554ce86d"
+          "contentHash": "85996f97c5d9"
         },
         {
           "path": "apps/web-fsa/src/pages/project-security-report/reportData.ts",
@@ -2518,7 +2518,7 @@
             "apps/web-fsa/src/features/access-control/model/usePermission.ts",
             "apps/web-fsa/src/features/language/model/index.tsx"
           ],
-          "contentHash": "1674a9864f2c"
+          "contentHash": "32c2d0734e4a"
         },
         {
           "path": "apps/web-fsa/src/pages/security-bugs/SecurityProjectBugsPage.tsx",
@@ -2543,7 +2543,7 @@
             "apps/web-fsa/src/shared/ui/feedback/ErrorState.tsx",
             "apps/web-fsa/src/shared/ui/feedback/LoadingScreen.tsx"
           ],
-          "contentHash": "a39ad875dc9f"
+          "contentHash": "82af8f7eac8d"
         },
         {
           "path": "apps/web-fsa/src/pages/settings/Settings.tsx",
@@ -2726,7 +2726,7 @@
             "apps/api/src/constants/uploads.ts",
             "apps/api/src/utils/AppError.ts"
           ],
-          "contentHash": "feaadc24832a"
+          "contentHash": "ed54b8437da0"
         },
         {
           "path": "apps/api/src/modules/pentest/models/itemAssessment.model.ts",
@@ -3761,7 +3761,7 @@
             "apps/web-fsa/src/entities/pentest/ui/modules/ModuleFallback.tsx",
             "apps/web-fsa/src/entities/retrospective/api/fourLApi.ts"
           ],
-          "contentHash": "7e41b3c081bf"
+          "contentHash": "bbb9a084ff17"
         },
         {
           "path": "apps/web-fsa/src/pages/pentest-workspace/PentestWorkspacePage.tsx",
@@ -3851,6 +3851,27 @@
           "contentHash": "07f7ebf72c7b"
         },
         {
+          "path": "apps/api/src/middlewares/auth.middleware.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for auth middleware test.",
+          "keywords": [
+            "api",
+            "middlewares",
+            "auth",
+            "middleware",
+            "test",
+            "authentication",
+            "users"
+          ],
+          "related": [
+            "apps/api/src/constants/roles.ts",
+            "apps/api/src/constants/security.ts",
+            "apps/api/src/middlewares/auth.middleware.ts",
+            "apps/api/src/middlewares/permission.middleware.ts"
+          ],
+          "contentHash": "f8302f48ea50"
+        },
+        {
           "path": "apps/api/src/middlewares/auth.middleware.ts",
           "kind": "middleware",
           "responsibility": "Request middleware for auth middleware.",
@@ -3868,12 +3889,12 @@
           ],
           "related": [
             "apps/api/src/constants/http.ts",
+            "apps/api/src/constants/routes.ts",
             "apps/api/src/constants/security.ts",
             "apps/api/src/modules/auth/services/session.service.ts",
-            "apps/api/src/utils/AppError.ts",
-            "apps/api/src/utils/cookies.ts"
+            "apps/api/src/utils/AppError.ts"
           ],
-          "contentHash": "510e5a6b94f0"
+          "contentHash": "b4b88b8c4c60"
         },
         {
           "path": "apps/api/src/middlewares/permission.middleware.ts",
@@ -3930,7 +3951,7 @@
             "apps/api/src/middlewares/csrf.middleware.ts",
             "apps/api/src/modules/audit/services/audit.service.ts"
           ],
-          "contentHash": "78fe6301d6c8"
+          "contentHash": "b556720490fe"
         },
         {
           "path": "apps/api/src/modules/auth/models/authSession.model.ts",
@@ -3968,13 +3989,13 @@
             "default"
           ],
           "related": [
+            "apps/api/src/constants/roles.ts",
             "apps/api/src/constants/routes.ts",
             "apps/api/src/middlewares/auth.middleware.ts",
             "apps/api/src/middlewares/csrf.middleware.ts",
-            "apps/api/src/middlewares/validate.middleware.ts",
-            "apps/api/src/modules/auth/controllers/auth.controller.ts"
+            "apps/api/src/middlewares/permission.middleware.ts"
           ],
-          "contentHash": "59f8751fc853"
+          "contentHash": "9b4f6fe35cf2"
         },
         {
           "path": "apps/api/src/modules/auth/services/auth.service.ts",
@@ -4001,7 +4022,29 @@
             "apps/api/src/modules/users/models/user.model.ts",
             "apps/api/src/modules/users/services/userAuth.service.ts"
           ],
-          "contentHash": "f2a9be005c53"
+          "contentHash": "53413f95e75d"
+        },
+        {
+          "path": "apps/api/src/modules/auth/services/session.service.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for session service test.",
+          "keywords": [
+            "api",
+            "modules",
+            "auth",
+            "services",
+            "session",
+            "service",
+            "test"
+          ],
+          "related": [
+            "apps/api/src/modules/auth/models/authSession.model.ts",
+            "apps/api/src/modules/auth/services/session.service.ts",
+            "apps/api/src/modules/users/models/user.model.ts",
+            "apps/api/src/modules/users/models/userPermission.model.ts",
+            "apps/api/src/utils/jwt.ts"
+          ],
+          "contentHash": "120fd883e352"
         },
         {
           "path": "apps/api/src/modules/auth/services/session.service.ts",
@@ -4020,6 +4063,7 @@
             "issueSessionTokens",
             "getAuthUserFromAccessToken",
             "refreshAuthSession",
+            "resumeDownloadSession",
             "revokeRefreshSession"
           ],
           "related": [
@@ -4029,7 +4073,7 @@
             "apps/api/src/modules/users/services/userAuth.service.ts",
             "apps/api/src/utils/AppError.ts"
           ],
-          "contentHash": "3a7fa650d98a"
+          "contentHash": "e59d8404aea6"
         },
         {
           "path": "apps/api/src/modules/auth/validators/auth.validators.test.ts",
@@ -4047,7 +4091,7 @@
           "related": [
             "apps/api/src/modules/auth/validators/auth.validators.ts"
           ],
-          "contentHash": "062dd1ff5579"
+          "contentHash": "8eb7854b7cc3"
         },
         {
           "path": "apps/api/src/modules/auth/validators/auth.validators.ts",
@@ -4067,10 +4111,7 @@
             "registerSchema",
             "registerAdminSchema"
           ],
-          "related": [
-            "apps/api/src/constants/roles.ts"
-          ],
-          "contentHash": "2e8911ed2383"
+          "contentHash": "b9c585e23f10"
         },
         {
           "path": "apps/api/src/modules/users/controllers/user.controller.ts",
@@ -4102,7 +4143,7 @@
             "apps/api/src/constants/roles.ts",
             "apps/api/src/modules/audit/services/audit.service.ts"
           ],
-          "contentHash": "3f6859ec96e0"
+          "contentHash": "b09b81517b08"
         },
         {
           "path": "apps/api/src/modules/users/models/role.model.ts",
@@ -4197,7 +4238,7 @@
             "apps/api/src/middlewares/permission.middleware.ts",
             "apps/api/src/middlewares/validate.middleware.ts"
           ],
-          "contentHash": "989fe003c235"
+          "contentHash": "9f1c90145eb1"
         },
         {
           "path": "apps/api/src/modules/users/services/role.service.ts",
@@ -4307,6 +4348,24 @@
           "contentHash": "e7982a749486"
         },
         {
+          "path": "apps/api/src/modules/users/validators/user.validators.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for user validators test.",
+          "keywords": [
+            "api",
+            "modules",
+            "users",
+            "validators",
+            "user",
+            "test",
+            "authentication"
+          ],
+          "related": [
+            "apps/api/src/modules/users/validators/user.validators.ts"
+          ],
+          "contentHash": "50e916aee493"
+        },
+        {
           "path": "apps/api/src/modules/users/validators/user.validators.ts",
           "kind": "validator",
           "responsibility": "Request validation for user validators.",
@@ -4320,6 +4379,7 @@
             "permissions"
           ],
           "symbols": [
+            "createUserSchema",
             "updateUserRolesPermissionsSchema",
             "updateRolePermissionsSchema"
           ],
@@ -4327,7 +4387,7 @@
             "apps/api/src/constants/permissions.ts",
             "apps/api/src/constants/roles.ts"
           ],
-          "contentHash": "7ec5c33d7c64"
+          "contentHash": "dc859c0824bc"
         },
         {
           "path": "apps/web-fsa/src/app/router/guards/PermissionRoute.tsx",
@@ -5118,7 +5178,7 @@
             "apps/api/src/modules/notifications/services/notificationCompatibility.service.ts",
             "apps/api/src/realtime/socket.delivery.ts"
           ],
-          "contentHash": "d78c51a2bb74"
+          "contentHash": "5f1c769d6415"
         },
         {
           "path": "apps/api/src/modules/notifications/services/notificationIndex.service.ts",
@@ -5196,6 +5256,8 @@
             "notifications"
           ],
           "symbols": [
+            "disconnectUserSockets",
+            "removeConnectedUsersFromProject",
             "emitToUser",
             "emitToProject",
             "addConnectedUsersToProject"
@@ -5206,7 +5268,7 @@
             "apps/api/src/realtime/socket.server.ts",
             "apps/api/src/realtime/socket.types.ts"
           ],
-          "contentHash": "61aa188dcb68"
+          "contentHash": "8e997fe3664c"
         },
         {
           "path": "apps/api/src/realtime/socket.errors.ts",
@@ -5246,6 +5308,25 @@
           "contentHash": "ef15eca06ee5"
         },
         {
+          "path": "apps/api/src/realtime/socket.rooms.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for socket rooms test.",
+          "keywords": [
+            "api",
+            "realtime",
+            "socket",
+            "rooms",
+            "test",
+            "notifications"
+          ],
+          "related": [
+            "apps/api/src/constants/socket.ts",
+            "apps/api/src/realtime/socket.rooms.ts",
+            "apps/api/src/realtime/socket.types.ts"
+          ],
+          "contentHash": "35b984b6cd26"
+        },
+        {
           "path": "apps/api/src/realtime/socket.rooms.ts",
           "kind": "module",
           "responsibility": "Implementation module for socket rooms.",
@@ -5265,7 +5346,7 @@
             "apps/api/src/constants/socket.ts",
             "apps/api/src/realtime/socket.types.ts"
           ],
-          "contentHash": "862ec1a43325"
+          "contentHash": "525af426065e"
         },
         {
           "path": "apps/api/src/realtime/socket.server.ts",
@@ -5291,7 +5372,7 @@
             "apps/api/src/realtime/socket.config.ts",
             "apps/api/src/realtime/socket.redis.ts"
           ],
-          "contentHash": "ace6fabcf610"
+          "contentHash": "f06102ec01d1"
         },
         {
           "path": "apps/api/src/realtime/socket.types.back.ts",
@@ -5383,7 +5464,7 @@
           "related": [
             "apps/web-fsa/src/entities/notification/model/notification.ts"
           ],
-          "contentHash": "b56a466bfb1b"
+          "contentHash": "acdb8d95d2d5"
         },
         {
           "path": "apps/web-fsa/src/entities/notification/model/notification.ts",
@@ -5410,7 +5491,7 @@
           "related": [
             "packages/contracts/src/index.ts"
           ],
-          "contentHash": "b1de2a59c8ef"
+          "contentHash": "d7088eb1635f"
         },
         {
           "path": "apps/web-fsa/src/features/notifications/api/notificationsApi.ts",
@@ -5455,7 +5536,7 @@
           "related": [
             "apps/web-fsa/src/entities/notification/model/notification.ts"
           ],
-          "contentHash": "e4a19c5abc20"
+          "contentHash": "ff6aa6b8c0b6"
         },
         {
           "path": "apps/web-fsa/src/features/notifications/model/notificationsSlice.test.ts",
@@ -5471,10 +5552,11 @@
             "realtime"
           ],
           "related": [
+            "apps/web-fsa/src/app/store/store.ts",
             "apps/web-fsa/src/entities/notification/model/notification.ts",
             "apps/web-fsa/src/features/notifications/model/notificationsSlice.ts"
           ],
-          "contentHash": "0c53c73bef88"
+          "contentHash": "5bdbf4f28278"
         },
         {
           "path": "apps/web-fsa/src/features/notifications/model/notificationsSlice.ts",
@@ -5499,7 +5581,7 @@
             "apps/web-fsa/src/app/store/store.ts",
             "apps/web-fsa/src/entities/notification/model/notification.ts"
           ],
-          "contentHash": "53fb5fab776e"
+          "contentHash": "0ae0b9780a8b"
         },
         {
           "path": "apps/web-fsa/src/features/notifications/model/useNotifications.ts",
@@ -6030,9 +6112,9 @@
             "apps/web-fsa/src/entities/project/model/provisioning.ts",
             "apps/web-fsa/src/features/auth/model/useAuth.ts",
             "apps/web-fsa/src/shared/lib/getApiErrorMessage.ts",
-            "apps/web-fsa/src/shared/types/index.ts"
+            "apps/web-fsa/src/shared/lib/useCurrentTime.ts"
           ],
-          "contentHash": "16237a1ddfa4"
+          "contentHash": "ea99892b4da9"
         }
       ]
     },
@@ -6531,6 +6613,19 @@
             "apps/web-fsa/src/shared/types/index.ts"
           ],
           "contentHash": "33b07cd83b40"
+        },
+        {
+          "path": "docs/SECURITY_PERFORMANCE_AUDIT_2026-09-19.md",
+          "kind": "documentation",
+          "responsibility": "Repository documentation for SECURITY PERFORMANCE AUDIT 2026 09 19.",
+          "keywords": [
+            "docs",
+            "security",
+            "performance",
+            "audit",
+            "2026"
+          ],
+          "contentHash": "ecbcbb8a86d1"
         }
       ]
     },
@@ -7440,6 +7535,24 @@
           "contentHash": "f28fe34f58d9"
         },
         {
+          "path": "apps/web-fsa/src/shared/api/baseApi.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for base Api test.",
+          "keywords": [
+            "web",
+            "shared",
+            "api",
+            "base",
+            "test",
+            "React",
+            "frontend"
+          ],
+          "related": [
+            "apps/web-fsa/src/shared/api/baseApi.ts"
+          ],
+          "contentHash": "8d81d706a768"
+        },
+        {
           "path": "apps/web-fsa/src/shared/api/baseApi.ts",
           "kind": "api-client",
           "responsibility": "RTK Query base API with cookies, CSRF, and refresh-token retry.",
@@ -7452,13 +7565,14 @@
             "frontend"
           ],
           "symbols": [
+            "baseQueryWithReauth",
             "api"
           ],
           "related": [
             "apps/web-fsa/src/features/auth/model/authSlice.ts",
             "apps/web-fsa/src/shared/config/backend.ts"
           ],
-          "contentHash": "59d535de41c3"
+          "contentHash": "37a912fe4f6a"
         },
         {
           "path": "apps/web-fsa/src/shared/api/unwrapApiData.ts",
@@ -7532,6 +7646,24 @@
             "getApiErrorMessage"
           ],
           "contentHash": "97b54536beb0"
+        },
+        {
+          "path": "apps/web-fsa/src/shared/lib/useCurrentTime.ts",
+          "kind": "module",
+          "responsibility": "Implementation module for use Current Time.",
+          "keywords": [
+            "web",
+            "shared",
+            "lib",
+            "use",
+            "current",
+            "time",
+            "React"
+          ],
+          "symbols": [
+            "useCurrentTime"
+          ],
+          "contentHash": "4c902ca524bf"
         },
         {
           "path": "apps/web-fsa/src/shared/mocks/browser.ts",
@@ -8342,6 +8474,20 @@
       ],
       "files": [
         {
+          "path": "apps/api/src/app/app.security.test.ts",
+          "kind": "test",
+          "responsibility": "Regression tests for app security test.",
+          "keywords": [
+            "api",
+            "app",
+            "security",
+            "test",
+            "Express",
+            "backend"
+          ],
+          "contentHash": "5fa405c9b6f5"
+        },
+        {
           "path": "apps/api/src/app/app.ts",
           "kind": "module",
           "responsibility": "Creates Express and mounts global middleware plus every API router.",
@@ -8361,7 +8507,7 @@
             "apps/api/src/constants/routes.ts",
             "apps/api/src/middlewares/csrf.middleware.ts"
           ],
-          "contentHash": "9cfc2c5b08df"
+          "contentHash": "dfee15cb0316"
         },
         {
           "path": "apps/api/src/config/env.ts",
@@ -8495,7 +8641,7 @@
             "apps/api/src/modules/notifications/services/notificationIndex.service.ts",
             "apps/api/src/modules/projects/services/projectIndex.service.ts"
           ],
-          "contentHash": "bc3c89de0ff3"
+          "contentHash": "4749e39677bc"
         },
         {
           "path": "apps/api/src/db/seed.ts",
@@ -8513,7 +8659,7 @@
             "apps/api/src/modules/users/models/user.model.ts",
             "apps/api/src/modules/users/services/role.service.ts"
           ],
-          "contentHash": "27c1d8e55bfb"
+          "contentHash": "6b4c72918cdc"
         },
         {
           "path": "apps/api/src/middlewares/csrf.middleware.ts",
@@ -9297,6 +9443,7 @@
           "symbols": [
             "csrfCookieName",
             "getCsrfCookieOptions",
+            "setAccessCookie",
             "setAuthCookies",
             "setCsrfCookie",
             "clearAuthCookies",
@@ -9306,7 +9453,7 @@
             "apps/api/src/config/env.ts",
             "apps/api/src/constants/security.ts"
           ],
-          "contentHash": "91b82374acbd"
+          "contentHash": "c19a6baa2ca1"
         },
         {
           "path": "apps/api/src/utils/jwt.ts",
@@ -9981,7 +10128,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "60c8efc8db22"
+          "contentHash": "9c9af00bafbe"
         },
         {
           "path": "deploy/nginx/crmlab.conf",
@@ -9995,7 +10142,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "ce387f04f733"
+          "contentHash": "a618ac3575a4"
         },
         {
           "path": "deploy/README.md",
@@ -10209,7 +10356,7 @@
           "symbols": [
             "default"
           ],
-          "contentHash": "c84cabb28ba6"
+          "contentHash": "d2e3fb6006e1"
         },
         {
           "path": "package-lock.json",
@@ -10222,7 +10369,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "0b52ef6bd2d1"
+          "contentHash": "33120334c5a6"
         },
         {
           "path": "package.json",
@@ -10234,7 +10381,7 @@
             "configuration",
             "deployment"
           ],
-          "contentHash": "df5ca1c3b01a"
+          "contentHash": "1e1386e37d0c"
         },
         {
           "path": "packages/authz/package.json",
@@ -10393,7 +10540,7 @@
             "Codex",
             "repository index"
           ],
-          "contentHash": "299d4654c990"
+          "contentHash": "b74ed942ea03"
         }
       ]
     }

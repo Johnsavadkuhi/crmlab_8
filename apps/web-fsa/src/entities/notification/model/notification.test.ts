@@ -1,5 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { safeNotificationActionUrl } from "./notification";
+
+test("notification navigation only accepts local application paths", () => {
+  assert.equal(safeNotificationActionUrl("/projects/123?tab=bugs#item"), "/projects/123?tab=bugs#item");
+  for (const url of ["javascript:alert(1)", "data:text/html,bad", "https://external.test", "//external.test", "/\\external.test", "/\n/external.test", undefined]) {
+    assert.equal(safeNotificationActionUrl(url), undefined);
+  }
+});
 import { normalizeNotification, normalizeNotificationPriority } from "./notification";
 
 test("normalizes legacy and unknown notification priorities safely", () => {

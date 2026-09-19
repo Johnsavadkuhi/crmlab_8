@@ -10,6 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useCurrentTime } from "@/shared/lib/useCurrentTime";
 import toast from "react-hot-toast";
 import { useAuth } from "@/features/auth/model/useAuth";
 import { getApiErrorMessage } from "@/shared/lib/getApiErrorMessage";
@@ -68,6 +69,7 @@ export default function ProjectProvisioningPanel({
       allowRepresentativeResolution && isAssignedRepresentative,
   });
   const provisioningStatus = ui.status;
+  const now = useCurrentTime();
   const pending =
     startState.isLoading ||
     readyState.isLoading ||
@@ -77,7 +79,7 @@ export default function ProjectProvisioningPanel({
   const blockedDurationMs =
     (project.provisioningBlockedDurationMs || 0) +
     (provisioningStatus === "DEVOPS_BLOCKED" && project.devopsFailureAt
-      ? Math.max(0, Date.now() - new Date(project.devopsFailureAt).getTime())
+      ? Math.max(0, now - new Date(project.devopsFailureAt).getTime())
       : 0);
 
   const run = async (operation: () => Promise<unknown>, message: string) => {

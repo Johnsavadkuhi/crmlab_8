@@ -1,4 +1,5 @@
 import { Badge, Box, HStack, Text } from "@chakra-ui/react";
+import { useCurrentTime } from "@/shared/lib/useCurrentTime";
 import { Link } from "react-router-dom";
 import type {
   ProjectAssignmentStatus,
@@ -208,7 +209,7 @@ function DeadlineIndicator({
   enabled: boolean;
 }) {
   const deadline = new Date(dueDate).getTime();
-  const remainingHours = (deadline - Date.now()) / 3_600_000;
+  const remainingHours = (deadline - useCurrentTime()) / 3_600_000;
   const expired = !Number.isFinite(deadline) || remainingHours <= 0;
   const urgent = enabled && !closed && !expired && remainingHours <= 48;
   const near = enabled && !urgent && !closed && !expired && remainingHours <= 168;

@@ -68,6 +68,7 @@ export async function setupSocket(server: HttpServer): Promise<RealtimeServer> {
   io.use(socketAuthMiddleware);
 
   io.on("connection", async (socket) => {
+    try {
     const user = socket.data.user;
 
     if (!user) {
@@ -103,8 +104,10 @@ export async function setupSocket(server: HttpServer): Promise<RealtimeServer> {
       }
     });
 
-    socket.on("notification:mark_read", async ({ id }) => {
+    socket.on("notification:mark_read", async (payload) => {
       try {
+        if (!payload || typeof payload.id !== "string") return;
+        const { id } = payload;
         await markNotificationReadForUser(user.id, id);
       } catch (error) {
         console.warn("[socket:notification:mark_read] failed", error);
@@ -118,6 +121,10 @@ export async function setupSocket(server: HttpServer): Promise<RealtimeServer> {
         console.warn("[socket:notifications:mark_all_read] failed", error);
       }
     });
+    } catch (error) {
+      console.warn("[socket:connection] initialization failed", error);
+      socket.disconnect(true);
+    }
   });
 
   io.engine.on("connection_error", (error) => {

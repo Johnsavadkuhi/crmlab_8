@@ -14,13 +14,13 @@ import {
   updateRolePermissionsForDashboard,
   updateUserRolesPermissions,
 } from "../controllers/user.controller";
-import { updateRolePermissionsSchema, updateUserRolesPermissionsSchema } from "../validators/user.validators";
+import { createUserSchema, updateRolePermissionsSchema, updateUserRolesPermissionsSchema } from "../validators/user.validators";
 
 const router = Router();
 
 router.use(requireAuth);
 router.get(ROUTES.ROOT, requirePermission(PERMISSIONS.ADMIN_USERS_READ), getUsers);
-router.post(ROUTES.ROOT, requirePermission(PERMISSIONS.ADMIN_USERS_CREATE), createUser);
+router.post(ROUTES.ROOT, requirePermission(PERMISSIONS.ADMIN_USERS_CREATE), validate(createUserSchema), createUser);
 router.get(ROUTES.USERS.ROLES, requirePermission(PERMISSIONS.ADMIN_ROLES_READ), getRolesPermissions);
 router.post(
   ROUTES.USERS.ROLES_SYNC_PERMISSIONS,

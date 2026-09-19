@@ -7,6 +7,7 @@ import type { Permission } from "@/constants/permissions";
 import { writeAuditLog } from "@/modules/audit/services/audit.service";
 import { AppError } from "@/utils/AppError";
 import { sendSuccess } from "@/utils/response";
+import { disconnectUserSockets } from "@/realtime/socket.delivery";
 import { normalizeRoles, UserModel } from "../models/user.model";
 import {
   getAllPermissionOptions,
@@ -77,6 +78,7 @@ export const deleteUser: RequestHandler = async (req, res, next) => {
       throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
     }
 
+    disconnectUserSockets(userId);
     await writeAuditLog({
       req,
       action: AUDIT_ACTIONS.USER_DELETE,
@@ -124,6 +126,7 @@ export const updateUserRolesPermissions: RequestHandler = async (req, res, next)
     if (!user) throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
 
     await upsertUserPermissions(userId, permissions);
+    disconnectUserSockets(userId);
 
     await writeAuditLog({
       req,

@@ -47,10 +47,18 @@ export default function Projects() {
     ...(canViewSecurity ? [{ view: "security" as const, title: t("projectViews.security.tableTitle"), query: securityQuery }] : []),
     ...(canViewQuality ? [{ view: "quality" as const, title: t("projectViews.quality.tableTitle"), query: qualityQuery }] : []),
   ];
-  const projects = isAdmin
-    ? adminQuery.data || []
-    : Array.from(new Map(roleTables.flatMap(({ query }) => query.data || [])
-        .map((project) => [project.id, project])).values());
+  const projects = useMemo(() => {
+    if (isAdmin) return adminQuery.data || [];
+    const byId = new Map<string, Project>();
+    for (const group of [
+      canViewPentest ? pentestQuery.data : undefined,
+      canViewSecurity ? securityQuery.data : undefined,
+      canViewQuality ? qualityQuery.data : undefined,
+    ]) {
+      for (const project of group || []) byId.set(project.id, project);
+    }
+    return Array.from(byId.values());
+  }, [isAdmin, adminQuery.data, canViewPentest, pentestQuery.data, canViewSecurity, securityQuery.data, canViewQuality, qualityQuery.data]);
   const isLoading = isAdmin
     ? adminQuery.isLoading
     : roleTables.some(({ query }) => query.isLoading);

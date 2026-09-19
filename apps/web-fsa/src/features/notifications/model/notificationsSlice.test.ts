@@ -6,7 +6,9 @@ import reducer, {
   notificationReceived,
   notificationsHydrated,
   notificationsSynced,
+  selectNotificationPage,
 } from "./notificationsSlice";
+import type { RootState } from "@/app/store/store";
 
 const notification = (id: string, createdAt: string, isRead = false): AppNotification => ({
   id,
@@ -44,4 +46,16 @@ test("HTTP reconnect snapshot removes stale recent records but preserves paginat
 
   assert.deepEqual(state.items.map((item) => item.id), ["current", "older-page"]);
   assert.equal(state.unreadCount, 1);
+});
+
+test("notification page selection preserves identity on unrelated state updates", () => {
+  const notifications = reducer(undefined, notificationReceived(notification("one", "2026-01-02T00:00:00Z")));
+  const state = { notifications } as RootState;
+  const first = selectNotificationPage(state);
+  assert.equal(selectNotificationPage({ ...state }), first);
+  assert.equal(selectNotificationPage({ ...state, notifications: { ...notifications, unreadCount: 5 } }), first);
+  assert.deepEqual(first.items.map((item) => item.id), ["one"]);
+  const changed = selectNotificationPage({ ...state, notifications: reducer(notifications, notificationMarkedRead("one")) });
+  assert.notEqual(changed, first);
+  assert.equal(changed.items[0].isRead, true);
 });

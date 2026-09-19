@@ -2,9 +2,9 @@ import React, { useMemo, useState } from 'react';
 import {
   Activity, AlertTriangle, Archive, BookOpen, CheckCircle2, ChevronDown, ChevronRight, ArrowLeft,
   ClipboardCheck, Download, FileJson, FileText, Fingerprint, Gauge, GitBranch,
-  Layers3, LockKeyhole, Menu, Printer, Search, ShieldAlert, ShieldCheck, Target,
-  TestTube2, XCircle, Network, Database, Eye, Wrench, RefreshCw, FileCheck2,
-  ListChecks, Scale, Boxes, KeyRound, Radar, Workflow, FileSearch, UserCheck
+  LockKeyhole, Menu, Printer, Search, ShieldAlert, ShieldCheck, Target,
+  TestTube2, Network, Database, Eye, Wrench, RefreshCw, FileCheck2,
+  ListChecks, Scale, Boxes, Radar, Workflow, FileSearch, UserCheck
 } from 'lucide-react';
 import {
   reportMeta, documentControl, assessmentContext, objectives, assets, scope,
@@ -172,7 +172,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
           ? TOC.filter(([, , id])=>EXECUTIVE_REPORT_TOC_IDS.has(id))
           : TOC.filter(([, , id])=>id!=='evidence');
 
-  function toggleSet(setter,id){ setter(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;}); }
+  function toggleSet(setter,id){ setter(prev=>{const n=new Set(prev);if(n.has(id)) n.delete(id); else n.add(id);return n;}); }
   function exportJson(){downloadBlob(`${liveReportMeta.reportId}.json`,JSON.stringify({ ...exportBundle, reportMeta: liveReportMeta },null,2),'application/json');}
   function exportTestsCsv(){csvDownload('wstg-test-execution-register.csv',['WSTG ID','Versioned ID','Category','Title','Applicable','Asset','Tester','Reviewer','Date','Verdict','PoCs','Evidence','Finding','Limitation'],testCaseRegister.map(x=>[x.testId,x.versionedId,x.category,x.title,x.applicable,x.asset,x.tester,x.reviewer,x.date,x.verdict,x.pocs,x.evidence,x.finding,x.limitation]));}
   function exportPocsCsv(){csvDownload('poc-register.csv',['PoC ID','WSTG ID','Asset','Verdict','Hypothesis','Expected','Actual','Confidence','Reproduction','Finding'],wstgItems.flatMap(t=>t.pocs.map(p=>[p.id,t.id,t.asset,p.verdict,p.hypothesis,p.expected,p.actual,p.confidence,p.reproduction,t.findingId||''])));}
@@ -289,7 +289,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 headers={[reportQualityControl.checksHeadingFa, reportQualityControl.approvalHeadingFa]}
                 rows={reportQualityControl.checks.map(x=>[
                   x.fa,
-                  <span>✓</span>
+                  <span key="cell-1">✓</span>
                 ])}
               />
             </div>
@@ -306,8 +306,8 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 headers={['Control','Source Wording','Status']}
                 rows={reportQualityControl.checks.map(x=>[
                   x.label,
-                  <span dir="rtl" style={{display:'block',textAlign:'right'}}>{x.fa}</span>,
-                  <span className="badge verdict-pass">Approved</span>
+                  <span key="cell-1" dir="rtl" style={{display:'block',textAlign:'right'}}>{x.fa}</span>,
+                  <span key="cell-2" className="badge verdict-pass">Approved</span>
                 ])}
               />
             </>
@@ -358,7 +358,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['میزان مخاطرات', '']}
                 rows={severityDefinitionRows.map(x=>[
-                  <span dir="ltr">{x.level}</span>,
+                  <span key="cell-0" dir="ltr">{x.level}</span>,
                   x.descriptionFa
                 ])}
               />
@@ -399,12 +399,12 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 rows={documentAccessControl.permissions.map(x=>[
                   x.entityFa,
                   documentAccessControl.classification.fa,
-                  <span>{x.useContent ? '✓' : '⊠'}</span>,
-                  <span>{x.changeContent ? '✓' : '⊠'}</span>,
-                  <span>{x.print ? '✓' : '⊠'}</span>,
-                  <span>{x.copyStore ? '✓' : '⊠'}</span>,
-                  <span>{x.sendExchange ? '✓' : '⊠'}</span>,
-                  <span>{x.destroy ? '✓' : '⊠'}</span>,
+                  <span key="cell-2">{x.useContent ? '✓' : '⊠'}</span>,
+                  <span key="cell-3">{x.changeContent ? '✓' : '⊠'}</span>,
+                  <span key="cell-4">{x.print ? '✓' : '⊠'}</span>,
+                  <span key="cell-5">{x.copyStore ? '✓' : '⊠'}</span>,
+                  <span key="cell-6">{x.sendExchange ? '✓' : '⊠'}</span>,
+                  <span key="cell-7">{x.destroy ? '✓' : '⊠'}</span>,
                 ])}
               />
 
@@ -422,12 +422,12 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 rows={documentAccessControl.permissions.map(x=>[
                   x.entityEn,
                   documentAccessControl.classification.en,
-                  <PermissionMark allowed={x.useContent} locale={locale}/>,
-                  <PermissionMark allowed={x.changeContent} locale={locale}/>,
-                  <PermissionMark allowed={x.print} locale={locale}/>,
-                  <PermissionMark allowed={x.copyStore} locale={locale}/>,
-                  <PermissionMark allowed={x.sendExchange} locale={locale}/>,
-                  <PermissionMark allowed={x.destroy} locale={locale}/>
+                  <PermissionMark key="cell-2" allowed={x.useContent} locale={locale}/>,
+                  <PermissionMark key="cell-3" allowed={x.changeContent} locale={locale}/>,
+                  <PermissionMark key="cell-4" allowed={x.print} locale={locale}/>,
+                  <PermissionMark key="cell-5" allowed={x.copyStore} locale={locale}/>,
+                  <PermissionMark key="cell-6" allowed={x.sendExchange} locale={locale}/>,
+                  <PermissionMark key="cell-7" allowed={x.destroy} locale={locale}/>
                 ])}
               />
               <h3>Vulnerability Identification Methods</h3>
@@ -466,8 +466,8 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['کلاس','نام پارامتر','توضیحات']}
                 rows={cvss31Reference.parameters.map(x=>[
-                  <span dir="ltr">{x.classSource}</span>,
-                  <span dir="ltr">{x.sourceName}</span>,
+                  <span key="cell-0" dir="ltr">{x.classSource}</span>,
+                  <span key="cell-1" dir="ltr">{x.sourceName}</span>,
                   x.descriptionFa
                 ])}
               />
@@ -507,9 +507,9 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['کلاس','نام پارامتر','مقادیر ممکن']}
                 rows={cvss31Reference.parameters.map(x=>[
-                  <span dir="ltr">{x.classSource}</span>,
-                  <span dir="ltr">{x.valuesSourceName}</span>,
-                  <div className="chip-row" dir="ltr">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
+                  <span key="cell-0" dir="ltr">{x.classSource}</span>,
+                  <span key="cell-1" dir="ltr">{x.valuesSourceName}</span>,
+                  <div key="cell-2" className="chip-row" dir="ltr">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
                 ])}
               />
             </div>
@@ -520,7 +520,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 rows={cvss31Reference.parameters.map(x=>[
                   x.classSource,
                   x.valuesSourceName,
-                  <div className="chip-row">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
+                  <div key="cell-2" className="chip-row">{x.values.map(v=><span className="chip" key={v}>{v}</span>)}</div>
                 ])}
               />
             </>
@@ -561,8 +561,8 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={testOutcomeAndHardeningSource.rankingHeadersFa}
                 rows={testOutcomeAndHardeningSource.rankingRows.map(x=>[
-                  <strong>{x.owaspFa}</strong>,
-                  <span dir="ltr">{x.cvssRange}</span>
+                  <strong key="cell-0">{x.owaspFa}</strong>,
+                  <span key="cell-1" dir="ltr">{x.cvssRange}</span>
                 ])}
               />
             </div>
@@ -572,8 +572,8 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['State','Meaning']}
                 rows={testOutcomeAndHardeningSource.resultStates.map(x=>[
-                  <span dir="ltr">{x.code}</span>,
-                  <span dir="rtl" lang="fa">{x.fa}</span>
+                  <span key="cell-0" dir="ltr">{x.code}</span>,
+                  <span key="cell-1" dir="rtl" lang="fa">{x.fa}</span>
                 ])}
               />
               <Callout title="Evidence & Security Guidance" icon={<ShieldCheck/>}>
@@ -581,7 +581,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               </Callout>
               <SimpleTable
                 headers={['OWASP Rating','CVSS Score Range']}
-                rows={testOutcomeAndHardeningSource.rankingRows.map(x=>[x.owaspFa,<span dir="ltr">{x.cvssRange}</span>])}
+                rows={testOutcomeAndHardeningSource.rankingRows.map(x=>[x.owaspFa,<span key="cell-1" dir="ltr">{x.cvssRange}</span>])}
               />
             </>
           )}
@@ -606,7 +606,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 headers={[penetrationTestApproachSource.reviewedHeadingFa, penetrationTestApproachSource.approvalHeadingFa]}
                 rows={penetrationTestApproachSource.testTypes.map(x=>[
                   x.labelFa,
-                  <span>{x.approved ? '✓' : '×'}</span>
+                  <span key="cell-1">{x.approved ? '✓' : '×'}</span>
                 ])}
               />
 
@@ -623,7 +623,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                 headers={['Approach','Source Definition']}
                 rows={penetrationTestApproachSource.boxDefinitions.map(x=>[
                   x.labelFa,
-                  <span dir="rtl" lang="fa">{x.textFa}</span>
+                  <span key="cell-1" dir="rtl" lang="fa">{x.textFa}</span>
                 ])}
               />
               <Callout title="Selected Approach" icon={<Radar/>}>
@@ -658,9 +658,9 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['مرجع استاندارد','ویرایش','تاریخ انتشار','کاربرد در گزارش']}
                 rows={iso15408_2026Baseline.seriesParts.map(x=>[
-                  <span dir="ltr">{x.reference}</span>,
-                  <span dir="ltr">{x.edition}</span>,
-                  <span dir="ltr">{x.publication}</span>,
+                  <span key="cell-0" dir="ltr">{x.reference}</span>,
+                  <span key="cell-1" dir="ltr">{x.edition}</span>,
+                  <span key="cell-2" dir="ltr">{x.publication}</span>,
                   x.purposeFa
                 ])}
               />
@@ -675,10 +675,10 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                   rows={group.families.map(f=>{
                     const status=iso15408FamilyStatus(f.code,'fa');
                     return [
-                      <strong dir="ltr">{f.code}</strong>,
+                      <strong key="cell-0" dir="ltr">{f.code}</strong>,
                       f.nameFa,
-                      <span dir="ltr">{f.clause}</span>,
-                      <span className={status.className}>{status.label}</span>
+                      <span key="cell-2" dir="ltr">{f.clause}</span>,
+                      <span key="cell-3" className={status.className}>{status.label}</span>
                     ];
                   })}
                 />
@@ -688,8 +688,8 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['کد توسعه‌یافته مشاهده‌شده در مستند قدیمی','نتیجه قدیمی','وضعیت در خط مبنای 2026']}
                 rows={iso15408LegacyExtendedRequirements.map(x=>[
-                  <strong dir="ltr">{x.code}</strong>,
-                  <span className="badge verdict-pass">{locale === 'fa' ? `${x.legacyResult} قدیمی — نیازمند بازتأیید 2026` : `Legacy ${x.legacyResult} — revalidation required`}</span>,
+                  <strong key="cell-0" dir="ltr">{x.code}</strong>,
+                  <span key="cell-1" className="badge verdict-pass">{locale === 'fa' ? `${x.legacyResult} قدیمی — نیازمند بازتأیید 2026` : `Legacy ${x.legacyResult} — revalidation required`}</span>,
                   x.noteFa
                 ])}
               />
@@ -712,7 +712,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                   headers={['Family','Clause','Assessment status']}
                   rows={group.families.map(f=>{
                     const status=iso15408FamilyStatus(f.code,'en');
-                    return [<strong>{f.code}</strong>,f.clause,<span className={status.className}>{status.label}</span>];
+                    return [<strong key="cell-0">{f.code}</strong>,f.clause,<span key="cell-2" className={status.className}>{status.label}</span>];
                   })}
                 />
               </div>)}
@@ -747,12 +747,12 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
               <SimpleTable
                 headers={['بند / شناسه WSTG','دسته آزمون','تعداد آزمون','وضعیت اجرا','نتیجه مستند مبنا','خانواده‌ها و بندهای متناظر ISO/IEC 15408-2:2026']}
                 rows={owaspWstgIso15408Crosswalk2026.categories.map(c=>[
-                  <div><strong dir="ltr">{c.order}</strong><br/><span dir="ltr">{c.wstgPrefix}</span></div>,
-                  <div><strong>{c.nameFa}</strong><br/><small dir="ltr">{c.nameEn}</small></div>,
-                  <span dir="ltr">{c.testCount}</span>,
-                  <span className="badge verdict-pass">{c.executionStatusFa}</span>,
-                  <span className={verdictClass(c.legacyResult)} data-source-literal="true">{c.legacyResult}</span>,
-                  <div className="chip-row">{c.isoRefs.map(r=><span className="chip" dir="ltr" key={`${c.code}-${r.code}`}>{r.code} · {r.clause}</span>)}</div>
+                  <div key="cell-0"><strong dir="ltr">{c.order}</strong><br/><span dir="ltr">{c.wstgPrefix}</span></div>,
+                  <div key="cell-1"><strong>{c.nameFa}</strong><br/><small dir="ltr">{c.nameEn}</small></div>,
+                  <span key="cell-2" dir="ltr">{c.testCount}</span>,
+                  <span key="cell-3" className="badge verdict-pass">{c.executionStatusFa}</span>,
+                  <span key="cell-4" className={verdictClass(c.legacyResult)} data-source-literal="true">{c.legacyResult}</span>,
+                  <div key="cell-5" className="chip-row">{c.isoRefs.map(r=><span className="chip" dir="ltr" key={`${c.code}-${r.code}`}>{r.code} · {r.clause}</span>)}</div>
                 ])}
               />
 
@@ -799,7 +799,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
                   c.nameEn,
                   c.testCount,
                   'Executed',
-                  <span className={verdictClass(c.legacyResult)}>{c.legacyResult}</span>,
+                  <span key="cell-4" className={verdictClass(c.legacyResult)}>{c.legacyResult}</span>,
                   c.isoRefs.map(r=>`${r.code} ${r.clause}`).join(' · ')
                 ])}
               />
@@ -948,7 +948,7 @@ export default function OriginalSecurityReport({ projectMeta, onBack, locale, on
 
         <section className="report-page" id="findings-summary" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
           <SectionHeading num="09" title={locale === 'fa' ? 'خلاصه یافته‌ها' : 'Findings Summary'} subtitle={locale === 'fa' ? 'خلاصه یافته‌های مهندسی با نمایش مستقل شدت فنی و ریسک سازمانی.' : 'Engineering findings with technical severity and organizational risk shown separately.'} icon={<ShieldAlert/>}/>
-          <SimpleTable headers={locale === 'fa' ? ['شناسه','یافته','دارایی','WSTG','شدت','CVSS','ریسک'] : ['ID','Finding','Asset','WSTG','Severity','CVSS','Risk']} rows={findings.map(f=>[f.id,localize(locale,f.title),f.asset,f.wstg,<span className={severityClass(f.severity)}>{locale === 'fa' ? faSeverity(f.severity) : f.severity}</span>,f.cvssScore,<span className={riskClass(f.organizationalRisk.riskRating)}>{locale === 'fa' ? faRisk(f.organizationalRisk.riskRating) : f.organizationalRisk.riskRating}</span>])}/>
+          <SimpleTable headers={locale === 'fa' ? ['شناسه','یافته','دارایی','WSTG','شدت','CVSS','ریسک'] : ['ID','Finding','Asset','WSTG','Severity','CVSS','Risk']} rows={findings.map(f=>[f.id,localize(locale,f.title),f.asset,f.wstg,<span key="cell-4" className={severityClass(f.severity)}>{locale === 'fa' ? faSeverity(f.severity) : f.severity}</span>,f.cvssScore,<span key="cell-6" className={riskClass(f.organizationalRisk.riskRating)}>{locale === 'fa' ? faRisk(f.organizationalRisk.riskRating) : f.organizationalRisk.riskRating}</span>])}/>
         </section>
 
         <section className="report-page" id="findings" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
@@ -1127,7 +1127,7 @@ function ManagementReportSections({locale,metrics,liveReportMeta}:{locale:'en'|'
         <div className="card"><h3>{locale === 'fa' ? 'ریسک ترکیبی' : 'Compound Risk'}</h3><p>{locale === 'fa' ? `تحلیل گزارش ${attackChains.length} زنجیره حمله بالقوه را ثبت کرده است. مهم‌ترین نگرانی مدیریتی این است که ضعف‌های هویت، مجوزدهی، ورودی و مرزهای اعتماد در صورت ترکیب، اثری فراتر از شدت هر یافته به‌تنهایی ایجاد کنند.` : `The report records ${attackChains.length} potential attack chains. The principal management concern is that identity, authorization, input and trust-boundary weaknesses can combine to create impact greater than any isolated finding.`}</p></div>
       </div>
       <h3>{locale === 'fa' ? 'یافته‌های بحرانی و سطح بالا' : 'Critical and High Findings'}</h3>
-      <SimpleTable headers={locale === 'fa' ? ['شناسه','یافته','دارایی','شدت','CVSS','اثر کسب‌وکار'] : ['ID','Finding','Asset','Severity','CVSS','Business Impact']} rows={priorityFindings.map(f=>[f.id,localize(locale,f.title),f.asset,<span className={severityClass(f.severity)}>{locale === 'fa' ? faSeverity(f.severity) : f.severity}</span>,f.cvssScore,localize(locale,f.businessImpact)])}/>
+      <SimpleTable headers={locale === 'fa' ? ['شناسه','یافته','دارایی','شدت','CVSS','اثر کسب‌وکار'] : ['ID','Finding','Asset','Severity','CVSS','Business Impact']} rows={priorityFindings.map(f=>[f.id,localize(locale,f.title),f.asset,<span key="cell-3" className={severityClass(f.severity)}>{locale === 'fa' ? faSeverity(f.severity) : f.severity}</span>,f.cvssScore,localize(locale,f.businessImpact)])}/>
       <Callout title={locale === 'fa' ? 'اصل تصمیم‌گیری' : 'Decision Principle'} icon={<Scale/>}>{locale === 'fa' ? 'اولویت اصلاح فقط از امتیاز CVSS استخراج نمی‌شود. ریسک سازمانی باید اثر کسب‌وکار، بحرانی‌بودن دارایی، میزان مواجهه، قابلیت بهره‌برداری، کنترل‌های موجود و امکان تشکیل زنجیره حمله را نیز در نظر بگیرد.' : 'Remediation priority is not derived from CVSS alone. Organizational risk also considers business impact, asset criticality, exposure, exploitability, existing controls and attack-chain potential.'}</Callout>
     </section>
 
@@ -1201,7 +1201,7 @@ function ManagementReportSections({locale,metrics,liveReportMeta}:{locale:'en'|'
 
 function Meta({label,value}){return <div className="meta"><span>{label}</span><strong>{value}</strong></div>}
 function SectionHeading({num,title,subtitle,icon}){return <div className="section-heading"><div className="section-icon">{icon}</div><div><span>{num}</span><h2>{title}</h2><p>{subtitle}</p></div></div>}
-function Metric({icon,label,value,sub,danger}){return <div className={`metric ${danger?'danger':''}`}><div className="metric-icon">{icon}</div><span>{label}</span><strong>{value}</strong><small>{sub}</small></div>}
+function Metric({icon,label,value,sub,danger = false}: {icon?: React.ReactNode; label: React.ReactNode; value: React.ReactNode; sub: React.ReactNode; danger?: boolean}){return <div className={`metric ${danger?'danger':''}`}><div className="metric-icon">{icon}</div><span>{label}</span><strong>{value}</strong><small>{sub}</small></div>}
 function OfficialDocumentProfileSection({locale}:{locale:'en'|'fa'}){
   return <section className="report-page" id="official-document-profile" dir={locale === 'fa' ? 'rtl' : 'ltr'}>
     <SectionHeading num="F1" title={locale === 'fa' ? 'شناسنامه مستند' : 'Official Document Profile'} subtitle={locale === 'fa' ? 'مشخصات هویتی، مالکیت و چرخه عمر سامانه و گزارش.' : 'Official identity, ownership and lifecycle metadata for the assessed system and issued report.'} icon={<Fingerprint/>}/>
@@ -1486,4 +1486,3 @@ function PocRecord({p,t,locale='en'}:{p:any;t:any;locale?:'en'|'fa'}){
 function CodeBlock({title,value}){return <div className="code-card"><strong>{title}</strong><pre dir="ltr" data-source-literal="true">{value}</pre></div>}
 
 function AnnexTest({t,locale}:{t:any;locale:'en'|'fa'}){return <article className="annex-test" dir={locale === 'fa' ? 'rtl' : 'ltr'}><div className="annex-test-head"><div><span>{t.versionedId}</span><strong>{localize(locale,t.title)}</strong><small>{localize(locale,t.categoryName)} · {t.asset}</small></div><span className={verdictClass(t.verdict)}>{locale === 'fa' ? fromMap({PASS:'موفق',FAIL:'ناموفق',PARTIAL:'ناقص','N/A':'نامرتبط'}, t.verdict) : t.verdict}</span></div>{t.pocs.length===0?<p><b>{locale === 'fa' ? 'قابلیت اعمال:' : 'Applicability:'}</b> {locale === 'fa' ? 'خیر' : 'NO'} — {locale === 'fa' ? 'در محدوده ارزیابی تأییدشده، قابلیت یا فناوری متناظر با هدف این آزمون وجود ندارد.' : t.applicabilityReason}</p>:t.pocs.map((p:any)=><PocRecord key={p.id} p={p} t={t} locale={locale}/>)}</article>}
-

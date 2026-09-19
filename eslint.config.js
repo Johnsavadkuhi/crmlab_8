@@ -12,9 +12,14 @@ export default [
       "**/node_modules/**",
       "**/coverage/**",
       "apps/api/src/test/**",
+      "**/vendor/**",
     ],
   },
   js.configs.recommended,
+  {
+    files: ["**/*.{js,cjs,mjs}"],
+    languageOptions: { globals: { process: "readonly", console: "readonly", module: "readonly", require: "readonly", __dirname: "readonly" } },
+  },
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -46,6 +51,8 @@ export default [
       ...tseslint.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
+      // TypeScript checks identifiers, including ambient DOM and test types.
+      "no-undef": "off",
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "@typescript-eslint/no-explicit-any": "off",
