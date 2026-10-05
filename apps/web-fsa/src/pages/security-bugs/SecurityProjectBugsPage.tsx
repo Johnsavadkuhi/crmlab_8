@@ -111,7 +111,7 @@ export default function SecurityProjectBugsPage() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
-  const bugs = data?.items || [];
+  const bugs = useMemo(() => data?.items || [], [data?.items]);
   const submitters = useMemo(() => Array.from(
     bugs.reduce((submitterMap, bug) => {
       if (bug.submitter) submitterMap.set(bug.submitter.id, bug.submitter);

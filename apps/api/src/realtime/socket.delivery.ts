@@ -1,9 +1,18 @@
 import { SOCKET_ROOMS } from "@/constants/socket";
 import { getIOIfInitialized } from "./socket.server";
-import { joinUserSocketsToProject } from "./socket.rooms";
+import { joinUserSocketsToProject, removeUserSocketsFromProject } from "./socket.rooms";
 import type { ServerToClientEvents } from "./socket.types";
 
 type EventName = keyof ServerToClientEvents;
+
+export function disconnectUserSockets(userId: string): void {
+  getIOIfInitialized()?.in(SOCKET_ROOMS.USER(userId)).disconnectSockets(true);
+}
+
+export async function removeConnectedUsersFromProject(userIds: readonly string[], projectId: string) {
+  const io = getIOIfInitialized();
+  if (io) await removeUserSocketsFromProject(io, userIds, projectId);
+}
 type EventPayload<TEvent extends EventName> = Parameters<ServerToClientEvents[TEvent]>[0];
 type TypedBroadcastOperator<TEvent extends EventName> = {
   emit(eventName: TEvent, eventPayload: EventPayload<TEvent>): boolean;

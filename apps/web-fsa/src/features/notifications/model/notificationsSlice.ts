@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "@/app/store/store";
 import type { AppNotification, NotificationConnectionStatus, NotificationPage, NotificationReadFilter } from "@/entities/notification/model/notification";
 
@@ -129,13 +129,15 @@ export const {
 export const selectNotifications = (state: RootState) => state.notifications.items;
 export const selectUnreadNotificationCount = (state: RootState) => state.notifications.unreadCount;
 export const selectNotificationConnectionStatus = (state: RootState) => state.notifications.connectionStatus;
-export const selectNotificationPage = (state: RootState) => {
-  const byId = new Map(state.notifications.items.map((item) => [item.id, item]));
-  const filter = state.notifications.page.filter;
+export const selectNotificationPage = createSelector(
+  [selectNotifications, (state: RootState) => state.notifications.page],
+  (items, page) => {
+  const byId = new Map(items.map((item) => [item.id, item]));
+  const filter = page.filter;
   return {
-    ...state.notifications.page,
-    items: state.notifications.page.ids.map((id) => byId.get(id)).filter((item): item is AppNotification => Boolean(item)).filter((item) => filter === "all" || (filter === "read" ? item.isRead : !item.isRead)),
+    ...page,
+    items: page.ids.map((id) => byId.get(id)).filter((item): item is AppNotification => Boolean(item)).filter((item) => filter === "all" || (filter === "read" ? item.isRead : !item.isRead)),
   };
-};
+});
 
 export default notificationsSlice.reducer;

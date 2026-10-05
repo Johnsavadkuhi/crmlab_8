@@ -67,3 +67,13 @@ export async function joinUserSocketsToProject(
     )
   );
 }
+
+export async function removeUserSocketsFromProject(
+  io: RealtimeServer,
+  userIds: readonly string[],
+  projectId: string
+): Promise<void> {
+  await Promise.all(Array.from(new Set(userIds), (userId) =>
+    io.in(SOCKET_ROOMS.USER(userId)).socketsLeave(SOCKET_ROOMS.PROJECT(projectId))
+  ));
+}

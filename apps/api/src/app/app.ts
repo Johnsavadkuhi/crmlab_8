@@ -11,6 +11,8 @@ import { ROUTES } from "@/constants/routes";
 import { csrfProtection } from "@/middlewares/csrf.middleware";
 import { errorHandler, notFoundHandler } from "@/middlewares/error.middleware";
 import { sendSuccess } from "@/utils/response";
+import { isEvidenceUpload } from "@/modules/uploads/services/uploadAccess.service";
+import { AppError } from "@/utils/AppError";
 
 import auditRoutes from "@/modules/audit/routes/audit.routes";
 import authRoutes from "@/modules/auth/routes/auth.routes";
@@ -73,7 +75,21 @@ export function createApp() {
   app.use(csrfProtection);
   app.use(morgan("dev"));
   app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 500 }));
-  app.use(ROUTES.UPLOADS_STATIC, express.static(uploadDir));
+  app.use(ROUTES.UPLOADS_STATIC, async (req, _res, next) => {
+    try {
+      const filename = decodeURIComponent(req.path.slice(1));
+      if (!filename || filename.includes("/") || filename.includes("\\") || await isEvidenceUpload(filename)) {
+        return next(new AppError("Upload not found", 404));
+      }
+      next();
+    } catch (error) { next(error); }
+  }, express.static(uploadDir, {
+    setHeaders(res) {
+      // Also isolate legacy uploads when opened as a document.
+      res.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' data:; sandbox");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+    },
+  }));
 
   app.get(ROUTES.HEALTH, (_req, res) =>
     sendSuccess(res, { ok: true, service: "enterprise-dashboard-backend" })

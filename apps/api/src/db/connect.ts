@@ -5,6 +5,7 @@ import { ensureProjectPersistenceIndexes } from "@/modules/projects/services/pro
 import { ensureNotificationIndexes } from "@/modules/notifications/services/notificationIndex.service";
 import { ensureAssetIndexes } from "@/modules/assets/services/assetIndex.service";
 import { ensureFourLRetrospectiveIndexes } from "@/modules/retrospectives/services/fourLRetrospectiveIndex.service";
+import { ensureEvidenceUploadIndexes } from "@/modules/uploads/services/uploadAccess.service";
 
 export async function connectDB() {
   mongoose.set("strictQuery", true);
@@ -25,5 +26,6 @@ export async function connectDB() {
   await ensureNotificationIndexes();
   await ensureAssetIndexes();
   await ensureFourLRetrospectiveIndexes();
+  await ensureEvidenceUploadIndexes();
   console.log(`MongoDB connected to database=${connectedDatabase}`);
 }

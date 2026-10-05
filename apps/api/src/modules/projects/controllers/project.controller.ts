@@ -27,7 +27,7 @@ import {
 } from "@/modules/pentest/services/projectFindingCount.service";
 import { toAuthUserContext } from "@/modules/users/services/userAuth.service";
 import { writeAuditLog } from "@/modules/audit/services/audit.service";
-import { addConnectedUsersToProject, emitToProject } from "@/realtime/socket.delivery";
+import { addConnectedUsersToProject, removeConnectedUsersFromProject, emitToProject } from "@/realtime/socket.delivery";
 import { SOCKET_EVENTS } from "@/constants/socket";
 import { AppError } from "@/utils/AppError";
 import { sendSuccess } from "@/utils/response";
@@ -1962,6 +1962,7 @@ export const assignUsersToProject: RequestHandler = async (req, res, next) => {
         { _id: { $in: fullyRemovedUserIds } },
         { $pull: { projectIds: projectId } }
       );
+      await removeConnectedUsersFromProject(fullyRemovedUserIds, projectId);
     }
 
     const addedUserIdSet = new Set(addedUserIds);

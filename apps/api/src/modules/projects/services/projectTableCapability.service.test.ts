@@ -135,7 +135,7 @@ test("projection fields contain only fields required by authorized columns", () 
     { columns: "summary,status" },
     [PERMISSIONS.DEVOPS_PROJECTS_READ]
   );
-  assert.deepEqual(result.columnKeys, ["summary", "status", "provisioningStatus"]);
+  assert.deepEqual(result.columnKeys, ["summary", "report", "status", "provisioningStatus"]);
   assert.ok(result.projectionFields.includes("projectName"));
   assert.ok(result.projectionFields.includes("status"));
   assert.ok(result.projectionFields.includes("provisioningStatus"));
@@ -169,7 +169,7 @@ test("row actions are a permission union and protected assignment actions reject
   });
   assert.deepEqual(
     resolveProjectRowActions(multiRoleContext),
-    ["view-project", "open-pentest-workspace", "assign-pentesters"]
+    ["view-project", "open-pentest-workspace", "assign-pentesters", "assign-project-members"]
   );
   const devopsContext = resolveProjectResponsibilityContext({
     user: { id: "user-1", permissions: [PERMISSIONS.DEVOPS_PROJECTS_READ] },
@@ -288,7 +288,7 @@ test("stored settings are re-sanitized after permission removal and restored saf
     stored,
     [PERMISSIONS.QA_PROJECTS_READ]
   );
-  assert.deepEqual(removed.visibleColumns, ["summary"]);
+  assert.deepEqual(removed.visibleColumns, ["summary", "report"]);
   assert.ok(!removed.columnOrder.includes("repository"));
   assert.deepEqual(removed.aliases, {});
 
@@ -386,7 +386,7 @@ test("Security Managers can configure and rename the project bug review column",
 
   assert.equal(securityBugs?.dataType, "action");
   assert.equal(securityBugs?.isConfigurable, true);
-  assert.deepEqual(securityBugs?.applicableViews, ["security"]);
+  assert.deepEqual(securityBugs?.applicableViews, ["security", "pentest"]);
 
   const saved = validateProjectTableSettings("user-projects", {
     visibleColumns: ["summary", "securityBugs"],

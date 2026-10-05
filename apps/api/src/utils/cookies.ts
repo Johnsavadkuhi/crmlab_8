@@ -19,12 +19,15 @@ export function getCsrfCookieOptions() {
   };
 }
 
-export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+export function setAccessCookie(res: Response, accessToken: string) {
   res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
     ...baseCookieOptions,
     maxAge: 15 * 60 * 1000,
   });
+}
 
+export function setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
+  setAccessCookie(res, accessToken);
   res.cookie(COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
     ...baseCookieOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000,

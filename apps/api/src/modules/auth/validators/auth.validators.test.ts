@@ -19,3 +19,11 @@ test("account creation keeps its password-strength requirement", () => {
     false
   );
 });
+
+test("public registration strips role and permission escalation inputs", () => {
+  const parsed = registerSchema.parse({ body: {
+    username: "user", password: "valid-password", roles: ["admin"],
+    permissions: ["admin.system.manage"], isActive: true, sessionVersion: 900,
+  } });
+  assert.deepEqual(parsed.body, { username: "user", password: "valid-password" });
+});

@@ -1,4 +1,5 @@
 import type { AppNotification } from "@/entities/notification/model/notification";
+import { safeNotificationActionUrl } from "@/entities/notification/model/notification";
 
 export type BrowserNotificationPermission = NotificationPermission | "unsupported";
 
@@ -37,8 +38,9 @@ export function showBrowserNotification(notification: AppNotification) {
 
   osNotification.onclick = () => {
     window.focus();
-    if (notification.actionUrl) {
-      window.location.assign(notification.actionUrl);
+    const actionUrl = safeNotificationActionUrl(notification.actionUrl);
+    if (actionUrl) {
+      window.location.assign(actionUrl);
     }
     osNotification.close();
   };

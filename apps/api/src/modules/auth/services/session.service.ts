@@ -56,7 +56,7 @@ export async function issueSessionTokens(authUser: Express.UserContext, context:
 async function getActiveAuthUser(userId: string) {
   const user = await UserModel.findById(userId);
 
-  if (!user || !user.isActive) {
+  if (!user || user.isActive === false || user.status === "Inactive") {
     throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
   }
 
@@ -88,13 +88,15 @@ export async function refreshAuthSession(refreshToken?: string) {
 
   assertCurrentSession(authUser, payload.sessionVersion);
 
-  const existingSession = await AuthSessionModel.findOne({
+  const existingSession = await AuthSessionModel.findOneAndUpdate({
     tokenId: payload.tokenId,
+    userId: payload.id,
     refreshTokenHash: hashToken(refreshToken),
-  });
+    revokedAt: { $exists: false },
+    expiresAt: { $gt: new Date() },
+  }, { $set: { revokedAt: new Date() } }, { new: true });
 
-  if (!existingSession || existingSession.revokedAt || existingSession.expiresAt <= new Date()) {
-    await AuthSessionModel.updateMany({ userId: payload.id, revokedAt: { $exists: false } }, { revokedAt: new Date() });
+  if (!existingSession) {
     throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
   }
 
@@ -103,7 +105,6 @@ export async function refreshAuthSession(refreshToken?: string) {
     userAgent: existingSession.userAgent || undefined,
   });
 
-  existingSession.revokedAt = new Date();
   existingSession.replacedByTokenId = verifyRefreshToken(newTokens.refreshToken).tokenId;
   await existingSession.save();
 
@@ -111,6 +112,22 @@ export async function refreshAuthSession(refreshToken?: string) {
     user: authUser,
     ...newTokens,
   };
+}
+
+export async function resumeDownloadSession(refreshToken?: string) {
+  if (!refreshToken) throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+  const payload = verifyRefreshToken(refreshToken);
+  const session = await AuthSessionModel.exists({
+    tokenId: payload.tokenId,
+    userId: payload.id,
+    refreshTokenHash: hashToken(refreshToken),
+    revokedAt: { $exists: false },
+    expiresAt: { $gt: new Date() },
+  });
+  if (!session) throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+  const user = await getActiveAuthUser(payload.id);
+  assertCurrentSession(user, payload.sessionVersion);
+  return { user, accessToken: signAccessToken({ id: user.id, sessionVersion: user.sessionVersion }) };
 }
 
 export async function revokeRefreshSession(refreshToken?: string) {

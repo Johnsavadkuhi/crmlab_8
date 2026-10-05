@@ -8,6 +8,19 @@ const permissionValues = ALL_PERMISSIONS as [string, ...string[]];
 const permissionListSchema = z.array(z.enum(permissionValues)).default([]);
 const userStatusSchema = z.enum(["Active", "Inactive"]);
 
+export const createUserSchema = z.object({
+  body: z.object({
+    firstName: z.string().trim().min(1).optional(),
+    lastName: z.string().trim().min(1).optional(),
+    username: z.string().trim().min(2),
+    password: z.string().min(6),
+    avatarUrl: z.string().optional(),
+    roles: z.array(z.enum(roleValues)).min(1).optional(),
+    permissions: z.array(z.enum(permissionValues)).optional(),
+    status: userStatusSchema.optional(),
+  }),
+});
+
 export const updateUserRolesPermissionsSchema = z.object({
   params: z
     .object({

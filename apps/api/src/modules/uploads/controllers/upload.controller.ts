@@ -8,6 +8,10 @@ import { UPLOADS } from "@/constants/uploads";
 import { writeAuditLog } from "@/modules/audit/services/audit.service";
 import { AppError } from "@/utils/AppError";
 import { sendSuccess } from "@/utils/response";
+import { UserModel } from "@/modules/users/models/user.model";
+import { ROLES } from "@/constants/roles";
+import { hasAvatarSignature } from "../services/avatar.service";
+import { isEvidenceUpload } from "../services/uploadAccess.service";
 
 type MulterFiles = Record<string, Express.Multer.File[]>;
 
@@ -37,6 +41,20 @@ export const uploadAvatar: RequestHandler = async (req, res, next) => {
 
         if (!file) {
             throw new AppError("Avatar image is required", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        const handle = await fs.open(file.path, "r");
+        let valid: boolean;
+        try {
+            const bytes = Buffer.alloc(12);
+            await handle.read(bytes, 0, bytes.length, 0);
+            valid = hasAvatarSignature(file.mimetype, bytes);
+        } finally {
+            await handle.close();
+        }
+        if (!valid) {
+            await fs.unlink(file.path);
+            throw new AppError("Uploaded content is not a valid avatar image", HTTP_STATUS.BAD_REQUEST);
         }
 
         const avatarUrl = UPLOADS.PUBLIC_PATH(file.filename);
@@ -77,6 +95,30 @@ export const deleteUpload: RequestHandler = async (req, res, next) => {
             throw new AppError("Invalid upload file id", HTTP_STATUS.BAD_REQUEST);
         }
         const filename = safeUploadFilename(uploadId);
+        if (await isEvidenceUpload(filename)) {
+            throw new AppError("Evidence must be managed through its project", HTTP_STATUS.FORBIDDEN);
+        }
+        if (!req.user?.roles.includes(ROLES.ADMIN)) {
+            const user = await UserModel.findById(req.user?.id);
+            const avatarPath = UPLOADS.PUBLIC_PATH(filename);
+            if (!user || ![user.avatarUrl, user.profileImageUrl].some((url) => {
+                if (!url) return false;
+                try { return new URL(url, "http://avatar.local").pathname === avatarPath; }
+                catch { return false; }
+            })) {
+                throw new AppError("Forbidden: upload does not belong to this user", HTTP_STATUS.FORBIDDEN);
+            }
+            const escapedFilename = filename.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const sharedReference = new RegExp(`(?:^|/)${escapedFilename}(?:[?#].*)?$`);
+            const shared = await UserModel.exists({
+                _id: { $ne: req.user?.id },
+                $or: [
+                    { avatarUrl: sharedReference },
+                    { profileImageUrl: sharedReference },
+                ],
+            });
+            if (shared) throw new AppError("Forbidden: upload is used by another user", HTTP_STATUS.FORBIDDEN);
+        }
         const filePath = resolveUploadFile(filename);
 
         if (!filePath.startsWith(`${uploadDir}${path.sep}`)) {
